@@ -2,7 +2,7 @@ __author__ = 'xyang'
 
 import os
 import shutil
-
+import fileinput
 
 class manageFile():
 
@@ -54,6 +54,17 @@ class manageFile():
             file.write(conten)
             print "OK"
 
+    def append_file_mem(self,copyfifle,sourcefile,newfile):
+        with open(copyfifle,'rb') as fin1, \
+                open(sourcefile,'rb') as fin2,  \
+                open(newfile,'wb') as fout:
+                shutil.copyfileobj(fin1, fout)
+                fin1.seek(-len(os.linesep), 2)
+                if fin1.read() != os.linesep:
+                    fout.write(os.linesep)
+                shutil.copyfileobj(fin2, fout)
+
+
 if __name__ == '__main__':
     fp = manageFile()
     files = os.listdir('D:\\NGTTProject\\aPage\Multi_ASR\\800-002-1020')
@@ -64,4 +75,5 @@ if __name__ == '__main__':
     count = 0
     #fp.remove_character(path,count,testcase,2)
     #fp.add_character(path,count,testcase,comment)
-    fp.append_file(path,despath,"digit_fr_8")
+    #fp.append_file(path,despath,"digit_fr_8")
+    fp.append_file_mem()
