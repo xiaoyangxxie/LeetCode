@@ -1,1 +1,7 @@
 https://developers.google.com/edu/python/introduction?hl=zh-CN&csw=1
+
+http://www.vaikan.com/improving-your-python-productivity/
+
+http://safehammad.com/downloads/python-idioms-2014-01-16.pdf
+
+http://blogread.cn/it/article/3892?f=wb
