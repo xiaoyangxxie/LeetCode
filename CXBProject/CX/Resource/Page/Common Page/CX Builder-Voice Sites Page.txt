@@ -1,0 +1,65 @@
+*** Settings ***
+Library           Selenium2Library
+Library           S2ExLibrary
+Resource          CX Builder Page.txt
+Resource          ../../Dictionary.txt
+
+*** Variables ***
+${HEADER_NAVI_LINKS}    xpath=//*[@id="bodyContainer"]/table/tbody/tr[2]/td[2]
+${CXBUILDER_LINK}    link=CX Builder
+${NAVIGATION LINK}    CX Builder > Voice Sites
+@{SITE NAMES}     My Voice Site
+${DELETE_BUTTON}    css=input.buttonDelete
+${COPY_BUTTON}    css=input.buttonCopy
+${IMG_COPYBUTTON}    css=input.imgCopyButton
+${COPIED SITE NAME}    input.field210
+${REFRESH_COPY_SITE}    link=Refresh
+
+*** Keywords ***
+Header Navigator Should Be Shown
+    ${actualNavigatorLink}=    Get Text    ${HEADER_NAVI_LINKS}
+    Should Be Equal As Strings    ${actualNavigatorLink}    ${NAVIGATION LINK}
+
+SB Voice Sites Page Should Be Open With No Sites
+    Header Navigator Should Be Shown
+    Page Should Contain    ${NO SITE TIP}
+    Page Should Contain Element    ${CREATE_SITE_LINK}
+
+SB Voice Sites Page Should Be Open With Sites
+    Site Links Should Be Shown
+    Element Should Match X Times    ${CreateNewSiteLink}    2
+    Element Should Match X Times    ${DeleteButton}    2
+    Element Should Match X Times    ${CopyButton}    2
+
+Site Links Should Be Shown
+    : FOR    ${site name}    IN    @{SITE NAMES}
+    \    Page Should Contain Element    link=${site name}
+
+Copy Voice Site
+    [Arguments]    ${site_name}    ${name}
+    Select Voice Site    ${site_name}
+    Click Copy Site
+    Modify Copied Site Name    ${name}
+    Click Copy Again
+    Click Copied Site Refresh
+    sleep    5
+    ${anumber}    Execute Javascript    return $("input[name='deleteDomainTag']").length
+    ${anumber}    Evaluate    int('${anumber}')
+    ${fnumber}    Evaluate    ${snumber}+1
+    Should Be Equal As Integers    ${fnumber}    ${anumber}
+
+Click Copy Site
+    Wait Until Keyword Succeeds    10sec    1sec    Click Element    ${COPY_BUTTON}
+
+Click Copy Again
+    Wait Until Keyword Succeeds    10sec    1sec    Click Element    ${IMG_COPYBUTTON}
+
+Modify Copied Site Name
+    [Arguments]    ${name}
+    Wait Until Element Is visable 10sec    css=${COPIED SITE NAME}
+    Execute Javascript    $("${COPIED SITE NAME}").val("${name}")
+
+Click Copied Site Refresh
+    sleep    5
+    Wait Until Element Is visable 10sec    ${REFRESH_COPY_SITE}
+    Click Link    ${REFRESH_COPY_SITE}

@@ -1,0 +1,18 @@
+*** Settings ***
+Resource          ../../../resource.txt
+Library           Selenium2Library
+
+*** Keywords ***
+Choose Greeting Page as Destination When system error occurs
+    [Arguments]    ${page}
+    Select From List By Label    name=systemError0SelectBox    ${page}
+
+Click Link Outcome Values
+    Click Link    link=Outcome Values
+
+Variable of outcome should be contained
+    [Arguments]    ${value}
+    Element Should Contain    lookupOutcomeVarRef_varID    ${value}
+
+Greeting Should Be Selected
+    List Selection Should Be    systemError0SelectBox    1 - Greeting

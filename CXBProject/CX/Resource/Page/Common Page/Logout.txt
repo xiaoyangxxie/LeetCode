@@ -1,0 +1,25 @@
+*** Settings ***
+Resource          ../../../resource.txt
+
+*** Variables ***
+${LOGIN_OP_BTN}    span.loginOpBtn>span
+${LOGOUT_MESSAGE_ID}    css=span.errors
+${LOGOUT_MESSAGE}    You have been signed out.
+
+*** Keywords ***
+Click Logout
+    Click Account Button
+    Wait Until Keyword Succeeds    5sec    1sec    Click Link    ${LOGOUT_LINK}
+
+Logout Message Should Be
+    [Arguments]    ${expected}
+    Wait Until Keyword Succeeds    10sec    1sec    Wait Until Page Contains Element    ${EMAIL_TEXT}
+    ${message}    Get Text    ${LOGOUT_MESSAGE_ID}
+    Should Be Equal As Strings    ${message}    ${expected}
+
+User Log Out CXB
+    Click Logout
+    Logout Message Should Be    ${LOGOUT_MESSAGE}
+
+Click Account Button
+    Wait Until Keyword Succeeds    5sec    1sec    Execute Javascript    $("${LOGIN_OP_BTN}").click()

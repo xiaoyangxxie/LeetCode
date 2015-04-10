@@ -1,0 +1,35 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../../../resource.txt
+
+*** Variables ***
+${HOME_TAB}       css=a.homeTab
+${CXBUILDER_TAB}    css=a.sbTab
+${CXANALYTICS_TAB}    css=a.rpTab
+${WELCOME_MESSAGE}    id=loginPeople
+${HOME_TAB_ACTIVE}    //*[@id='angelHeader']/ul/li[@class='active ']/a[@class='homeTab']
+${CXBUILDER_TAB_ACTIVE}    //*[@id='angelHeader']/ul/li[@class='active ']/a[@class='sbTab ']
+${CXANALYTICS_TAB_ACTIVE}    //*[@id='angelHeader']/ul/li[@class='active ']/a[@class='rpTab ']
+${LOGIN_OPTION_BUTTON}    jquery=$("span.loginOpBtn>span")
+${ACCOUNT_SETTINGS_LINK}    link=Account Settings
+${GET_SUPPORT_LINK}    link=Get Support
+${LOGOUT_LINK}    link=Logout
+${CAMPAIGN_MANAGER_TAB}    css=a.voiceTab
+${SMS_Tab}        css=a.smsTab
+${SUPPORT_TAB}    css=a.supportTab
+
+*** Keywords ***
+Header Tab Should Be Active
+    [Arguments]    ${tabActiveLocator}
+    Page Should Contain Element    ${tabActiveLocator}
+
+Login Option Button Should Be Enabled
+    Element Should Be Visible    ${LOGIN_OPTION_BUTTON}
+
+Open Header Tab
+    [Arguments]    ${tabLocator}
+    Wait Until Keyword Succeeds    15sec    0.5sec    Click Link    ${tabLocator}
+
+Welcome Message Should StartWith Hello
+    ${actualWelcome}=    Get Text    ${WELCOME_MESSAGE}
+    Should Contain    ${actualWelcome}    Hello,

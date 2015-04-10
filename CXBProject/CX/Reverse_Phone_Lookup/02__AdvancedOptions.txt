@@ -1,0 +1,35 @@
+*** Settings ***
+Test Setup        Run Keywords    Create Phone Lookup Page    AND    Open Advanced Option Tab
+Resource          ../resource.txt
+
+*** Test Cases ***
+Reg_Rev_10
+    [Documentation]    Advanced options - Error Occurs.User can select the designated page when error occurs.
+    [Tags]    Regression
+    Choose Greeting Page as Destination When system error occurs    1 - Greeting
+    Greeting Should Be Selected
+    Save Successfully
+
+Reg_Rev_11
+    [Documentation]    Advanced options - Save outcome of lookup.User can select any variable to save the outcome of lookup.
+    [Tags]    Regression
+    [Setup]    Create One Variable    test2
+    Go To Site Overview
+    Create Phone Lookup Page
+    Open Advanced Option Tab
+    Variable of outcome should be contained    test
+    Save Successfully
+
+Reg_Rev_12
+    [Documentation]    Advanced options - Link - Edit variables.User can click the Edit variable link to change the variable name.
+    [Tags]    Regression
+    Click Edit Variables Link
+    Site Variables Page Should Be Open
+
+Reg_Rev_13
+    [Documentation]    Advanced options - Link - Outcome values. The link should be open in the new window
+    [Tags]    PEP-580
+    Click Link Outcome Values
+    New Window Title Should Be    Outcome Variable Values / IVR Wiki
+    Close Popup Window
+    Window Title Should Be    Angel.com - New Reverse Phone Lookup Page

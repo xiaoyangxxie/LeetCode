@@ -1,0 +1,20 @@
+*** Settings ***
+Resource          ../../../resource.txt
+Library           Selenium2Library
+Resource          PLR Main.txt
+Resource          PLR Advanced.txt
+
+*** Keywords ***
+Create Phone Lookup Page
+    Choose Voice Page    @{VPAGES}[8]
+    Phone Lookup Page Should Be Open
+
+Phone Lookup Page Should Be Open
+    Wait Util Page Fully Loaded
+    Title Should Be    Angel.com - New Reverse Phone Lookup Page
+    ${pageURL}    Get Location
+    Set Test Variable    ${pageURL}
+    ${expectLink}=    Get Expect Navi Link    @{NEWVPages}[3]
+    NaviLink Should Be    ${expectLink}
+    Page Name Should Be    @{NEWVPages}[3]
+    Page Number Should Be    ${PAGE NUMBER}

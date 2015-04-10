@@ -1,0 +1,806 @@
+*** Settings ***
+Force Tags
+Resource          ../Testflow/Logic Page.txt
+Resource          ../Testflow/Util.txt
+Resource          ../Resource/Page/Logic Page/Logic Page.txt
+Resource          ../Resource/Page/Common Page/Site Variables Page.txt
+Resource          ../resource.txt
+
+*** Test Cases ***
+Add Condition TC-2.1
+    [Documentation]    Click *Condition* Button, and Save as default. The system should not allow to do and display a sentence in red: *Please select a variable*
+    [Tags]    Regression
+    Create Logic Page
+    Add Condition
+    Save Page
+    Should Contain Error Message    ${NOT CHOOSE VAR ERR MSG}
+
+Add Condition TC-2.2
+    [Documentation]    Click *Condition* Button, select a *Condition Variable*, input a *Constant*, save logic page. The system should allow to save without any error.
+    [Tags]    Regression
+    Create Logic Page
+    Add Condition
+    Choose Condition Variable Randomly
+    Input Condition Constant    5
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Add Condition TC-2.3
+    [Documentation]    Click *Condition* Button, select a *Condition Variable*, select a *Right Condition Variable*, save logic page. The system should allow to save without any error.
+    [Tags]    Regression
+    Create Logic Page
+    Add Condition
+    Choose Condition Variable Randomly
+    Change Condition Constant To Variable
+    Choose Condition Right Variable Randomly
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Add Assignment TC-3.1
+    [Documentation]    Click *Assignment* Button, and Save as default. The system allow to save without errors.
+    [Tags]    Regression
+    Create Logic Page
+    Add Assignment
+    Save Page Named As Test Case
+    Should Contain Error Message    ${NOT CHOOSE VAR ERR MSG}
+
+Add Assignment TC-3.2
+    [Documentation]    Click *Assignment* Button, and select *New Variable*, *Constant* and save. *New Variable* should occur in *Site Variables*.
+    [Tags]    Regression
+    Create Logic Page
+    Add Assignment
+    Choose Assignment/Transformation Variable    New Variable
+    Input Assignment Left Constant    5
+    Save Page
+    Assignment Variable Should Be    NewLogicPage
+    Save Done Tip Should Be Open
+    Go To Site Variables
+    Site Variables Page Should Be Open
+    Site Variables Page Should Contain Var    NewLogicPage
+
+Add Assignment TC-3.3
+    [Documentation]    Click *Assignment* Button, and select *Existed Variable*, *Constant* and save. System shoule allow to save without any errors.
+    [Tags]    Regression
+    Create Site Variable    MyNewVariable
+    Go To Site Overview
+    Site Overview Should Be Open
+    Create Logic Page
+    Add Assignment
+    Choose Assignment/Transformation Variable    MyNewVariable
+    Input Assignment Left Constant    5
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Add Assignment TC-3.4
+    [Documentation]    Click *Assignment* Button, and select *New Variable*, typekey *Variable* and random *Site Variable* and save. System shoule allow to save without any errors.
+    [Tags]    Regression
+    Create Logic Page
+    Add Assignment
+    Choose Assignment/Transformation Variable    New Variable
+    Choose Assignment Operator    @{ASSIGN TYPE KEYS}[1]
+    Choose Assignment Right Variable Randomly
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Add Assignment TC-3.5
+    [Documentation]    Click *Assignment* Button, and select *Existed Variable*, typekey *Variable* and random *Site Variable* and save. System shoule allow to save without any errors.
+    [Tags]    Regression
+    Go To Site Variables
+    Site Variables Page Should Be Open
+    Create One Variable    MyNewVariable1
+    Go To Site Overview
+    Site Overview Should Be Open
+    Create Logic Page
+    Add Assignment
+    Choose Assignment/Transformation Variable    MyNewVariable1
+    Choose Assignment Operator    @{ASSIGN TYPE KEYS}[1]
+    Choose Assignment Right Variable Randomly
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Add Assignment TC-3.6
+    [Documentation]    Click *Assignment* Button, and select *New Variable*, typekey *Random* and random type *Numer*, try some groups of *From* and *To* inputs, then save.
+    [Tags]    Regression
+    Add Assignment&Random&Number With Different Inputs    1    1000000
+    Save Done Tip Should Be Open
+
+Add Assignment TC-3.7
+    [Documentation]    Click *Assignment* Button, and select *New Variable*, typekey *Random* and random type *Numer*, try some groups of *From* and *To* inputs, then save.
+    [Tags]    Regression
+    Add Assignment&Random&Number With Different Inputs    1    50000000
+    Error Message Should Contain    ${ASSIGN NUM MAX ERR MSG}
+
+Add Assignment TC-3.8
+    [Documentation]    Click *Assignment* Button, and select *New Variable*, typekey *Random* and random type *Numer*, try some groups of *From* and *To* inputs, then save.
+    [Tags]    Regression
+    Add Assignment&Random&Number With Different Inputs    0    1000
+    Error Message Should Contain    ${ASSIGN NUM MIN ERR MSG}
+
+Add Assignment TC-3.9
+    [Documentation]    Click *Assignment* Button, and select *New Variable*, typekey *Random* and random type *Numer*, try some groups of *From* and *To* inputs, then save.
+    [Tags]    Regression
+    Add Assignment&Random&Number With Different Inputs    10    1
+    Save Done Tip Should Be Open
+
+Add Assignment TC-3.10
+    [Documentation]    Click *Assignment* Button, and select *New Variable*, typekey *Random* and random type *Numeric*, try some *Length* inputs, then save.
+    [Tags]    Regression
+    Add Assignment&Random&Numeric With Different Inputs    0
+    Save Done Tip Should Be Open
+
+Add Assignment TC-3.11
+    [Documentation]    Click *Assignment* Button, and select *New Variable*, typekey *Random* and random type *Numeric*, try some *Length* inputs, then save.
+    [Tags]    Regression
+    Add Assignment&Random&Numeric With Different Inputs    50
+    Save Done Tip Should Be Open
+
+Add Assignment TC-3.12
+    [Documentation]    Click *Assignment* Button, and select *New Variable*, typekey *Random* and random type *Numeric*, try some *Length* inputs, then save.
+    [Tags]    Regression
+    Add Assignment&Random&Numeric With Different Inputs    51
+    Error Message Should Contain    ${ASSIGN NUM LEN MAX ERR MSG}
+
+Add Assignment TC-3.13
+    [Documentation]    Click *Assignment* Button, and select *New Variable*, typekey *Random* and random type *Numeric*, try some *Length* inputs, then save.
+    [Tags]    Regression
+    Add Assignment&Random&Alphabetic With Different Inputs    0
+    Save Done Tip Should Be Open
+
+Add Assignment TC-3.14
+    [Documentation]    Click *Assignment* Button, and select *New Variable*, typekey *Random* and random type *Numeric*, try some *Length* inputs, then save.
+    [Tags]    Regression
+    Add Assignment&Random&Alphabetic With Different Inputs    50
+    Save Done Tip Should Be Open
+
+Add Assignment TC-3.15
+    [Documentation]    Click *Assignment* Button, and select *New Variable*, typekey *Random* and random type *Numeric*, try some *Length* inputs, then save.
+    [Tags]    Regression
+    Add Assignment&Random&Alphabetic With Different Inputs    51
+    Error Message Should Contain    ${ASSIGN NUM LEN MAX ERR MSG}
+
+Add Assignment TC-3.16
+    [Documentation]    Click *Assignment* Button, and select *New Variable*, typekey *Random* and random type *Numeric*, try some *Length* inputs, then save.
+    [Tags]    Regression
+    Add Assignment&Random&Alpha Number With Different Inputs    0
+    Save Done Tip Should Be Open
+
+Add Assignment TC-3.17
+    [Documentation]    Click *Assignment* Button, and select *New Variable*, typekey *Random* and random type *Numeric*, try some *Length* inputs, then save.
+    [Tags]    Regression
+    Add Assignment&Random&Alpha Number With Different Inputs    50
+    Save Done Tip Should Be Open
+
+Add Assignment TC-3.18
+    [Documentation]    Click *Assignment* Button, and select *New Variable*, typekey *Random* and random type *Numeric*, try some *Length* inputs, then save.
+    [Tags]    Regression
+    Add Assignment&Random&Alpha Number With Different Inputs    51
+    Error Message Should Contain    ${ASSIGN NUM LEN MAX ERR MSG}
+
+Add Transformation TC-4.1
+    [Documentation]    Click *Transformation* Button, and select *New Variable*, random left variable, then save. System should allow to save without any errors.
+    [Tags]    Regression
+    Create Logic Page
+    Add Transformation
+    Choose Assignment/Transformation Variable    New Variable
+    Choose Transformation Middle Variable Randomly
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Add Transformation TC-4.2
+    [Documentation]    Click *Transformation* Button, and select *New Variable*, Click *Use Constant* image, input some different kinds of constant then save. System should allow to save without any errors.
+    [Tags]    Regression
+    [Template]
+    Add Transformation With Different Left Constant Inputs    -1
+
+Add Transformation TC-4.3
+    [Documentation]    Click *Transformation* Button, and select *New Variable*, Click *Use Constant* image, input some different kinds of constant then save. System should allow to save without any errors.
+    [Tags]    Regression
+    [Template]
+    Add Transformation With Different Left Constant Inputs    a
+
+Add Transformation TC-4.4
+    [Documentation]    Click *Transformation* Button, and select *New Variable*, Click *Use Constant* image, input some different kinds of constant then save. System should allow to save without any errors.
+    [Tags]    Regression
+    [Template]
+    Add Transformation With Different Left Constant Inputs    500000000000000000000
+
+Add Transformation TC-4.5
+    [Documentation]    Click *Transformation* Button, and select *New Variable*, Click *Use Constant* image, input some different kinds of constant then save. System should allow to save without any errors.
+    [Tags]    Regression
+    [Template]
+    Add Transformation With Different Left Constant Inputs    @#$_
+
+Add Transformation TC-4.6
+    [Documentation]    Click *Transformation* Button, and select *New Variable*, Click *Use Constant* image, input some different kinds of constant then save. System should allow to save without any errors.
+    [Tags]    Regression
+    [Template]
+    Add Transformation With Different Left Constant Inputs    (a*b)-13
+
+Add Transformation TC-4.7
+    [Documentation]    Click *Transformation* Button, and select *New Variable*, random *Site Variable*, select different *Operator*, input some different kinds of *Right Constant* then save. System should allow to save without any errors.
+    [Tags]    Regression
+    [Template]
+    Add Transformation With Random Left Var&Different Operators&Right Constant Inputs    @{VAR OPS}[0]    0
+
+Add Transformation TC-4.8
+    [Documentation]    Click *Transformation* Button, and select *New Variable*, random *Site Variable*, select different *Operator*, input some different kinds of *Right Constant* then save. System should allow to save without any errors.
+    [Tags]    Regression
+    [Template]
+    Add Transformation With Random Left Var&Different Operators&Right Constant Inputs    @{VAR OPS}[0]    aAbB C
+
+Add Transformation TC-4.9
+    [Documentation]    Click *Transformation* Button, and select *New Variable*, random *Site Variable*, select different *Operator*, input some different kinds of *Right Constant* then save. System should allow to save without any errors.
+    [Tags]    Regression
+    [Template]
+    Add Transformation With Random Left Var&Different Operators&Right Constant Inputs    @{VAR OPS}[0]    (a - b)*3
+
+Add Transformation TC-4.10
+    [Documentation]    Click *Transformation* Button, and select *New Variable*, random *Site Variable*, select different *Operator*, input some different kinds of *Right Constant* then save. System should allow to save without any errors.
+    [Tags]    Regression
+    [Template]
+    Add Transformation With Random Left Var&Different Operators&Right Constant Inputs    @{VAR OPS}[1]    -5000000000
+
+Add Transformation TC-4.11
+    [Documentation]    Click *Transformation* Button, and select *New Variable*, random *Site Variable*, select different *Operator*, input some different kinds of *Right Constant* then save. System should allow to save without any errors.
+    [Tags]    Regression
+    [Template]
+    Add Transformation With Random Left Var&Different Operators&Right Constant Inputs    @{VAR OPS}[1]    0
+
+Add Transformation TC-4.12
+    [Documentation]    Click *Transformation* Button, and select *New Variable*, random *Site Variable*, select different *Operator*, input some different kinds of *Right Constant* then save. System should allow to save without any errors.
+    [Tags]    Regression
+    [Template]
+    Add Transformation With Random Left Var&Different Operators&Right Constant Inputs    @{VAR OPS}[2]    -5000000000
+
+Add Transformation TC-4.13
+    [Documentation]    Click *Transformation* Button, and select *New Variable*, random *Site Variable*, select different *Operator*, input some different kinds of *Right Constant* then save. System should allow to save without any errors.
+    [Tags]    Regression
+    [Template]
+    Add Transformation With Random Left Var&Different Operators&Right Constant Inputs    @{VAR OPS}[2]    aAbB C
+
+Add Transformation TC-4.14
+    [Documentation]    Click *Transformation* Button, and select *New Variable*, random *Site Variable*, select different *Operator*, input some different kinds of *Right Constant* then save. System should allow to save without any errors.
+    [Tags]    Regression
+    [Template]
+    Add Transformation With Random Left Var&Different Operators&Right Constant Inputs    @{VAR OPS}[3]    -5000000000
+
+Add Transformation TC-4.15
+    [Documentation]    Click *Transformation* Button, and select *New Variable*, random *Site Variable*, select different *Operator*, input some different kinds of *Right Constant* then save. System should allow to save without any errors.
+    [Tags]    Regression
+    [Template]
+    Add Transformation With Random Left Var&Different Operators&Right Constant Inputs    @{VAR OPS}[3]    0
+
+Add Transformation TC-4.16
+    [Documentation]    Click *Transformation* Button, and select *New Variable*, random *Site Variable*, select different *Operator*, input some different kinds of *Right Constant* then save. System should allow to save without any errors.
+    [Tags]    Regression
+    [Template]
+    Add Transformation With Random Left Var&Different Operators&Right Constant Inputs    @{VAR OPS}[3]    aAbB C
+
+Add Transformation TC-4.17
+    [Documentation]    Click *Transformation* Button, and select *New Variable*, random *Site Variable*, select different *Operator*, input some different kinds of *Right Constant* then save. System should allow to save without any errors.
+    [Tags]    Regression
+    [Template]
+    Add Transformation With Random Left Var&Different Operators&Right Constant Inputs    @{VAR OPS}[4]    -50000000000
+
+Add Transformation TC-4.18
+    [Documentation]    Click *Transformation* Button, and select *New Variable*, random *Site Variable*, select different *Operator*, input some different kinds of *Right Constant* then save. System should allow to save without any errors.
+    [Tags]    Regression
+    [Template]
+    Add Transformation With Random Left Var&Different Operators&Right Constant Inputs    @{VAR OPS}[4]    aAbB C
+
+Add Transformation TC-4.19
+    [Documentation]    Click *Transformation* Button, and select *New Variable*, random *Site Variable*, select different *Operator*, input some different kinds of *Right Constant* then save. System should allow to save without any errors.
+    [Tags]    Regression
+    [Template]
+    Add Transformation With Random Left Var&Different Operators&Right Constant Inputs    @{VAR OPS}[4]    0
+
+Add Transformation TC-4.20
+    [Documentation]    Click *Transformation* Button, and select *New Variable*, random *Site Variable*, select different *Operator*, input some different kinds of *Right Constant* then save. System should allow to save without any errors.
+    [Tags]    Regression
+    [Template]
+    Add Transformation With Random Left Var&Different Operators&Right Constant Inputs    @{VAR OPS}[5]    -50000000000
+
+Add Transformation TC-4.21
+    [Documentation]    Click *Transformation* Button, and select *New Variable*, random *Site Variable*, select different *Operator*, input some different kinds of *Right Constant* then save. System should allow to save without any errors.
+    [Tags]    Regression
+    [Template]
+    Add Transformation With Random Left Var&Different Operators&Right Constant Inputs    @{VAR OPS}[5]    aAbB C
+
+Add Transformation TC-4.22
+    [Documentation]    Click *Transformation* Button, and select *New Variable*, random *Site Variable*, select different *Operator*, input some different kinds of *Right Constant* then save. System should allow to save without any errors.
+    [Tags]    Regression
+    [Template]
+    Add Transformation With Random Left Var&Different Operators&Right Constant Inputs    @{VAR OPS}[5]    0
+
+Add Transformation TC-4.23
+    [Documentation]    Click *Transformation* Button, and select *New Variable*, random *Site Variable*, select different *Operator*, input some different kinds of *Right Constant* then save. System should allow to save without any errors.
+    [Tags]    Regression
+    [Template]
+    Add Transformation With Random Left Var&Different Operators&Right Constant Inputs    @{VAR OPS}[6]    -50000000000
+
+Add Transformation TC-4.24
+    [Documentation]    Click *Transformation* Button, and select *New Variable*, random *Site Variable*, select different *Operator*, input some different kinds of *Right Constant* then save. System should allow to save without any errors.
+    [Tags]    Regression
+    [Template]
+    Add Transformation With Random Left Var&Different Operators&Right Constant Inputs    @{VAR OPS}[6]    aAbB C
+
+Add Transformation TC-4.25
+    [Documentation]    Click *Transformation* Button, and select *New Variable*, random *Site Variable*, select different *Operator*, input some different kinds of *Right Constant* then save. System should allow to save without any errors.
+    [Tags]    Regression
+    [Template]
+    Add Transformation With Random Left Var&Different Operators&Right Constant Inputs    @{VAR OPS}[6]    0
+
+Add Transformation TC-4.26
+    [Documentation]    Click *Transformation* Button, and select *New Variable*, random *Site Variable*, select the third kind of *Operator*, then save. System should allow to save without any errors.
+    [Tags]    Regression
+    [Template]
+    Add Transformation With The Third Kind of Op    @{VAR OPS}[7]
+
+Add Transformation TC-4.27
+    [Documentation]    Click *Transformation* Button, and select *New Variable*, random *Site Variable*, select the third kind of *Operator*, then save. System should allow to save without any errors.
+    [Tags]    Regression
+    [Template]
+    Add Transformation With The Third Kind of Op    @{VAR OPS}[8]
+
+Add Transformation TC-4.28
+    [Documentation]    Click *Transformation* Button, and select *New Variable*, random *Site Variable*, select the third kind of *Operator*, then save. System should allow to save without any errors.
+    [Tags]    Regression
+    [Template]
+    Add Transformation With The Third Kind of Op    @{VAR OPS}[9]
+
+Add Transformation TC-4.29
+    [Documentation]    Click *Transformation* Button, and select *New Variable*, random *Site Variable*, select the third kind of *Operator*, then save. System should allow to save without any errors.
+    [Tags]    Regression
+    [Template]
+    Add Transformation With The Third Kind of Op    @{VAR OPS}[10]
+
+Add Transformation TC-4.30
+    [Documentation]    Click *Transformation* Button, and select *New Variable*, random *Site Variable*, select the third kind of *Operator*, then save. System should allow to save without any errors.
+    [Tags]    Regression
+    [Template]
+    Add Transformation With The Third Kind of Op    @{VAR OPS}[12]
+
+Add Transformation TC-4.31
+    [Documentation]    Click *Transformation* Button, and select *New Variable*, random *Site Variable*, select the *substring Operator*, input some groups of *Start* and *End* numbers, then save. System should allow to save without any errors.
+    [Tags]    Regression
+    [Template]
+    Add Transformation&substring Op With Different Inputs    2    1
+
+Add Transformation TC-4.32
+    [Documentation]    Click *Transformation* Button, and select *New Variable*, random *Site Variable*, select the *substring Operator*, input some groups of *Start* and *End* numbers, then save. System should allow to save without any errors.
+    [Tags]    Regression
+    [Template]
+    Add Transformation&substring Op With Different Inputs    0    50000000000
+
+Add Logic&Delete TC-5.1
+    [Documentation]    Click *Condition* Button, and select the *Condition Checkbox*, then click *Delete* Button, the condition block should disappear, then save. The system should allow to save without any error.
+    [Tags]    Regression
+    Create Logic Page
+    Add Condition
+    Select Condition Checkbox
+    Click Delete Button
+    Page Should Not Contain Condition Checkbox
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Add Logic&Delete TC-5.2
+    [Documentation]    Click *Condition* Button *TWICE*, and select both the *Condition Checkbox*, then click *Delete* Button, the two condition blocks should disappear, then save. The system should allow to save without any error.
+    [Tags]    Regression
+    Create Logic Page
+    Add Condition
+    Add Condition    2
+    Select Condition Checkbox    1
+    Select Condition Checkbox    2
+    Click Delete Button
+    Page Should Not Contain Condition Checkbox
+    Page Should Not Contain Condition Checkbox
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Add Logic&Delete TC-5.3
+    [Documentation]    Click *Assignment* Button, and select the *Assign&Tran Checkbox*, then click *Delete* Button, the assignment block should disappear, then save. The system should allow to save without any error.
+    [Tags]    Regression
+    Create Logic Page
+    Add Assignment
+    Select Assignment/Transformation Checkbox
+    Click Delete Button
+    Page Should Not Contain Assignment/Transformation Checkbox
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Add Logic&Delete TC-5.4
+    [Documentation]    Click *Assignment* Button and *Transformation* Button, and select both the *Assign&Tran Checkbox*, then click *Delete* Button, the two blocks should disappear, then save. The system should allow to save without any error.
+    [Tags]    Regression
+    Create Logic Page
+    Add Assignment
+    Add Transformation    2
+    Select Assignment/Transformation Checkbox    1
+    Select Assignment/Transformation Checkbox    2
+    Click Delete Button
+    Page Should Not Contain Assignment/Transformation Checkbox    1
+    Page Should Not Contain Assignment/Transformation Checkbox    2
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Add Logic&Delete TC-5.5
+    [Documentation]    Click *Condition* *Assignment* and *Transformation* Button, and select the *Condition Checkbox*, then click *Delete* Button, the condition block should disappear and the other two blocks should be visible and *Delete* Button should be visible, then save.
+    [Tags]    Regression
+    Create Logic Page
+    Add Assignment
+    Add Transformation    2
+    Add Condition
+    Select Condition Checkbox
+    Select Assignment/Transformation Checkbox
+    Click Delete Button
+    Page Should Contain Delete Button
+
+Add Logic&Delete TC-5.6
+    [Documentation]    Click *Condition* *Assignment* and *Transformation* Button, and select one *Assign&Tran Checkbox*, then click *Delete* Button, the assign&tran block should disappear and the other two blocks should be visible and *Delete* Button should be visible, then save.
+    [Tags]    Regression
+    Create Logic Page
+    Add Assignment
+    Add Transformation    2
+    Add Condition
+    Select Assignment/Transformation Checkbox
+    Click Delete Button
+    Page Should Contain Delete Button
+
+Add Logic&Copy TC-6.1
+    [Documentation]    Click *Condition* button, select random *Variable*, random *Operator*, random *Constant*, random *GoTo Page*, and Click *Copy*, then another condition block with the same default value should be visible, then save. The system should allow to save without any error.
+    [Tags]    Regression
+    Create Logic Page
+    Add Condition
+    Choose Condition Variable Randomly
+    Choose Condition Operation    equals
+    Input Condition Constant    10
+    Choose Condition GoTo Page Randomly
+    Select Condition Checkbox
+    Click Copy Button
+    Page Should Contain Condition Checkbox    2
+    Condition Operator Should Be    equals    2
+    Condition Constant Should Be    10    2
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Add Logic&Copy TC-6.2
+    [Documentation]    Click *Condition* button, select random *Variable*, random *Operator*, click *Use Variable* image, \ random *Variable*, random *GoTo Page*, and Click *Copy*, then another condition block with the same default value should be visible, then save. The system should allow to save without any error.
+    [Tags]    Regression
+    Create Logic Page
+    Add Condition
+    Choose Condition Variable Randomly
+    Choose Condition Operation Randomly
+    Change Condition Constant To Variable
+    Choose Condition Right Variable Randomly
+    Choose Condition GoTo Page Randomly
+    Select Condition Checkbox
+    Click Copy Button
+    Page Should Contain Condition Checkbox    2
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Add Logic&Copy TC-6.3
+    [Documentation]    Click *Assignment* button, select *New Variable*, *Constant*, input constant, click *Copy* button, \ then another assignment block with the same default value should be visible, then save. The system should allow to save without any error.
+    [Tags]    Regression
+    Create Site Variable    NewVarForCopy
+    Go To Site Overview
+    Create Logic Page
+    Add Assignment
+    Choose Assignment/Transformation Variable    New Variable
+    Input Assignment Left Constant    10
+    Select Assignment/Transformation Checkbox
+    Click Copy Button
+    Page Should Contain Assignment/Transformation Checkbox    2
+    Assignment Variable Should Be    New Variable    2
+    Assignment Constant Should Be    10    2
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Add Logic&Copy TC-6.4
+    [Documentation]    Click *Assignment* button, select *New Variable*, *Variable*, select *New Variable*, click *Copy* button, \ then another assignment block with the same default value should be visible, then save. The system should allow to save without any error.
+    [Tags]    Regression
+    Create Site Variable    NewVarForCopy1
+    Go To Site Overview
+    Create Logic Page
+    Add Assignment
+    Choose Assignment/Transformation Variable    New Variable
+    Choose Assignment Operator    @{ASSIGN TYPE KEYS}[1]
+    Choose Assignment Right Variable Randomly
+    Select Assignment/Transformation Checkbox
+    Click Copy Button
+    Page Should Contain Assignment/Transformation Checkbox    2
+    Assignment Variable Should Be    New Variable    2
+    Assignment Operator Should Be    @{ASSIGN TYPE KEYS}[1]    2
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Add Logic&Copy TC-6.5
+    [Documentation]    Click *Assignment* button, select *New Variable*, *Random*, select *Number*, click *Copy* button, \ then another assignment block with the same default value should be visible, then save. The system should allow to save without any error.
+    [Tags]    Regression
+    Create Site Variable    NewVarForCopy2
+    Go To Site Overview
+    Create Logic Page
+    Add Assignment
+    Choose Assignment/Transformation Variable    New Variable
+    Choose Assignment Operator    @{ASSIGN TYPE KEYS}[2]
+    Select Assignment/Transformation Checkbox
+    Click Copy Button
+    Page Should Contain Assignment/Transformation Checkbox    2
+    Assignment Variable Should Be    New Variable    2
+    Assignment Operator Should Be    @{ASSIGN TYPE KEYS}[2]    2
+    Assignment Random Type Should Be    Number
+    Assignment Random From Number Should Be    1
+    Assignment Random To Number Should Be    1000
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Add Logic&Copy TC-6.6
+    [Documentation]    Click *Assignment* button, select *New Variable*, *Random*, select *Numeric*, input *Num Length*, click *Copy* button, \ then another assignment block with the same default value should be visible, then save. The system should allow to save without any error.
+    [Tags]    Regression
+    Create Site Variable    NewVarForCopy3
+    Go To Site Overview
+    Create Logic Page
+    Add Assignment
+    Choose Assignment/Transformation Variable    New Variable
+    Choose Assignment Operator    @{ASSIGN TYPE KEYS}[2]
+    Choose Assignment Random Type    @{ASSIGN RAN TYPES}[1]
+    Input Assignment Random Numeric Length    10
+    Select Assignment/Transformation Checkbox
+    Click Copy Button
+    Page Should Contain Assignment/Transformation Checkbox    2
+    Assignment Variable Should Be    New Variable
+    Assignment Operator Should Be    @{ASSIGN TYPE KEYS}[2]
+    Assignment Random Type Should Be    @{ASSIGN RAN TYPES}[1]
+    Assignment Nemeric Length Should Be    10
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Add Logic&Merge TC-7.1
+    [Documentation]    Click *Condition* *Assignment* button, select both checkbox, click *Merge* button, the two can be merged into one and the values should be the same as before.
+    [Tags]    Regression
+    Create Logic Page
+    Add Condition
+    Add Assignment
+    Select Condition Checkbox
+    Select Assignment/Transformation Checkbox
+    Click Merge Button
+    Condition Checkbox Should Be Selected
+
+Add Logic&Merge TC-7.2
+    [Documentation]    Click two *Condition* button and one *Assignment* button, select all the checkbox, click *Merge* button, the three can be merged into one and the values should be the same as before.
+    [Tags]    Regression
+    Create Logic Page
+    Add Condition
+    Choose Condition GoTo Page Randomly
+    Add Condition    2
+    Add Assignment
+    Select Condition Checkbox
+    Select Condition Checkbox    2
+    Select Assignment/Transformation Checkbox
+    Click Merge Button
+    Condition Checkbox Should Be Selected    1
+    Condition Bool Operator Should Be    AND
+
+Add Logic&Up TC-8.1
+    [Documentation]    Click twice *Condition* button, select the second checkbox, click *Up* button, the second one can be the first one and the values should be the same as before.
+    [Tags]    Regression
+    Create Logic Page
+    Add Condition
+    Choose Condition Operation Randomly
+    Add Condition    2
+    Select Condition Checkbox    2
+    Click Up Button
+    Condition Checkbox Should Be Selected
+    Condition Operator Should Be    @{OPERS}[0]
+
+Add Logic&Up TC-8.2
+    [Documentation]    Click twice *Assignment* button, select the second checkbox, click *Up* button, the second one can be the first one and the values should be the same as before.
+    [Tags]    Regression
+    Create Logic Page
+    Add Assignment
+    Choose Assignment Operator    @{ASSIGN TYPE KEYS}[2]
+    Add Assignment    2
+    Select Assignment/Transformation Checkbox    2
+    Click Up Button
+    Assignment/Transformation Checkbox Should Be Selected
+    Assignment Operator Should Be    @{ASSIGN TYPE KEYS}[2]    2
+    Save Page Named As Test Case
+
+Add Logic&Up TC-8.3
+    [Documentation]    Click *Condition* button, select the checkbox after _if_, click *Condition* button, select the second condition statement, click *Up* button, the second one can be the first one and the values should be the same as before.
+    [Tags]    Regression
+    Create Logic Page
+    Add Condition
+    Select Inner Condition Checkbox
+    Click Condition Button
+    Choose Condition Operation    @{OPERS}[1]    1
+    Unselect Inner Condition Checkbox
+    Select Inner Condition Checkbox    1    2
+    Click Up Button
+    Inner Condition Checkbox Should Be Selected    1    1
+    Inner Condition Operator Should Be    @{OPERS}[1]    1    2
+    Condition Bool Operator Should Be    AND
+
+Add Logic&Down TC-9.1
+    [Documentation]    Click twice *Condition* button, select the first checkbox, click *Down* button, the first one can be the second one and the values should be the same as before.
+    [Tags]    Regression
+    Create Logic Page
+    Add Condition
+    Choose Condition Operation Randomly
+    Add Condition    2
+    Select Condition Checkbox    1
+    Click Down Button
+    Condition Checkbox Should Be Selected    2
+    Condition Operator Should Be    @{OPERS}[0]
+    Save Page Named As Test Case
+
+Add Logic&Down TC-9.2
+    [Documentation]    Click twice *Assignment* button, select the first checkbox, click *Down* button, the first one can be the second one and the values should be the same as before.
+    [Tags]    Regression
+    Create Logic Page
+    Add Assignment
+    Choose Assignment Operator    @{ASSIGN TYPE KEYS}[2]
+    Add Assignment    2
+    Select Assignment/Transformation Checkbox
+    Click Down Button
+    Assignment/Transformation Checkbox Should Be Selected    2
+    Assignment Operator Should Be    @{ASSIGN TYPE KEYS}[0]
+    Save Page Named As Test Case
+
+Add Logic&Down TC-9.3
+    [Documentation]    Click *Condition* button, select the checkbox after _if_, click *Condition* button, select the first condition statement, click *Down* button, the first one can be the second one and the values should be the same as before.
+    [Tags]    Regression
+    Create Logic Page
+    Add Condition
+    Choose Condition Operation    @{OPERS}[1]
+    Select Inner Condition Checkbox
+    Click Condition Button
+    Select Inner Condition Checkbox    1    1
+    Click Down Button
+    Inner Condition Checkbox Should Be Selected    1    2
+    Inner Condition Operator Should Be    @{OPERS}[1]    1    2
+    Save Page Named As Test Case
+
+Add Logic&OtherwiseOr TC-10.1
+    [Documentation]    Click twice *Condition* button, click *Otherwise* image, alert will appear, click *Or* image, alert will appear.
+    [Tags]    Regression
+    Create Logic Page
+    Add Condition
+    Page Should Contain Condition Top Otherwise
+    Add Condition
+    Page Should Contain Condition Top OR
+    Page Should Contain Condition Bottom Otherwise
+    Page Should Not Contain Condition Top OtherWise
+    Click Condition Bottom Element
+    Alert Text Should Be    You must have at least 1 assignment or transformation under this condition to toggle.
+    Click Condition Condition Top OR
+    Alert Text Should Be    You must have at least 1 assignment or transformation under this condition to toggle.
+
+Add Logic&OtherwiseOr TC-10.2
+    [Documentation]    Click *Condition* button, click *Assignment* button, select both checkboxes, click *Merge* button, click *Otherwise* image, it became *Continue* image.
+    [Tags]    Regression
+    Create Logic Page
+    Add Condition
+    Page Should Contain Condition Top Otherwise
+    Add Assignment
+    Select Condition Checkbox
+    Select Assignment/Transformation Checkbox
+    Click Merge Button
+    Condition Checkbox Should Be Selected
+    Click Condition Top Otherwise
+    Page Should Contain Condition Top Continue
+
+Add Logic&OtherwiseOr TC-10.3
+    [Documentation]    Click *Condition* button, click *Assignment* button, select both checkboxes, click *Merge* button, repeat the action above, click *Otherwise* image, it became *Continue* image, click *Or* image, it became *Continue* image.
+    [Tags]    Regression
+    Create Logic Page
+    Add Condition
+    Page Should Contain Condition Top Otherwise
+    Add Assignment
+    Add Condition    2
+    Page Should Contain Condition Top OR
+    Add Assignment    2
+    Scroll Down Page    500
+    Select Condition Checkbox    2
+    Select Assignment/Transformation Checkbox    2
+    Click Merge Button
+    Scroll Down Page	    500
+    Page Should Not Contain Assignment/Transformation Checkbox    2
+    Unselect Condition Checkbox    2
+    Select Condition Checkbox
+    Select Assignment/Transformation Checkbox
+    Click Merge Button
+    Scroll Down Page	    500
+    Page Should Not Contain Assignment/Transformation Checkbox
+    Click Condition Bottom Otherwise
+    Page Should Contain Condition Bottom Continue
+    Click Condition Condition Top OR
+    Page Should Contain Condition Top Continue
+    Click Condition Top Continue
+    Page Should Contain Condition Top OR
+    Click Condition Bottom Continue
+    Page Should Contain Condition Bottom Otherwise
+
+Go To Designated Page TC-11.1
+    [Documentation]    Create Logic Page, select random new vpage in *Go To Page* selector, *View* button disappear.
+    [Tags]    Regression
+    Create Logic Page
+    Choose Logic GoTo Page Randomly
+    View Button Should Not Be Visible
+
+Go To Designated Page TC-11.2
+    [Documentation]    Create Logic Page, select *Home Page* in *Go To Page* selector, click *View* button to go to Home Page.
+    [Tags]    Regression
+    Create Logic Page
+    Click View Button
+    Switch To New Window    Angel.com - Message Page
+    Window Title Should Be    Angel.com - Message Page
+    Page Name Should Be    Greeting
+    Switch To Main Window
+
+Go To Designated Page TC-11.3
+    [Documentation]    Create Logic Page, select *1-Greeting* page in *Go To Page* selector, click *View* button to go to Greeting page.
+    [Tags]    Regression
+    Create Logic Page
+    Choose Logic GoTo Page    1 - Greeting
+    Click View Button
+    Switch To New Window    Angel.com - Message Page
+    Window Title Should Be    Angel.com - Message Page
+    Page Name Should Be    Greeting
+    Switch To Main Window
+
+Go To Designated Page TC-11.4
+    [Documentation]    Create Logic Page, select *A Page In Another Site* in *Go To Page* selector, click *Close* link to go back.
+    [Tags]    Regression
+    Create Logic Page
+    Choose Logic GoTo Page    A Page in Another Site
+    VPage Select Should Be Open
+    Go To Choose Another Site Page
+    Switch To New Window    ${BROWSER ALL PAGES TITLE}
+    Close Popup Window
+    VPage Select Should Be Open
+
+Go To Designated Page TC-11.5
+    [Documentation]    Create Logic Page, select *A Page In Another Site* in *Go To Page* selector, click *Back* image, and the vpage selector should be visible.
+    [Tags]    Regression
+    Create Logic Page
+    Choose Logic GoTo Page    A Page in Another Site
+    VPage Select Should Be Open
+    Go Back To VPage Selector
+    GoToPage Should Be    Home Page
+
+Go To Designated Page TC-11.6
+    [Documentation]    Create Logic Page, select *A Page In Another Site* in *Go To Page* selector, choose a site in another site.
+    [Tags]    Regression
+    Create Logic Page
+    Choose Logic GoTo Page    A Page in Another Site
+    VPage Select Should Be Open
+    Go To Choose Another Site Page
+    Switch To New Window    ${BROWSER ALL PAGES TITLE}
+    Run keyword If    ${runsInFirefox}    Choose Voice Site In Browse Voice Pages    990000113307
+    Switch To Main Window
+    Run keyword If    ${runsInFirefox}    Site Number In GoTo Should Be    990000113307
+
+Go To Designated Page TC-11.7
+    [Documentation]    Create Logic Page, select *A Page In Another Site* in *Go To Page* selector, choose a site in another site.
+    [Tags]    Regression
+    Create Logic Page
+    Choose Logic GoTo Page    A Page in Another Site
+    VPage Select Should Be Open
+    Go To Choose Another Site Page
+    Switch To New Window    ${BROWSER ALL PAGES TITLE}
+    Run keyword If    ${runsInFirefox}    Choose Voice Page In Browse Voice Pages    990000113307    1
+    Switch To Main Window
+    Run keyword If    ${runsInFirefox}    Page Number In GoTo Should Be    1
+    Run keyword If    ${runsInFirefox}    Site Number In GoTo Should Be    990000113307
+
+Operation Rules Link TC-17
+    [Tags]    Regression
+    Create Logic Page
+    Add Condition
+    Open Operation Rules Window
+    Open Rules for Comparison Window
+    Open Rules for Assignment Window
+    Close Popup Window
+    Switch To Main Window
+
+*** Keywords ***

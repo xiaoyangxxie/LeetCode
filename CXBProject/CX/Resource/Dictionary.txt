@@ -1,0 +1,16 @@
+*** Variables ***
+${ASSIGN NUM MIN ERR MSG}    The minimum value allowed is 1
+${ASSIGN NUM MAX ERR MSG}    The maximum value allowed is 1000000
+${ASSIGN NUM LEN MAX ERR MSG}    The maximum length allowed is 50
+${INIT PROMPTS TEXT}    Type your message here. Say record to customize with your own voice.
+${EMPTY FOLDER MESSAGE}    This folder is empty.
+${NO SITE TIP}    There are no Voice Sites in your account.
+${CHECK NI/NM MSG}    Check NI/NM Setting in Site Properties
+${TTS TEXT MSG}    YOUR TEXT HERE
+${DEFAULT FROM NUMBER}    1
+${DEFAULT TO NUMBER}    1000
+${INVALID RECORD TIME MSG}    The Maximum recording time you can enter is 1800 seconds and minimum is 5 seconds
+${CANDIAN_FRENCHCALLER}    Canadian-FrenchCaller
+${UK_ENGLISHCALLER}    UK-EnglishCaller
+${SPANISHCALLER}    SpanishCaller
+${ENGLISHCALLER}    EnglishCaller

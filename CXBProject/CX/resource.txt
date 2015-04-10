@@ -1,0 +1,3 @@
+*** Settings ***
+Resource          Testflow/All Test Flow.txt
+Resource          Resource/All Resources.txt

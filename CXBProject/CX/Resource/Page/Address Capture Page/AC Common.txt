@@ -1,0 +1,16 @@
+*** Settings ***
+Resource          ../../../resource.txt
+Library           Selenium2Library
+
+*** Variables ***
+${GOTOPAGE}       success0SelectBox
+
+*** Keywords ***
+Choose Go To Destination Page
+    [Arguments]    ${page}
+    Click Element    ${GOTOPAGE}
+    Run Keyword And Ignore Error    Click Element    ${COMMENTS_TEXT}
+    Selenium2Library.Select From List By Label    ${GOTOPAGE}    ${page}
+
+Click A Page in another site
+    Click link    javascript:openMagnifyingGlassWindow(document.mainBodyForm.success_domainCode, document.mainBodyForm.success_pageCode, document.mainBodyForm.inputSiteCode_of_success_domainCode,0);

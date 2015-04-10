@@ -1,0 +1,64 @@
+*** Settings ***
+Test Setup        Run Keywords    Create Voice Mail Page    AND    Open Confirmation Tab    AND    Confirmation Tab Should Be Open
+Resource          ../Testflow/Util.txt
+
+*** Test Cases ***
+Reg_VM_40
+    [Documentation]    1. User can select the *Do Not Confirm* option.
+    ...    2. The *Confirmation Prompts* should not displayed if the user select the *Do Not Confirm* option.
+    [Tags]    Regression
+    VM Confirmation Prompts Block Should Not Be Visible
+
+Reg_VM_41
+    [Documentation]    User can click on the link to know How Confirmation Works. System should pop up a new window.
+    [Tags]    Regression
+    Confirm Recording Confirmation
+    VM Confirmation Prompts Block Should Be Visible
+    Click How To Replace Link    1
+    Switch To New Window    ${REPLACE CONFIRM PROMPT PAGE TITLE}
+    Close Popup Window
+
+Reg_VM_42
+    [Documentation]    User can reset the defualt audio files in the 'Confirmation' initial, NI and NM prompts.
+    [Tags]    Regression
+    Confirm Recording Confirmation
+    VM Confirmation Prompts Block Should Be Visible
+    ${confirm_initial_prompt_audio_file}=    Get Confirmation Prompt Audio File    1
+    Link Audio File To Page    ${AUDIO FILE}    1
+    Confirmation Prompt Audio File Should Be    Sent.wav    1
+    ${review_initial_prompt_audio_file}=    Get Confirmation Prompt Audio File    6
+    Link Audio File To Page    ${AUDIO FILE}    6
+    Confirmation Prompt Audio File Should Be    Sent.wav    6
+    ${msg_sent_audio_file}=    Get Confirmation Prompt Audio File    11
+    Link Audio File To Page    ${AUDIO FILE}    11
+    Confirmation Prompt Audio File Should Be    Sent.wav    11
+    ${re-record_audio_file}=    Get Confirmation Prompt Audio File    12
+    Link Audio File To Page    ${AUDIO FILE}    12
+    Confirmation Prompt Audio File Should Be    Sent.wav    12
+    Click Reset To Default Values Link    1
+    Confirmation Prompt Audio File Should Be    ${confirm_initial_prompt_audio_file}    1
+    Confirmation Prompt Audio File Should Be    ${review_initial_prompt_audio_file}    6
+    Confirmation Prompt Audio File Should Be    ${msg_sent_audio_file}    11
+    Confirmation Prompt Audio File Should Be    ${re-record_audio_file}    12
+    Save Successfully
+
+Reg_VM_43
+    [Documentation]    1. Click the *Link to Audio* link.
+    ...    2. System should navigate to page where user can select the audio files.
+    [Tags]    Regression
+    Confirm Recording Confirmation
+    VM Confirmation Prompts Block Should Be Visible
+    Click Link Audio Link    1
+    Audio Handler Should Be Open
+    Save Successfully
+
+Reg_VM_44
+    [Documentation]    1. Click *play* link.
+    ...    2. System should play the selected wav file.
+    [Tags]    Debug    chrome
+    Confirm Recording Confirmation
+    VM Confirmation Prompts Block Should Be Visible
+    Link Audio File To Page    ${AUDIO FILE}    1
+    Confirmation Prompt Audio File Should Be    Sent.wav    1
+    Play Audio File    Sent.wav    1
+    Save Successfully

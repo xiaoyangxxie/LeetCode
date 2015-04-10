@@ -1,0 +1,20 @@
+*** Settings ***
+Resource          ../config.txt
+Resource          Global Resource.txt
+Resource          Page/Common Elements.txt
+Resource          Page/Logic Page/Logic Page.txt
+Resource          Page/Common Page/All Common Pages.txt
+Resource          Page/Call Queue Page/Call Queue Page.txt
+Resource          Page/Address Capture Page/Address Capture Page.txt
+Resource          Page/Data Page/Data Page.txt
+Resource          Page/Name_Capture_Page/Name Capture Page.txt
+Resource          Page/Reverse_Phone_Lookup_Page/Reverse Phone Lookup Page.txt
+Resource          Page/Schedule Page/Schedule Page.txt
+Resource          Page/SMS_Page/SMS Page.txt
+Resource          Dictionary.txt
+Resource          Page/Call Transfer Page/Call Transfer Page.txt
+Resource          Page/Transaction Page/Transaction Page.txt
+Resource          Page/Voice Mail Page/Voice Mail Page.txt
+Resource          Page/Message Page/Message Page.txt
+Resource          Page/Question Page/Question Page.txt
+Resource          Page/Site_Command/site_command_page.txt

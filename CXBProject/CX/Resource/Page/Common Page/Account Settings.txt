@@ -1,0 +1,36 @@
+*** Settings ***
+Resource          ../../../resource.txt
+
+*** Variables ***
+${USER_ACCOUNT_MANAGEMENT}    link=User Account Management
+${NEWPIN}         name=newPIN
+${REENTER_NEWPIN}    name=reenterNewPIN
+${NEW_PASSWORD}    name=password_string
+${REENTER_PASSWORD}    name=reenterPassword
+${SECURITY_QUESTION}    name=securityQuestion
+${SECURITY_ANSWER}    name=securityAnswer_string
+@{SECURITY_QUESTION_LIST}     What is the name of the city where you were born?     What is your Mother's middle name?     What is your Mother's middle name?     What's your pet's name?     What's your favorite film?     What's your favorite team?
+${FOUR_DIGIT}     1234
+${NEW_PASSWORD_ENTER}    Genesys1ctc
+${ACCOUNT_SETTINGS}    xpath=//a[@href='/SubscriberEditor?command=editProfile']
+
+*** Keywords ***
+Click Account Settings
+    Go To Account Settings
+    Wait Until Keyword Succeeds    10sec    1sec    Click Element    ${ACCOUNT_SETTINGS}
+
+Input Pin And Password
+    [Arguments]    ${pin}    ${pinagain}    ${password}    ${passwordagain}
+    Input Text    ${NEWPIN}    ${pin}
+    Input Text    ${REENTER_NEWPIN}    ${pinagain}
+    Input Text    ${NEW_PASSWORD}    ${password}
+    Input Text    ${REENTER_PASSWORD}    ${passwordagain}
+
+Select Question
+    [Arguments]    ${type}    ${text}
+    Common Elements.Select From List By Label    ${SECURITY_QUESTION}    ${type}
+    Input Text    ${SECURITY_ANSWER}    ${text}
+
+Go To Account Settings
+    Click Account Button
+    Wait Until Keyword Succeeds    10sec    1sec    Click Link    ${ACCOUNT_SETTINGS_LINK}

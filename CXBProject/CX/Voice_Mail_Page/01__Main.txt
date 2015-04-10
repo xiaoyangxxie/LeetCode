@@ -1,0 +1,284 @@
+*** Settings ***
+Test Setup        Create Voice Mail Page
+Resource          ../Testflow/Util.txt
+
+*** Test Cases ***
+Reg_VM_01
+    [Documentation]    By default, initial prompts text box should be displayed.
+    [Tags]    Regression
+    Prompts Table Should Be Visible
+
+Reg_VM_02
+    [Documentation]    1. Select the *Arrow* link.
+    ...    2. \ User can link any audio files to play.
+    [Tags]    Regression
+    Change To Audio    1
+    Link Audio File To Page    ${AUDIO FILE}    1
+    Audio File Text Should Be    Sent.wav    1
+    Save Successfully
+
+Reg_VM_03
+    [Documentation]    1. Add audio file.
+    ...    2. Click *Clear* link.
+    ...    3. System should clear the selected wav file.
+    [Tags]    Regression
+    Change To Audio    1
+    Link Audio File To Page    ${AUDIO FILE}    1
+    Audio File Text Should Be    Sent.wav    1
+    Click Clear Link    1
+    Audio File Text Should Be    None    1
+    Save Successfully
+
+Reg_VM_04
+    [Documentation]    1. Add audio file.
+    ...    2. Click *play* link.
+    ...    3. System should play the selected wav file.4. If the audio file is blank or have been cleared, the button 'Play' should not be clicked
+    [Tags]    Debug
+    Change To Audio    1
+    Link Audio File To Page    ${AUDIO FILE}    1
+    Audio File Text Should Be    Sent.wav    1
+    Play Audio File    Sent.wav    1
+    Save Successfully
+
+Reg_VM_05
+    [Documentation]    1. Click the *Link to Audio* link.
+    ...    2. System should navigate to page where user can select the audio files.
+    [Tags]    Regression
+    Change To Audio    1
+    Click Link Audio Link    1
+    Audio Handler Should Be Open
+    Save Successfully
+
+Reg_VM_06-07
+    [Documentation]    1. Click *browse* button.
+    ...    2. System should open the folders to select the audio file in local space. 3. Select the audio. 4. Select the Upload button to upload it.
+    [Tags]    Regression
+    Change To Audio    1
+    Click Link Audio Link    1
+    Audio Handler Should Be Open
+    Go To Audio Frame
+    Upload Sound File    ${AUDIO FILE}
+    Go Out Of Frame
+    Save Successfully
+
+Reg_VM_08
+    [Documentation]    1. Click *Link to Audio* link, 2. Enter name for new folder. 3. Click Add. 4. System should add the new folder.
+    [Tags]    Regression
+    Change To Audio    1
+    Click Link Audio Link    1
+    Audio Handler Should Be Open
+    Go To Audio Frame
+    Add Folder    ${TEST_NAME}
+    Go Out Of Frame
+    Save Successfully
+
+Reg_VM_09
+    [Documentation]    1. Select any audio file and click the delete button.
+    ...    2. System should delete the audio file.
+    [Tags]    Regression
+    Change To Audio    1
+    Click Link Audio Link    1
+    Audio Handler Should Be Open
+    Go To Audio Frame
+    Upload Sound File    ${AUDIO FILE}
+    Delete Audio File    ${filename}
+    Go Out Of Frame
+    Save Successfully
+
+Reg_VM_10
+    [Documentation]    1. Create many folders.
+    ...    2. Add audio file in any folders.
+    ...    3. Click Folder up button.
+    ...    4. The system should navigate to one folder up.
+    [Tags]    Regression    PEP-424
+    Change To Audio    1
+    Click Link Audio Link    1
+    Audio Handler Should Be Open
+    Go To Audio Frame
+    Add Folder    ${TEST_NAME}
+    Go To Folder    ${TEST_NAME}
+    Upload Sound File    ${AUDIO FILE}
+    Go Out Of Frame
+    Go To Audio Frame
+    Folder Up
+    Current Folder Should Be    /
+    Go Out Of Frame
+    Save Successfully
+
+Reg_VM_11
+    [Documentation]    1. Click *Back* button.
+    ...    2. System should navigate to the main page of the message page.
+    [Tags]    Regression
+    Change To Audio    1
+    Click Link Audio Link    1
+    Audio Handler Should Be Open
+    Go To Audio Frame
+    Go Back To Audio Block    1
+    Prompts Table Should Be Visible
+    Save Successfully
+
+Reg_VM_13
+    [Documentation]    1. Click *Audio* button.
+    ...    2. System should add new audio prompt.
+    [Tags]    Regression
+    Add Audio Prompt Block    2
+    Save Successfully
+
+Reg_VM_14
+    [Documentation]    1. Click *Text-to-Speech* button.
+    ...    2. System should add new Text -to-speech prompt.
+    [Tags]    Regression
+    Add TTS Prompt Block    2
+    Save Successfully
+
+Reg_VM_15
+    [Documentation]    1. Click *Variable* button.
+    ...    2. System should add the new variable line.
+    [Tags]    Regression
+    Add Variable Prompt Block    2
+    Save Successfully
+
+Reg_VM_16
+    [Documentation]    1. Click *Using Variables* link.
+    ...    2. The Working with Variables link should be open in the new window.
+    [Tags]    Regression
+    Click Using Variables Link
+    Using Variable Window Should Be Open
+    Close Popup Window
+
+Reg_VM_17
+    [Documentation]    1. Select any audio prompt or Text-to-speech prompt or variable prompt.
+    ...    2. Click *delete* buton..
+    ...    3. System should delete the selected prompt.
+    [Tags]    Regression
+    Add Audio Prompt Block    2
+    Add TTS Prompt Block    3
+    Add Variable Prompt Block    4
+    Select Audio Prompts Checkbox    2
+    Select Audio Prompts Checkbox    3
+    Select Audio Prompts Checkbox    4
+    Click Delete Button
+    Save Successfully
+    Audio Prompt Block Should Not Exist    2
+    Audio Prompt Block Should Not Exist    3
+    Audio Prompt Block Should Not Exist    4
+
+Reg_VM_18
+    [Documentation]    1. User can make the selected prompts up \ by clicking *Up* button (if the prompts are more than one, the button would display and do work)
+    [Tags]    Regression
+    Add TTS Prompt Block    2
+    Select Audio Prompts Checkbox    2
+    Click Up Button
+    TTS Prompt Block Should Be Open    1
+    Save Successfully
+
+Reg_VM_19
+    [Documentation]    1. User can make the selected prompts down \ by clicking *Down* button \ (if the prompts are more than one, the button would display and do work)
+    [Tags]    Regression
+    Add TTS Prompt Block    2
+    Select Audio Prompts Checkbox    1
+    Click Down Button
+    TTS Prompt Block Should Be Open    1
+    Save Successfully
+
+Reg VM 20
+    [Documentation]    1. User can select destination for recordings : New mailbox and existed mailboxes. 2. Save it check if it is wrong or not
+    [Tags]    Regression
+    VM Mailbox Should Be    Inbox
+    VM Select Mailbox    New Mailbox
+    Save Successfully
+
+Reg_VM_21-1
+    [Documentation]    1. User can select the variables: New Variable, 2. Save page and the selection should be *NewVoicemailPage *.
+    [Tags]    Regression
+    VM Select Response Storage Variable    New Variable
+    Save Page
+    Save Done Tip Should Be Open
+    VM Response Storage Variable Should Be    NewVoicemailPage \
+
+Reg_VM_21-2
+    [Documentation]    1. User can select the variables: Select a Variable, 2. Save page and system should allow to save without any error.
+    [Tags]    Regression
+    VM Select Response Storage Variable    Select a Variable
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_VM_21-3
+    [Documentation]    1. User can select the variables: a Existing Variable, 2. Save page and system should allow to save without any error.
+    [Tags]    Regression
+    [Setup]
+    Create One Variable    NewVar1
+    Go To Site Overview
+    Create Voice Mail Page
+    VM Select Response Storage Variable    NewVar1 \
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_VM_22
+    [Documentation]    1. User can edit variables in Site Variables by clicking *Edit Variables* link.
+    [Tags]    Regression    PEP-144
+    [Setup]
+    Create One Variable    NewVar2
+    Go To Site Overview
+    Create Voice Mail Page
+    VM Select Response Storage Variable    NewVar2 \
+    Click Edit Variables Link
+    Site Variables Page Should Be Open
+    Modify Site Variable By Name    NewVar2    NewVar3
+    Save&Exit Page
+    Voice Mail Page Should Be Open
+    VM Response Storage Variable Should Be    NewVar3 \
+
+Reg_VM_23-1
+    [Documentation]    1.User can set destination page: New page, 2. save the page and the system should allow to save without any error.
+    [Tags]    Regression
+    VM Action Type Should Be    @{VM ACTION TYPES}[0]
+    VM Select Destination Page    @{NEW VPAGES}[0]
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_VM_23-2
+    [Documentation]    1.User can set destination page: Home Page, 2. save the page and the system should allow to save without any error.
+    [Tags]    Regression
+    VM Action Type Should Be    @{VM ACTION TYPES}[0]
+    VM Select Destination Page    Home Page
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_VM_23-3
+    [Documentation]    1.User can set destination page: Existing Page, 2. save the page and the system should allow to save without any error.
+    [Tags]    Regression
+    VM Action Type Should Be    @{VM ACTION TYPES}[0]
+    VM Select Destination Page    1 - Greeting
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_VM_23-4
+    [Documentation]    1.User can set destination page: page in another site, 2. save the page and the system should allow to save without any error.
+    [Tags]    Regression
+    VM Action Type Should Be    @{VM ACTION TYPES}[0]
+    VM Select Destination Page    A Page in Another Site
+    VPage Select Should Be Open
+    Go To Choose Another Site Page    1
+    Switch To New Window    ${BROWSER ALL PAGES TITLE}
+    Run Keyword If    ${runsInFirefox}    Choose Voice Site In Browse Voice Pages    ${SITE NUMBER}
+    Switch To Main Window
+    VPage Chosen Site Number Should Be    ${SITE NUMBER}
+    Save Page Named As Test Case
+    Run Keyword If    ${runsInFirefox}    Save Done Tip Should Be Open
+
+Reg_VM_24
+    [Documentation]    1. User can set Go back as Action and Destination Go To Page Selector should not be visible. 2. Save page and system should allow to save without any error.
+    [Tags]    Regression
+    VM Select Action Type    @{VM ACTION TYPES}[1]
+    VM Destination GoToPage Selector Should Not Exsit
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_VM_25
+    [Documentation]    1. User can set End the call as Action and Destination Go To Page Selector should not be visible. 2. Save page and system should allow to save without any error.
+    [Tags]    Regression
+    VM Select Action Type    @{VM ACTION TYPES}[2]
+    VM Destination GoToPage Selector Should Not Exsit
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open

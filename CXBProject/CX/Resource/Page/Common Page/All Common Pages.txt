@@ -1,0 +1,28 @@
+*** Settings ***
+Resource          CX Builder Page.txt
+Resource          CX Builder-Voice Sites Page.txt
+Resource          Home Page.txt
+Resource          Login Frame.txt
+Resource          New Voice Site Page.txt
+Resource          Site Overview.txt
+Resource          Login Page.txt
+Resource          New Voice Site Page.txt
+Resource          Site Variables Page.txt
+Resource          VPage Select.txt
+Resource          Angel Header.txt
+Resource          Left Navigation Panel.txt
+Resource          Data File Properties.txt
+Resource          No Match.txt
+Resource          No Input.txt
+Resource          Barge In.txt
+Resource          Audio Files.txt
+Resource          Audio Block.txt
+Resource          ASR Settings.txt
+Resource          Whisper.txt
+Resource          Advanced Option Tab.txt
+Resource          Confirmation.txt
+Resource          Logout.txt
+Resource          Account Settings.txt
+Resource          API Key Management.txt
+Resource          system_command.txt
+Resource          Site Properties.txt

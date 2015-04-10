@@ -3,6 +3,7 @@ __author__ = 'xyang'
 import os
 import shutil
 import fileinput
+import re
 
 class manageFile():
 
@@ -74,6 +75,6 @@ if __name__ == '__main__':
     comment = "#test_case"
     count = 0
     #fp.remove_character(path,count,testcase,2)
-    fp.add_character(path,count,testcase,comment)
-    #fp.append_file(path,despath,"digit_fr_8")
+    #fp.add_character(path,count,testcase,comment)
+    fp.append_file(path,despath,"digit_fr_8")
     #fp.append_file_mem()

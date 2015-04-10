@@ -1,0 +1,146 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../Common Elements.txt
+Resource          ../../../resource.txt
+Resource          ../../Dictionary.txt
+
+*** Variables ***
+${ASSIGN_LEFT_CONSTANT_TEXT}    name=blocks_@INDEX@_initializers_0_leftConstant
+@{ASSIGN TYPE KEYS}    Constant    Variable    Random
+${ASSIGN_LEFT_VAR_SELECTOR}    id=blocks_@INDEX@_initializers_0_leftVar_varID
+${ASSIGN_RAN_NUM_FROM_TEXT}    name=blocks_@INDEX@_initializers_0_fromNumber
+${ASSIGN_RAN_NUM_TO_TEXT}    name=blocks_@INDEX@_initializers_0_toNumber
+@{ASSIGN RAN TYPES}    Number    Numeric    Alphabetic    Alpha Numeric
+${ASSIGN_RAN_TYPE_SELECTOR}    id=blocks_@INDEX@_initializers_0_randomType
+${ASSIGN_NUM_LEN_TEXT}    name=blocks_@INDEX@_initializers_0_numericLength
+${ASSIGN DEFAULT NUM LENGTH}    5
+${ASSIGN_ALPHA_NUM_LEN_TEXT}    name=blocks_@INDEX@_initializers_0_alphaNumericLength
+${ASSIGN_TRAN_CHECKBOX}    name=blocks_@INDEX@_selected
+${ASSIGN_TRAN_CHECKBOX2}    name=blocks_@INDEX@_selected
+${ASSIGNTO_VAR_SELECTOR}    id=blocks_@INDEX@_initializers_0_assignToVar_varID
+${ASSIGN_TYPE_KEY_SELECTOR}    id=blocks_@INDEX@_initializers_0_typesKey
+${ASSIGN_ALPHABETIC_LEN_TEXT}    name=blocks_@INDEX@_initializers_0_alphabeticLength
+
+*** Keywords ***
+Assignment Block Should Be Open
+    [Arguments]    ${index}=1
+    ${ASSIGNTO_VAR_SELECTOR}    Generate Locator By Decreasing One    ${ASSIGNTO_VAR_SELECTOR}    ${index}
+    ${ASSIGN_TYPE_KEY_SELECTOR}    Generate Locator By Decreasing One    ${ASSIGN_TYPE_KEY_SELECTOR}    ${index}
+    ${ASSIGN_LEFT_CONSTANT_TEXT}    Generate Locator By Decreasing One    ${ASSIGN_LEFT_CONSTANT_TEXT}    ${index}
+    Wait Until Page Contains Element    ${ASSIGNTO_VAR_SELECTOR}
+    List Selection Should Be    ${ASSIGNTO_VAR_SELECTOR}    @{SITE VARIABLES}[0]
+    List Selection Should Be    ${ASSIGN_TYPE_KEY_SELECTOR}    @{ASSIGN TYPE KEYS}[0]
+    Textfield Value Should Be    ${ASSIGN_LEFT_CONSTANT_TEXT}    ${EMPTY}
+
+Input Assignment Left Constant
+    [Arguments]    ${constant}    ${index}=1
+    ${ASSIGN_LEFT_CONSTANT_TEXT}    Generate Locator By Decreasing One    ${ASSIGN_LEFT_CONSTANT_TEXT}    ${index}
+    Input Text    ${ASSIGN_LEFT_CONSTANT_TEXT}    ${constant}
+
+Choose Assignment Operator
+    [Arguments]    ${key}    ${index}=1
+    ${ASSIGN_TYPE_KEY_SELECTOR}    Generate Locator By Decreasing One    ${ASSIGN_TYPE_KEY_SELECTOR}    ${index}
+    Select From List By Label    ${ASSIGN_TYPE_KEY_SELECTOR}    ${key}
+
+Choose Assignment Right Variable By Value
+    [Arguments]    ${var}    ${index}=1
+    ${ASSIGN_LEFT_VAR_SELECTOR}    Generate Locator By Decreasing One    ${ASSIGN_LEFT_VAR_SELECTOR}    ${index}
+    Wait Until Page Contains Element    ${ASSIGN_LEFT_VAR_SELECTOR}
+    Click Element    ${ASSIGN_LEFT_VAR_SELECTOR}
+    Run Keyword And Ignore Error    Click Element    ${COMMENTS_TEXT}
+    Select From List By Value    ${ASSIGN_LEFT_VAR_SELECTOR}    ${var}
+
+Choose Assignment Random Type
+    [Arguments]    ${type}    ${index}=1
+    ${ASSIGN_RAN_TYPE_SELECTOR}    Generate Locator By Decreasing One    ${ASSIGN_RAN_TYPE_SELECTOR}    ${index}
+    Select From List By Value    ${ASSIGN_RAN_TYPE_SELECTOR}    ${type}
+
+Input Assignment Random From Number
+    [Arguments]    ${from}    ${index}=1
+    ${ASSIGN_RAN_NUM_FROM_TEXT}    Generate Locator By Decreasing One    ${ASSIGN_RAN_NUM_FROM_TEXT}    ${index}
+    Input Text    ${ASSIGN_RAN_NUM_FROM_TEXT}    ${from}
+
+Input Assignment Random To Number
+    [Arguments]    ${to}    ${index}=1
+    ${ASSIGN_RAN_NUM_TO_TEXT}    Generate Locator By Decreasing One    ${ASSIGN_RAN_NUM_TO_TEXT}    ${index}
+    Input Text    ${ASSIGN_RAN_NUM_TO_TEXT}    ${to}
+
+Input Assignment Random Numeric Length
+    [Arguments]    ${len}    ${index}=1
+    ${ASSIGN_NUM_LEN_TEXT}    Generate Locator By Decreasing One    ${ASSIGN_NUM_LEN_TEXT}    ${index}
+    Input Text    ${ASSIGN_NUM_LEN_TEXT}    ${len}
+
+Input Assignment Alphabetic Length
+    [Arguments]    ${len}    ${index}=1
+    ${ASSIGN_ALPHABETIC_LEN_TEXT}    Generate Locator By Decreasing One    ${ASSIGN_ALPHABETIC_LEN_TEXT}    ${index}
+    Input Text    ${ASSIGN_ALPHABETIC_LEN_TEXT}    ${len}
+
+Input Assignment Alpha Number Length
+    [Arguments]    ${len}    ${index}=1
+    ${ASSIGN_ALPHA_NUM_LEN_TEXT}    Generate Locator By Decreasing One    ${ASSIGN_ALPHA_NUM_LEN_TEXT}    ${index}
+    Input Text    ${ASSIGN_ALPHA_NUM_LEN_TEXT}    ${len}
+
+Choose Assignment Left Variable By Label
+    [Arguments]    ${var}    ${index}=1
+    ${ASSIGN_LEFT_VAR_SELECTOR}    Generate Locator By Decreasing One    ${ASSIGN_LEFT_VAR_SELECTOR}    ${index}
+    Click Element    ${ASSIGN_LEFT_VAR_SELECTOR}
+    Run Keyword And Ignore Error    Click Element    ${COMMENTS_TEXT}
+    Select From List By Label    ${ASSIGN_LEFT_VAR_SELECTOR}    ${var}
+
+Assignment Variable Should Be
+    [Arguments]    ${value}    ${index}=1
+    ${ASSIGNTO_VAR_SELECTOR}    Generate Locator By Decreasing One    ${ASSIGNTO_VAR_SELECTOR}    ${index}
+    ${pageSelected}=    Get Selected List Label    ${ASSIGNTO_VAR_SELECTOR}
+    Should Contain    ${pageSelected}    ${value}
+
+Choose Assignment Right Variable Randomly
+    [Arguments]    ${index}=1
+    ${option}=    Get Random Option From X    ${SITE VARIABLES}    1
+    Choose Assignment Right Variable By Value    ${option}    ${index}
+
+Assignment Random From Number Should Be
+    [Arguments]    ${value}    ${index}=1
+    ${ASSIGN_RAN_NUM_FROM_TEXT}    Generate Locator By Decreasing One    ${ASSIGN_RAN_NUM_FROM_TEXT}    ${index}
+    Textfield Value Should Be    ${ASSIGN_RAN_NUM_FROM_TEXT}    ${value}
+
+Assignment Random To Number Should Be
+    [Arguments]    ${value}    ${index}=1
+    ${ASSIGN_RAN_NUM_TO_TEXT}    Generate Locator By Decreasing One    ${ASSIGN_RAN_NUM_TO_TEXT}    ${index}
+    Textfield Value Should Be    ${ASSIGN_RAN_NUM_TO_TEXT}    ${value}
+
+Assignment Random Numeric Length Should Be
+    [Arguments]    ${value}    ${index}=1
+    ${ASSIGN_NUM_LEN_TEXT}    Generate Locator By Decreasing One    ${ASSIGN_NUM_LEN_TEXT}    ${index}
+    Textfield Value Should Be    ${ASSIGN_NUM_LEN_TEXT}    ${value}
+
+Assignment Random Alphabetic Length Should Be
+    [Arguments]    ${value}    ${index}=1
+    ${ASSIGN_ALPHABETIC_LEN_TEXT}    Generate Locator By Decreasing One    ${ASSIGN_ALPHABETIC_LEN_TEXT}    ${index}
+    Textfield Value Should Be    ${ASSIGN_ALPHABETIC_LEN_TEXT}    ${value}
+
+Assignment Random Alpha Numeric Length Should Be
+    [Arguments]    ${value}    ${index}=1
+    ${ASSIGN_ALPHA_NUM_LEN_TEXT}    Generate Locator By Decreasing One    ${ASSIGN_ALPHA_NUM_LEN_TEXT}    ${index}
+    Textfield Value Should Be    ${ASSIGN_ALPHA_NUM_LEN_TEXT}    ${value}
+
+Assignment Constant Should Be
+    [Arguments]    ${value}    ${index}=1
+    ${ASSIGN_LEFT_CONSTANT_TEXT}    Generate Locator By Decreasing One    ${ASSIGN_LEFT_CONSTANT_TEXT}    ${index}
+    Textfield Value Should Be    ${ASSIGN_LEFT_CONSTANT_TEXT}    ${value}
+
+Assignment Operator Should Be
+    [Arguments]    ${value}    ${index}=1
+    ${ASSIGN_TYPE_KEY_SELECTOR}    Generate Locator By Decreasing One    ${ASSIGN_TYPE_KEY_SELECTOR}    ${index}
+    ${pageSelected}=    Get Selected List Label    ${ASSIGN_TYPE_KEY_SELECTOR}
+    Should Contain    ${pageSelected}    ${value}
+
+Assignment Random Type Should Be
+    [Arguments]    ${value}    ${index}=1
+    ${ASSIGN_RAN_TYPE_SELECTOR}    Generate Locator By Decreasing One    ${ASSIGN_RAN_TYPE_SELECTOR}    ${index}
+    ${pageSelected}=    Get Selected List Label    ${ASSIGN_RAN_TYPE_SELECTOR}
+    Should Contain    ${pageSelected}    ${value}
+
+Assignment Nemeric Length Should Be
+    [Arguments]    ${value}    ${index}=1
+    ${ASSIGN_NUM_LEN_TEXT}    Generate Locator By Decreasing One    ${ASSIGN_NUM_LEN_TEXT}    ${index}
+    Textfield Value Should Be    ${ASSIGN_NUM_LEN_TEXT}    ${value}

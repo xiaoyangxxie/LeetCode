@@ -1,0 +1,119 @@
+*** Settings ***
+Test Setup        Create Schedule Page
+Resource          ../resource.txt
+
+*** Test Cases ***
+Reg_Sch_01
+    [Documentation]    Time Blocks - Time Zone drop down
+    ...
+    ...    User shall select the different time zone to schedule the voice site.
+    [Tags]    Regression
+    Choose Different Time Zones And Save Page    [GMT -12.0] Etc/GMT+12 - GMT-12:00    [GMT -5.0] EST - Eastern Standard Time    [GMT +5.5] Asia/Kolkata - India Standard Time    [GMT 0.0] Africa/Ouagadougou - Greenwich Mean Time    [GMT +14.0] Pacific/Kiritimati - Line Is. Time
+    comment    [GMT -7.0] America/Los_Angeles - Pacific Standard Time    [GMT -5.0] America/Chicago - Central Standard Time
+
+Reg_Sch_02
+    [Documentation]    Time Blocks - Day drop down
+    ...
+    ...    User shall select different days to schedule the voice pages.
+    [Tags]    Regression
+    Choose Different Days And Save Page    Mondays    Wednesdays    Weekdays (Mon-Fri)
+    Choose Different Days And Save Page    Weekends (Sat & Sun)    Tuesdays    Thursdays
+    Choose Different Days And Save Page    Fridays    Saturdays    Sundays
+
+Reg_Sch_03 Reg_Sch_04
+    [Documentation]    Validation of multiple combinations of valid and invalid from and to time
+    [Tags]    Regression
+    Input Correct Time    8:00 AM    8:00 PM
+    Input Correct Time    8:03:21 AM    16:34:56
+    Input From Time Greater Than To Time    8:00 AM    7:00 AM
+    Incorrect Time Validation
+    Incorrect Time Format Validation
+    Blank Time Validation
+    Incorrect and Blank Time Validation
+
+Reg_Sch_05 Reg_Sch_13 Reg_Sch_18
+    [Documentation]    User shall select voice pages to reach in the same and other sites
+    [Tags]    Regression
+    Choose Exisiting Goto Page In Same Site    1 - Greeting
+    Choose New Goto Page In Same Site    New Call Transfer Page
+    Choose Existing Goto Page In Another Voice Site
+
+Reg_Sch_06
+    [Documentation]    User shall select voice pages to reach in the same and other sites when the call comes out of the scheduled hours
+    [Tags]    Regression
+    Choose Any Other Time Existing Gotopg Same Site    1 - Greeting
+    Choose Any Other Time Existing Gotopg Other Voice Site
+
+Reg_Sch_07
+    [Documentation]    Deleting a schedule
+    ...    "1. Select a schedule check box.
+    ...    2. Click on delete button.
+    ...    3. System should delete the selected schedule."
+    [Tags]    Regression
+    Choose Different Days And Save Page    Mondays    Wednesdays    Weekdays (Mon-Fri)
+    Scroll Down Page    500
+    Select Schedule Checkbox    3
+    Click Delete Button
+    Wait Until Element Is visable 10sec    ${SCH_PG_TIMEZONE_DROPDOWN}
+    Scroll Down Page    500
+    Page Should Not Contain Schedule    3
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_Sch_08
+    [Documentation]    User can add time blocks to schedule.
+    ...    "1. Click on Add Time Block
+    ...    2. System should be able to add a time block."
+    [Tags]    asr
+    Select All Time Block
+    Delete Time Block By Js
+    Comment    Select Schedule Checkbox    2
+    Comment    Click Delete Button
+    Comment    Select Schedule Checkbox    1
+    Comment    Click Delete Button
+    Click Add Time Button
+    Input Correct Time    8:00 AM    8:00 PM
+
+Reg_Sch_09
+    [Documentation]    User can reorder the time blocks. (ascending)
+    ...    "1. Select schedules in random order
+    ...    2. Click on Reorder Time Block.
+    ...    3. System should be able to reorder the time blocks in ascending order."
+    [Tags]    Regression
+    Choose Different Days And Save Page    Fridays    Wednesdays    Mondays
+    Click Reorder Time Button
+    Different Days Should Be    Mondays    Wednesdays    Fridays
+
+Reg_Sch_10
+    [Documentation]    User can save the page and see the saved confirmation message
+    ...    "1. Enter details
+    ...    2. Save Page
+    ...    3. The details should be saved and the saved confirmation message should be displayed in the same page"
+    [Tags]    Regression
+    Choose Different Days And Save Page    Fridays    Wednesdays    Mondays
+
+Reg_Sch_11
+    [Documentation]    User can exit the page and details will not be saved
+    ...    "1. Enter details
+    ...    2. Exit Page
+    ...    3. The details should not be saved and navigate to the Site Overview page."
+    [Tags]    Regression
+    Input Page Number    156
+    Exit Page
+    Verify Page Title    ${VOICE SITE PAGE TITLE}
+    Page Number Should Not Exist    156
+
+Reg_Sch_12
+    [Documentation]    Edit name of the page and save
+    ...    "1. Create page with a specific page name and number
+    ...    2. Edit Page name and save page
+    ...    3. Verify edited page name."
+    [Tags]    Regression
+    Input Page Name    ${TEST_NAME}
+    Input Page Number    100
+    Save Page
+    Save Done Tip Should Be Open
+    Input Page Name    ${EDIT_PAGE_NAME}
+    Save&Exit Page
+    Page Name Should Exist    ${EDIT_PAGE_NAME}
+    Page Number Should Exist    100

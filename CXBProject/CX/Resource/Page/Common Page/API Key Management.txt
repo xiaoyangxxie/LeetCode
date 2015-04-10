@@ -1,0 +1,54 @@
+*** Settings ***
+Resource          ../../../resource.txt
+
+*** Variables ***
+${API_KEY_MANAGEMENT}    xpath=//a[@href='/APIKeyManager?command=display']
+${Active}         name=deleteKey
+${API_ACTIVATE}    css=input[value='Activate']
+${API_DELETE}     css=input[value='Delete']
+${API_NEW_KEY}    name=New Key
+${KEY}            xpath=//*[@id='bodyContainer']//tr/td[1]/span[2]
+${GENERATE_API_KEY_MESSAGE}    Click the "Activate" button to generate your API key.
+
+*** Keywords ***
+Click Api Management
+    Go To Account Settings
+    Wait Until Keyword Succeeds    10sec    1sec    Click Element    ${API_KEY_MANAGEMENT}
+
+Click API Active
+    Wait Until Page Contains    Angel API Keys dont expire
+    ${status}    Run Keyword And Return Status    Page Should Contain Element    ${API_ACTIVATE}
+    Run Keyword If    ${status}==True    Click Element    ${API_ACTIVATE}
+
+Api Key Is Not Empty
+    ${keyvalue}    Get Text    ${KEY}
+    Should Not Be Empty    ${keyvalue}
+
+Click New Api
+    ${status}    Run Keyword And Return Status    Page Should Contain Element    ${API_NEW_KEY}
+    ${keyvalue}    Get Text    ${KEY}
+    Run Keyword If    ${status}==True    Click Element    ${API_NEW_KEY}
+    ${newkeyvalue}    Get Text    ${KEY}
+    Run Keyword If    ${status}==True    Should Not Be Equal As Strings    ${keyvalue}    ${newkeyvalue}
+
+Click Delete Api Key
+    ${status}    Run Keyword And Return Status    Page Should Contain Element    ${API_DELETE}
+    Run Keyword If    ${status}==True    Click Element    ${API_DELETE}
+    sleep    2
+    Choose Ok On Next Confirmation
+    sleep    3
+    Run Keyword If    ${status}==True    Generate Api Key Message Should Be Here
+
+Generate Api Key Message Should Be Here
+    Wait Until Keyword Succeeds    10sec    1sec    Page Should Contain    ${GENERATE_API_KEY_MESSAGE}
+
+Change Password
+    Input Pin And Password    ${FOUR_DIGIT}    ${FOUR_DIGIT}    ${NEW_PASSWORD_ENTER}    ${NEW_PASSWORD_ENTER}
+    Select Question    @{SECURITY_QUESTION_LIST}[1]    zhejiangzhoushan
+    Save Page
+    Save Done Tip Should Be Open
+    User Log Out CXB
+    Input Email    ${LOGIN EMAIL}
+    Input Passwd    ${NEW_PASSWORD_ENTER}
+    Submit Credentials
+    Home Page Should Be Open

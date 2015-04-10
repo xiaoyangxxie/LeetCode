@@ -1,0 +1,68 @@
+*** Settings ***
+Test Setup        Run Keywords    Create Question Page    AND    Open Advanced Option Tab
+Resource          ../resource.txt
+
+*** Test Cases ***
+Reg_Ques_78
+    [Documentation]    Advance Settings - Link - Why (barge-in)
+    ...
+    ...    The Barge-in information message should be open in new window.
+    [Tags]    Regression
+    Click Why Link
+    New Window Title Should Be    Barge-in
+    Close Popup Window
+
+Reg_Ques_79
+    [Documentation]    Advance Settings - Barge-in \ - On
+    ...
+    ...    Callers can interrupt prompt playback with voice or touch-tone input
+    [Tags]    Regression
+    Barge In Should Be On
+
+Reg_Ques_80
+    [Documentation]    Advance Settings - Barge-in \ - Off
+    ...
+    ...    Callers must listen to the full prompt before voice or touch-tone input.
+    [Tags]    Regression
+    Turn Off Barge In
+    Barge In Should Be Off
+    Save Successfully
+
+Reg_Ques_81
+    [Documentation]    Advance Settings - Disable Site Commands
+    ...
+    ...    User can Disable Site Commands control by selecting the "Disable Site Commands" check box.
+    [Tags]    Regression
+    Disable Site Commands
+    Disable Site Commands Should Be Selected
+    Save Successfully
+
+Reg_Ques_82
+    [Documentation]    Advance Settings - Disable Site Commands - Why link
+    ...
+    ...    The Why Disable Site Commands? information message should be open in new window.
+    [Tags]    Regression
+    Click Why Link    2
+    New Window Title Should Be    Why Disable Site Commands?
+    Close Popup Window
+
+Reg_Ques_83
+    [Documentation]    Advance Settings - Response Filters
+    ...
+    ...    "1. User can specify the ""Pre"" and ""Post"" keywords alson with the caller's response.
+    ...    2. User can enter the keywords in the ""Pre"" and ""Post"" text boxes."
+    [Tags]    Regression
+    Input Response Filters Pre Value    pretest
+    Input Response Filters Post Value    postest
+    Save Successfully
+    Response Filters Pre Value Should Be    pretest
+    Response Filters Post Value Should Be    postest
+
+Reg_Ques_84
+    [Documentation]    Advance Settings - Response Filters - Why link
+    ...
+    ...    The Response filters informations should be open in new window.
+    [Tags]    Regression
+    Click Working with Keywords Link
+    New Window Title Should Be    Working with Keywords
+    Close Popup Window

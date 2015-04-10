@@ -1,0 +1,165 @@
+*** Settings ***
+Test Setup        Run Keywords    Create Call Transfer Page    AND    Open Advanced Option Tab    AND    CT Advanced Option Tab Should Be Open
+Force Tags
+Resource          ../Testflow/Util.txt
+Resource          ../Resource/Page/Call Transfer Page/Call Transfer Page.txt
+
+*** Test Cases ***
+Reg_CT_77
+    [Documentation]    Open *Advanced Options* tab, click *Why?* link, new window should be open.
+    [Tags]    Regression
+    Click Why Link
+    New Window Title Should Be    Barge-in
+    Close Popup Window
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_78
+    [Documentation]    Open *Advanced Options* tab, click *On* radio button.
+    [Tags]    Regression
+    Turn On Barge In
+    Barge In Should Be On
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_79
+    [Documentation]    Open *Advanced Options* tab, click *Off* radio button.
+    [Tags]    Regression
+    Turn Off Barge In
+    Barge In Should Be Off
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_80
+    [Documentation]    Open *Advanced Options* tab, verify *Disable Site Commands* checkbox should be disable, click *Main* tab, select other actions except *Listen for Site Commands*, open *Advanced Options* tab, user should select the *Disable Site Commands* checkbox.
+    [Tags]    Regression
+    Disable Site Commands
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_81-1
+    [Documentation]    Open *Advanced Options* tab, use can select *Play On-hold Music* checkbox.
+    [Tags]    Regression
+    Select Play On Hold Music Checkbox    1
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_81-2
+    [Documentation]    Open *Advanced Options* tab, click *Link Audio* link, use can choose audio file as play on_hold music.
+    [Tags]    Regression
+    Click Link Audio Link    1
+    Audio Handler Should Be Open
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_82
+    [Documentation]    Open *Advanced Options* tab, User can select the *Allow caller to be redirected to a Voice Page* check box to allow caller to be redirected to a Voice Page after the call has been transferred.
+    [Tags]    Regression
+    Select Allow Caller To Be Redirected To Voice Page Checkbox
+    Allow Caller To Be Redirected To Voice Page Block Should Be Open
+    Save Page
+    Red Notice Should Display    The touch-tone value must be specified as a * followed by one or more digits.
+
+Reg_CT_83-1
+    [Documentation]    Open *Advanced Options* tab, click *Customize Caller ID* checkbox, input *Caller ID* with 4 digits, User can specify the customized caller id for the transfer agent.
+    [Tags]    Regression
+    Select Customize Caller ID Checkbox
+    Customize Caller ID Block Should Be Open
+    Scroll Down Page    500
+    CT Input Caller ID    1111
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_83-2
+    [Documentation]    Open *Advanced Options* tab, click *Customize Caller ID* checkbox, select caller id type *Variable*, select *New Variable* as caller id, User can specify the customized caller id for the transfer agent.
+    [Tags]    Regression
+    Select Customize Caller ID Checkbox
+    Customize Caller ID Block Should Be Open
+    CT Select Caller ID Type    @{CALLER ID TYPES}[1]
+    CT Select Caller ID Variable    New Variable
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_83-3
+    [Documentation]    Open *Advanced Options* tab, click *Customize Caller ID* checkbox, select *Number in Account* as caller id type, User can specify the customized caller id for the transfer agent.
+    [Tags]    Regression
+    Select Customize Caller ID Checkbox
+    Customize Caller ID Block Should Be Open
+    CT Select Caller ID Type    @{CALLER ID TYPES}[2]
+    CT Account Caller ID Selector Should Be Visible
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_84-1
+    [Documentation]    Open *Advanced Options* tab, click *Limit Call Duration* checkbox, input duration time, User can limit the transfer call duration by entering the seconds in the provided text box.
+    [Tags]    Regression
+    CT Select Limit Call Duration Checkbox
+    CT Limit Call Duration Block Should Be Visible
+    CT Input Limit Call Duration    60
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_84-2
+    [Documentation]    Open *Advanced Options* tab, click *Limit Call Duration* checkbox, click *Use Variable* link, choose *New Variable*, User can limit the transfer call duration by entering the seconds in the provided text box.
+    [Tags]    Regression
+    CT Select Limit Call Duration Checkbox
+    CT Limit Call Duration Block Should Be Visible
+    Click Use Variable Img    1
+    CT Select Limit Call Duration Variable    New Variable
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_84-3
+    [Documentation]    Open *Advanced Options* tab, click *Limit Call Duration* checkbox, click *Warn Caller Expired Time* checkbox, User can also specify the warning message about to expire time of the transfer call.
+    [Tags]    Regression
+    CT Select Limit Call Duration Checkbox
+    CT Limit Call Duration Block Should Be Visible
+    CT Select Warn Call Expired Time Checkbox
+    CT Input Warn Call Expired Time    20
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_84-4
+    [Documentation]    Open *Advanced Options* tab, click *Limit Call Duration* checkbox, warning message file can be managed by *Link Audio* *Clear* *Play* links.
+    [Tags]    Regression
+    CT Select Limit Call Duration Checkbox
+    CT Limit Call Duration Block Should Be Visible
+    Click Link Audio Link    2
+    Audio Handler Should Be Open
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_85-1
+    [Documentation]    Open *Advanced Options* tab, select *New Variable* for *Talk Time* store variable, save page and the selection should be *TalkTime*.
+    [Tags]    Regression
+    CT Select Talk Time Store Variable    New Variable
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+    CT Talk Time Store Variable Should Be    TalkTime \
+
+Reg_CT_85-2
+    [Documentation]    Open *Advanced Options* tab, select *New Variable* for *Call Outcome* store variable, save page and the selection should be *CallOutcome*.
+    [Tags]    Regression
+    CT Select Call Outcome Store Variable    New Variable
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+    CT Call Outcome Store Variable Should Be    CallOutcome \
+
+Reg_CT_85-3
+    [Documentation]    Open *Advanced Options* tab, select *New Variable* for *Referrer* store variable, save page and the selection should be *Referrer*.
+    [Tags]    Regression
+    CT Select Referrer Store Variable    New Variable
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+    CT Referrer Store Variable Should Be    Referrer \
+
+Reg_CT_85-4
+    [Documentation]    Open *Advanced Options* tab, select *New Variable* for *Talk Time* store variable, save page and the selection should be *TalkTime*, click the first *Edit Variables* link, the site variable page should be open.
+    [Tags]    Regression
+    CT Select Talk Time Store Variable    New Variable
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+    CT Talk Time Store Variable Should Be    TalkTime \
+    Scroll Down Page    800
+    Advanced Options.Click Edit Variables Link    1
+    Site Variables Page Should Be Open

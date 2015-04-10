@@ -1,0 +1,26 @@
+*** Settings ***
+Resource          ../../../resource.txt
+Library           Selenium2Library
+Resource          SMS Main.txt
+Resource          SMS Advanced.txt
+
+*** Keywords ***
+Create SMS Page
+    Set Selenium Implicit Wait    0
+    Wait Until Keyword Succeeds    10sec    0.5sec    Select Label    ${PAGE_TYPE_SELECTOR}    SMS Page
+    Set Selenium Implicit Wait    ${IMPLICT WAIT}
+    SMS Page Should Be Open
+
+SMS Page Should Be Open
+    Wait Util Page Fully Loaded
+    Title Should Be    Angel.com - SMS Page
+    ${pageURL}    Get Location
+    Set Test Variable    ${pageURL}
+    ${expectLink}=    Get Expect Navi Link    @{NEWVPages}[9]
+    NaviLink Should Be    ${expectLink}
+    Page Name Should Be    @{NEWVPages}[9]
+    Page Number Should Be    ${PAGE NUMBER}
+
+Choose SMS Page Was Sent to go
+    [Arguments]    ${page}
+    Select From List By Label    name=smsSent0SelectBox    ${page}

@@ -1,0 +1,9 @@
+*** Variables ***
+${BASE URL}       http://10.197.55.159:8080/    # required
+${BROWSER}        chrome    #optional, ff/ie/chrome, default--ff
+${LOGIN EMAIL}    xie.yang@genesys.com    # required
+${LOGIN PASSWORD}    1234QWER    # required
+${ENABLE PROFILE}    no    #required, yes/no, yes to use proxy
+${SCREENSHOT ON ERROR}    yes    # optional, yes/no, default--yes
+${EXECUTE SPEED}    0    # optional, define with seconds
+${RECORD OR TEST}    r    #r/record for record, others for test

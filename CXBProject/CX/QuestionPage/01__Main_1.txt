@@ -1,0 +1,193 @@
+*** Settings ***
+Test Setup        Create Question Page
+Library           Selenium2Library
+Resource          ../resource.txt
+
+*** Test Cases ***
+Reg_Ques_01
+    [Documentation]    Main Tab - Initial Prompts
+    ...
+    ...    1.By default, initial prompts text box should be displayed.
+    [Tags]    Regression
+    Prompts Should Exist    1
+
+Reg_Ques_02
+    [Documentation]    Main Tab - Text-to-Speech
+    ...
+    ...    1.User can enter Text to speech message and save.
+    [Tags]    Regression
+    Input Prompts Text    Some message to test.    1
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_Ques_03
+    [Documentation]    Main Tab - Change to Audio
+    ...
+    ...    "1. Click on the 'Arrow' icon.
+    ...    2. In this user can link any audio files to play."
+    [Tags]    Regression
+    Change To Audio    1
+    Link Audio File To Page    ${AUDIO FILE}    1
+    Save Successfully
+
+Reg_Ques_04
+    [Documentation]    Main Tab - Audio button
+    ...
+    ...    User can click the 'Audio' button to add audio prompt for the voice page.
+    [Tags]    Regression
+    Click Audio Button
+    New Audio Prompts Should Be Visible    1
+    Link Audio File To Page    ${AUDIO FILE}    1
+    Save Successfully
+
+Reg_Ques_05
+    [Documentation]    Main Tab - Link - Clear
+    ...
+    ...    "1. Add audio file.
+    ...    2. Click on the Clear link.
+    ...    3. System should clear the selected wav file."
+    [Tags]    Regression
+    Change To Audio
+    Link Audio File To Page    ${AUDIO FILE}    0
+    Audio File Text Should Be    Sent.wav
+    Clear Audio File
+    Save Successfully
+
+Reg_Ques_06
+    [Documentation]    Main Tab - Link - Play
+    ...
+    ...    "1. Add audio file.
+    ...    2. Click on the Play link.
+    ...    3. System should play the selected wav file."
+    [Tags]    Debug    chrome
+    Change To Audio    1
+    Link Audio File To Page    ${AUDIO FILE}    1
+    Play Audio File    Sent.wav    1
+    Save Successfully
+
+Reg_Ques_07
+    [Documentation]    Main Tab - Link - Link \ Audio
+    ...
+    ...    "1. Click on the 'Link to Audio' link.
+    ...    2. System should navigate to page where user can select the audio files."
+    [Tags]    Regression
+    Change To Audio    1
+    Click Link Audio Link    1
+    Audio Handler Should Be Open
+    Save Successfully
+
+Reg_Ques_08
+    [Documentation]    Main Tab - Browse Audio file
+    ...
+    ...    "1. Click browse button.
+    ...    2. System should open the folders to select the audio file."
+    [Tags]    Regression
+    Change To Audio    1
+    Click Link Audio Link    1
+    Audio Handler Should Be Open
+    Go To Audio Frame
+    Choose Audio File    ${AUDIO FILE}
+    Go Out Of Frame
+    Save Successfully
+
+Reg_Ques_09
+    [Documentation]    Main Tab - Add folder
+    ...
+    ...    "1. Enter name for new folder.
+    ...    2. Click on the Add button.
+    ...    3. System should add the new folder."
+    [Tags]    Regression
+    Change To Audio    1
+    Click Link Audio Link    1
+    Audio Handler Should Be Open
+    Go To Audio Frame
+    Add Folder    NewFolder
+    Go Out Of Frame
+    Save Successfully
+
+Reg_Ques_10
+    [Documentation]    Main Tab - Upload Audio file
+    ...
+    ...    "1. Click on the Browse button and select the audio.
+    ...    2. Click on the Upload button to upload it."
+    [Tags]    Regression
+    Change To Audio    1
+    Click Link Audio Link    1
+    Audio Handler Should Be Open
+    Go To Audio Frame
+    Upload Sound File    ${AUDIO FILE}
+    Go Out Of Frame
+    Save Successfully
+
+Reg_Ques_11
+    [Documentation]    Main Tab - Delete Audio
+    ...
+    ...    "1. Select any audio file and click on the delete button.
+    ...    2. System should delete the audio file."
+    [Tags]    Regression
+    Change To Audio    1
+    Click Link Audio Link    1
+    Audio Handler Should Be Open
+    Go To Audio Frame
+    Upload Sound File    ${AUDIO FILE}
+    Delete Audio File    ${filename}
+    Go Out Of Frame
+    Save Successfully
+
+Reg_Ques_12
+    [Documentation]    Main Tab - Folder Up
+    ...
+    ...    "1. Create many folders.
+    ...    2. Add audio file in any folders.
+    ...    3. Click on the Folder up button.
+    ...    4. The system should navigate to one folder up."
+    [Tags]    Regression    PEP-424
+    Change To Audio    1
+    Click Link Audio Link    1
+    Audio Handler Should Be Open
+    Go To Audio Frame
+    Add Folder    NewFolder1
+    Go To Folder    NewFolder1
+    Upload Sound File    ${AUDIO FILE}
+    Go Out Of Frame
+    Go To Audio Frame
+    Folder Up
+    Current Folder Should Be    /
+    Go Out Of Frame
+    Save Successfully
+
+Reg_Ques_13
+    [Documentation]    Main Tab - <<Back
+    ...
+    ...    "1. Click on the 'Back button""
+    ...    2. System should navigate to the main page of the message page."
+    [Tags]    Regression
+    Change To Audio    1
+    Click Link Audio Link    1
+    Audio Handler Should Be Open
+    Go To Audio Frame
+    Go Back To Audio Block    1
+    Prompts Table Should Be Visible
+    Save Successfully
+
+Reg_Ques_14
+    [Documentation]    Main Tab - Variable Button
+    ...
+    ...    "1. Click on the 'Variable button.
+    ...    2. System should add the new variable line."
+    [Tags]    Regression
+    Add Variable Prompt Block    2
+    Variable Prompt Block Should Be Open    2
+    Save Successfully
+
+Reg_Ques_15
+    [Documentation]    Main Tab - Link - Using variables
+    ...
+    ...    "1. Click on the Using Variables link.
+    ...    2. The Working with Variables informations should be open in the new window."
+    [Tags]    Regression
+    Click Using Variables Link
+    Wait Until Keyword Succeeds    30sec    0.5sec    New Window Title Should Be    Working with Variables / IVR Wiki
+    Close Popup Window
+
+*** Keywords ***

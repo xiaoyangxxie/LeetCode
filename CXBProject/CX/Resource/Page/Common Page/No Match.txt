@@ -1,0 +1,109 @@
+*** Settings ***
+Resource          No Input.txt
+
+*** Variables ***
+${NO_MATCH_PROMPT_RADIO}    noMatchStrat_prompts_selected
+${NM_PROMPT_SITE_LEVEL_RADIO}    css=input[name="noMatchPromptLevel"][value="promptSiteLevel"]
+${NM_PROMPT_PAGE_LEVEL_RADIO}    css=input[name="noMatchPromptLevel"][value="promptPageLevel"]
+${NM_NESTED_PROMPT_CHECKBOX}    css=input[name="noMatchStrat_prompts_@INDEX@_nestedPrompts_selector"][value="@NESTED@"]
+${NM_NESTED_MSG_TEXT}    name=noMatchStrat_prompts_@INDEX@_nestedPrompts_@NESTED@_message
+${NM_NESTED_AUDIO_FILE_TEXT}    name=noMatchStrat_prompts_@INDEX@_nestedPrompts_@NESTED@_filetag
+${NM_PROMPT_RADIO_BUTTON}    css=input[name="noMatchStrat_prompts_selected"][value="@INDEX@"]
+
+*** Keywords ***
+No Match Tab Should Be Open
+    Wait Until Keyword Succeeds    5sec    0.5sec    Element Should Be Visible    ${NM_PROMPT_SITE_LEVEL_RADIO}
+    Element Should Be Visible    ${NM_PROMPT_PAGE_LEVEL_RADIO}
+    NM Site Level Should Be Selected
+    Page Should Contain    ${CHECK NI/NM MSG}
+
+NM Site Level Should Be Selected
+    Radio Button Should Be Set To    noMatchPromptLevel    promptSiteLevel
+
+NM Select Page Level
+    Select Radio Button    noMatchPromptLevel    promptPageLevel
+
+NM Select No Match Prompt
+    [Arguments]    ${no}=1
+    ${no}=    Evaluate    int(${no}) - 1
+    ${no}=    Convert To String    ${no}
+    Wait Until Keyword Succeeds    30    1    Select Radio Button    ${NO_MATCH_PROMPT_RADIO}    ${no}
+
+NM No Match Prompt Should Be Selected
+    [Arguments]    ${no}=1
+    ${no}=    Evaluate    int(${no}) - 1
+    ${no}=    Convert To String    ${no}
+    Radio Button Should Be Set To    ${NO_MATCH_PROMPT_RADIO}    ${no}
+
+NM Select Nested Prompts Checkbox
+    [Arguments]    ${no}=1    ${nested}=1
+    ${locator}=    Generate Nested Locator    ${NM_NESTED_PROMPT_CHECKBOX}    ${no}    ${nested}
+    Wait Until Keyword Succeeds    30    1    Select Checkbox    ${locator}
+
+No Match Block Should Be Open
+    Wait Until Keyword Succeeds    5sec    0.5sec    NM No Match Prompt Should Be Selected
+    All Links Should Be Visible
+
+NM Nested Prompts Checkbox Should Be Selected
+    [Arguments]    ${no}=1    ${nested}=1
+    ${locator}=    Generate Nested Locator    ${NM_NESTED_PROMPT_CHECKBOX}    ${no}    ${nested}
+    Checkbox Should Be Selected    ${locator}
+
+NM Nested Variable Block Should Be Open
+    [Arguments]    ${no}=1    ${nested}=1
+    ${locator}=    Generate Nested Locator    ${NM_NESTED_PROMPT_CHECKBOX}    ${no}    ${nested}
+    Wait Until Page Contains Element    ${locator}
+
+NM Nested TTS Block Should Be Open
+    [Arguments]    ${no}=1    ${nested}=1
+    ${locator}=    Generate Nested Locator    ${NM_NESTED_PROMPT_CHECKBOX}    ${no}    ${nested}
+    Wait Until Page Contains Element    ${locator}
+    ${locator}=    Generate Nested Locator    ${NM_NESTED_MSG_TEXT}    ${no}    ${nested}
+    Page Should Contain Element    ${locator}
+    NM Nested TTS Message Should Be    ${TTS TEXT MSG}    ${no}    ${nested}
+
+NM Nested Audio Block Should Be Open
+    [Arguments]    ${no}=1    ${nested}=1
+    ${locator}=    Generate Nested Locator    ${NM_NESTED_PROMPT_CHECKBOX}    ${no}    ${nested}
+    Wait Until Page Contains Element    ${locator}
+    ${locator}=    Generate Nested Locator    ${NM_NESTED_AUDIO_FILE_TEXT}    ${no}    ${nested}
+    Page Should Contain Element    ${locator}
+
+NM Nested Block Should Be Deleted
+    [Arguments]    ${no}=1    ${nested}=1
+    ${locator}=    Generate Nested Locator    ${NM_NESTED_PROMPT_CHECKBOX}    ${no}    ${nested}
+    Wait Until Keyword Succeeds    5sec    0.5sec    Page Should Not Contain Element    ${locator}
+
+NM Nested TTS Message Should Be
+    [Arguments]    ${expected}    ${no}=1    ${nested}=1
+    ${locator}=    Generate Nested Locator    ${NM_NESTED_MSG_TEXT}    ${no}    ${nested}
+    Wait Until Keyword Succeeds    30s    1s    Element Text Should Be    ${locator}    ${expected}
+
+NM Add No Match Prompt Block
+    [Arguments]    ${no}=1
+    Click NI/NM Add Button
+    ${locator}=    Generate Locator By Decreasing One    ${NM_PROMPT_RADIO_BUTTON}    ${no}
+    Page Should Contain Element    ${locator}
+
+NM No Match Prompt Block Should Be Deleted
+    [Arguments]    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${NM_PROMPT_RADIO_BUTTON}    ${no}
+    Wait Until Keyword Succeeds    5sec    0.5sec    Page Should Not Contain Element    ${locator}
+
+NM Copied Prompt Block Should Be Open
+    [Arguments]    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${NM_PROMPT_RADIO_BUTTON}    ${no}
+    Wait Until Page Contains Element    css=input[name="noMatchStrat_prompts_selected"][value="${no}"]
+    ${locator}=    Generate Nested Locator    ${NM_NESTED_AUDIO_FILE_TEXT}    1    1
+    ${file}=    Get Value    ${locator}
+    ${locator}=    Generate Nested Locator    ${NM_NESTED_AUDIO_FILE_TEXT}    ${no}    1
+    ${file1}=    Get Value    name=noMatchStrat_prompts_${no}_nestedPrompts_0_filetag
+    Should Be Equal As Strings    ${file}    ${file1}
+
+Open No Match Tab
+    Open Setting Tab    @{SETTINGS_BOX_TABS}[2]    #Open No Match Tab
+
+NM Nested Audio File Shoule Be
+    [Arguments]    ${filename}    ${no}=1    ${nested}=1
+    ${locator}=    Generate Nested Locator    ${NM_NESTED_AUDIO_FILE_TEXT}    ${no}    ${nested}
+    Wait Until Keyword Succeeds    5sec    0.5sec    Textfield Value Should Be    ${locator}    ${filename}

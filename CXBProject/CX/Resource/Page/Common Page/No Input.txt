@@ -1,0 +1,196 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../Common Elements.txt
+Resource          ../../Dictionary.txt
+
+*** Variables ***
+${NO_SPEECH_PROMPT_RADIO}    noSpeechStrat_prompts_selected
+${UP_LINK}        link=Up
+${DOWN_LINK}      link=Down
+${DELETE_LINK}    link=Delete
+${VAR_LINK}       link=Variable
+${TTS_LINK}       link=Text-to-Speech
+${AUDIO_LINK}     link=Audio
+${NI_NESTED_AUDIO_FILE_TEXT}    name=noSpeechStrat_prompts_@INDEX@_nestedPrompts_@NESTED@_filetag
+${NI_PROMPT_SITE_LEVEL_RADIO}    css=input[name="noInputPromptLevel"][value="promptSiteLevel"]
+${NI_PROMPT_PAGE_LEVEL_RADIO}    css=input[name="noInputPromptLevel"][value="promptPageLevel"]
+${NI_NESTED_PROMPT_CHECKBOX}    css=input[name="noSpeechStrat_prompts_@INDEX@_nestedPrompts_selector"][value="@NESTED@"]
+${NESTED_PLAY_MSG_CHECKBOX}    name=pseudo_@INDEX@_reprompt
+${NI_NESTED_MSG_TEXT}    name=noSpeechStrat_prompts_@INDEX@_nestedPrompts_@NESTED@_message
+${NI_PROMPT_RADIO_BUTTON}    css=input[name="noSpeechStrat_prompts_selected"][value="@INDEX@"]
+
+*** Keywords ***
+No Input Tab Should Be Open
+    Wait Until Keyword Succeeds    5sec    0.5sec    Element Should Be Visible    ${NI_PROMPT_SITE_LEVEL_RADIO}
+    Element Should Be Visible    ${NI_PROMPT_PAGE_LEVEL_RADIO}
+    NI Site Level Should Be Selected
+    Page Should Contain    ${CHECK NI/NM MSG}
+
+NI Site Level Should Be Selected
+    Radio Button Should Be Set To    noInputPromptLevel    promptSiteLevel
+
+NI Select Page Level
+    Select Radio Button    noInputPromptLevel    promptPageLevel
+
+NI Select No Speech Prompt
+    [Arguments]    ${no}=1
+    ${no}=    Evaluate    int(${no}) - 1
+    Select Radio Button    ${NO_SPEECH_PROMPT_RADIO}    ${no}
+
+NI No Speech Prompt Should Be Selected
+    [Arguments]    ${no}=1
+    ${no}=    Evaluate    int(${no}) - 1
+    ${no}=    Convert To String    ${no}
+    Radio Button Should Be Set To    ${NO_SPEECH_PROMPT_RADIO}    ${no}
+
+NI Select Nested Prompts Checkbox
+    [Arguments]    ${no}=1    ${nested}=1
+    ${locator}=    Generate Nested Locator    ${NI_NESTED_PROMPT_CHECKBOX}    ${no}    ${nested}
+    Wait Until Page Contains Element    ${locator}    10sec
+    Select Checkbox    ${locator}
+
+Play Message Chcekbox Should Be Selected
+    [Arguments]    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${NESTED_PLAY_MSG_CHECKBOX}    ${no}
+    Checkbox Should Be Selected    ${locator}
+
+All Links Should Be Visible
+    Element Should Be Visible    ${UP_LINK}
+    Element Should Be Visible    ${DOWN_LINK}
+    Element Should Be Visible    ${DELETE_LINK}
+    Element Should Be Visible    ${VAR_LINK}
+    Element Should Be Visible    ${TTS_LINK}
+    Element Should Be Visible    ${AUDIO_LINK}
+
+No Input Block Should Be Open
+    Wait Until Keyword Succeeds    5sec    0.5sec    NI No Speech Prompt Should Be Selected
+    All Links Should Be Visible
+
+NI Nested Prompts Checkbox Should Be Selected
+    [Arguments]    ${no}=1    ${nested}=1
+    ${locator}=    Generate Nested Locator    ${NI_NESTED_PROMPT_CHECKBOX}    ${no}    ${nested}
+    Checkbox Should Be Selected    ${locator}
+
+Play Message Checkbox Should Be Disable
+    [Arguments]    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${NESTED_PLAY_MSG_CHECKBOX}    ${no}
+    Element Should Be Disabled    ${locator}
+
+Add Nested Variable
+    [Arguments]    ${no}=1
+    Wait Until Keyword Succeeds    30s    1s    Click Visible Element    ${VAR_LINK}    ${no}
+    sleep    2
+
+NI Nested Variable Block Should Be Open
+    [Arguments]    ${no}=1    ${nested}=1
+    ${locator}=    Generate Nested Locator    ${NI_NESTED_PROMPT_CHECKBOX}    ${no}    ${nested}
+    Wait Until Page Contains Element    ${locator}
+
+Add Nested TTS
+    [Arguments]    ${no}=1
+    Wait Until Keyword Succeeds    30s    1s    Click Visible Element    ${TTS_LINK}    ${no}
+
+NI Nested TTS Block Should Be Open
+    [Arguments]    ${no}=1    ${nested}=1
+    ${locator}=    Generate Nested Locator    ${NI_NESTED_PROMPT_CHECKBOX}    ${no}    ${nested}
+    Wait Until Page Contains Element    ${locator}
+    ${locator}=    Generate Nested Locator    ${NI_NESTED_MSG_TEXT}    ${no}    ${nested}
+    Page Should Contain Element    ${locator}
+    NI Nested TTS Message Should Be    ${TTS TEXT MSG}    ${no}    ${nested}
+
+Add Nested Audio
+    [Arguments]    ${no}=1
+    Wait Until Keyword Succeeds    30s    1s    Click Visible Element    link=Audio    ${no}
+
+NI Nested Audio Block Should Be Open
+    [Arguments]    ${no}=1    ${nested}=1
+    ${locator}=    Generate Nested Locator    ${NI_NESTED_PROMPT_CHECKBOX}    ${no}    ${nested}
+    Wait Until Page Contains Element    ${locator}
+    ${locator}=    Generate Nested Locator    ${NI_NESTED_AUDIO_FILE_TEXT}    ${no}    ${nested}
+    Page Should Contain Element    ${locator}
+
+Click Up Link
+    Click Link    ${UP_LINK}
+
+Click Down Link
+    Click Link    ${DOWN_LINK}
+
+Click Delete Link
+    Click Link    ${DELETE_LINK}
+
+Click Variable Link
+    Click Link    ${VAR_LINK}
+
+Select Variable In First NoInputVariable List
+    [Arguments]    ${val}
+    select from list by label    noSpeechStrat_prompts_0_nestedPrompts_1_varIDSelect    ${val}
+
+NI Nested Block Should Be Deleted
+    [Arguments]    ${no}=1    ${nested}=1
+    ${locator}=    Generate Nested Locator    ${NI_NESTED_PROMPT_CHECKBOX}    ${no}    ${nested}
+    Wait Until Keyword Succeeds    5sec    0.5sec    Page Should Not Contain Element    ${locator}
+
+NI Nested TTS Message Should Be
+    [Arguments]    ${expected}    ${no}=1    ${nested}=1
+    ${locator}=    Generate Nested Locator    ${NI_NESTED_MSG_TEXT}    ${no}    ${nested}
+    Wait Until Keyword Succeeds    10s    1s    Element Text Should Be    ${locator}    ${expected}
+
+Open No Input Tab
+    Open Setting Tab    @{SETTINGS_BOX_TABS}[1]    #Open No Input Tab
+
+NI Add No Speech Prompt Block
+    [Arguments]    ${no}=1
+    Click NI/NM Add Button    1
+    ${locator}=    Generate Locator By Decreasing One    ${NI_PROMPT_RADIO_BUTTON}    ${no}
+    Page Should Contain Element    ${locator}
+
+NI No Speech Prompt Block Should Be Deleted
+    [Arguments]    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${NI_PROMPT_RADIO_BUTTON}    ${no}
+    Wait Until Keyword Succeeds    5sec    0.5sec    Page Should Not Contain Element    ${locator}
+
+NI Copied Prompt Block Should Be Open
+    [Arguments]    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${NI_PROMPT_RADIO_BUTTON}    ${no}
+    Wait Until Page Contains Element    ${locator}
+    ${locator}=    Generate Nested Locator    ${NI_NESTED_AUDIO_FILE_TEXT}    1    1
+    ${file}=    Get Value    ${locator}
+    ${locator1}=    Generate Nested Locator    ${NI_NESTED_AUDIO_FILE_TEXT}    ${no}    1
+    ${file1}=    Get Value    ${locator1}
+    Should Be Equal As Strings    ${file}    ${file1}
+
+Click NI/NM Add Button
+    [Arguments]    ${no}=1
+    Click Visible Element    xpath=//input[@value='Add']    ${no}
+
+Click Visible View Button
+    [Arguments]    ${no}=1
+    Click Visible Element    ${VIEW_BUTTON}    ${no}
+
+Click Visible Delete Button
+    [Arguments]    ${no}=1
+    Click Visible Element    ${DELETE_BUTTON}    ${no}
+
+Click Why Link
+    [Arguments]    ${no}=1
+    Wait Until Element Is Visible    ${WHY_LINK}    10sec
+    Click Visible Element    ${WHY_LINK}    ${no}
+
+NI Nested Audio File Should Be
+    [Arguments]    ${filename}    ${no}=1    ${nested}=1
+    ${locator}=    Generate Nested Locator    ${NI_NESTED_AUDIO_FILE_TEXT}    ${no}    ${nested}
+    Wait Until Keyword Succeeds    5sec    0.5sec    Textfield Value Should Be    ${locator}    ${filename}
+
+Click Vairbale TTS and Audio
+    Wait Until Keyword Succeeds    10sec    0.5sec    Click Link    ${TTS_LINK}
+    Wait Until Element Is Visible    ${TTS_LINK}
+    Wait Until Keyword Succeeds    10sec    0.5sec    Click Link    link=Audio
+    Wait Until Element Is Visible    link=Audio
+    Wait Until Keyword Succeeds    10sec    0.5sec    Click Link    ${VAR_LINK}
+    Wait Until Element Is Visible    ${VAR_LINK}
+
+Wait Until NI Page Level Page Display
+    Wait Until Element Is Visible    name=noSpeechStrat_prompts_selected    10sec
+
+Wait Until MI Page Level Page Display
+    Wait Until Element Is Visible    name=noMatchStrat_prompts_selected    10sec

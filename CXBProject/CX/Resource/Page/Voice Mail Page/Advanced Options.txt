@@ -1,0 +1,43 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../Common Page/Barge In.txt
+Resource          ../../Dictionary.txt
+
+*** Variables ***
+${VM_MAX_RECORD_TIME_TEXT}    name=maxtime
+${VM_END_RECORDING_SILENCE_TIME_SELECTOR}    id=finalSilence
+@{VM END RECORDING SILENCE TIMES}    0.5 seconds    1 seconds    1.5 seconds    2.0 seconds    2.5 seconds    3.0 seconds    4.0 seconds
+...               5.0 seconds    10.0 seconds    20.0 seconds    30.0 seconds    60.0 seconds    90.0 seconds    120.0 seconds
+${VM_DISABLE_SITE_CMD_CHECKBOX}    id=disableSiteCommandsCheckbox
+
+*** Keywords ***
+VM Advanced Option Tab Should Be Open
+    Barge In Should Be On
+    VM Max Record Time Should Be    300
+    VM End Recording Silence Time Should Be    @{VM END RECORDING SILENCE TIMES}[5]
+
+VM Max Record Time Should Be
+    [Arguments]    ${time}
+    Textfield Value Should Be    ${VM_MAX_RECORD_TIME_TEXT}    ${time}
+
+VM End Recording Silence Time Should Be
+    [Arguments]    ${option}
+    List Selection Should Be    ${VM_END_RECORDING_SILENCE_TIME_SELECTOR}    ${option}
+
+VM Disable Site Commands
+    Select Checkbox    ${VM_DISABLE_SITE_CMD_CHECKBOX}
+
+VM Input Max Record Time
+    [Arguments]    ${time}
+    Execute Javascript    document.getElementsByName('maxtime')[0].setAttribute('value', '${time}')
+
+VM Max Record Time Error Alert Should Be Open
+    [Arguments]    ${time}
+    Execute Javascript    validateMaxTime(${time},5,1800)
+    Page Should Contain Element    simple-dialog
+    Element Text Should Be    //*[@id='simple-dialog']/p    ${INVALID RECORD TIME MSG}
+    Click Element    //span[@class='simple-dialog-title-close']
+
+VM Choose End Of Recording Silence Time
+    [Arguments]    ${option}
+    Select From List By Label    ${VM_END_RECORDING_SILENCE_TIME_SELECTOR}    ${option}

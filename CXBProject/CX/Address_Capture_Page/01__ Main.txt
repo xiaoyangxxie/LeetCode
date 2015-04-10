@@ -1,0 +1,55 @@
+*** Settings ***
+Test Setup        Create Address Capture Page
+Resource          ../resource.txt
+
+*** Test Cases ***
+Reg_Addrs_01
+    [Documentation]    Radio button-1.Check the default selection: Standard variables names \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 2. Check the radio button
+    [Tags]    Regression
+    Standard variable names should be selected
+
+Reg_Addrs_02_03
+    [Documentation]    Standard variables names-Check the new created variables after saving when choosing Standard variables names
+    [Tags]    Regression
+    Select Standard Variable Names
+    Save Page
+    Go To Site Variables
+    Site Variables Page Should Be Open
+    Site Variables Page Should Contain Var    City
+    Site Variables Page Should Contain Var    FullAddress
+    Site Variables Page Should Contain Var    State
+    Site Variables Page Should Contain Var    StreetInfo
+    Site Variables Page Should Contain Var    ZipCode
+
+Reg_Addrs_04
+    [Documentation]    Store name in Different Variable Names- Link - Edit Variables，1. Choose the radio button for 'Let me choose the Variable names'.2. User can click the Edit variable link to modify the variables in Site Variables
+    [Tags]    Regression    PEP-144
+    Select Let me choose the variable names
+    Click Edit Variables Link
+    Site Variables Page Should Be Open
+
+Reg_Addrs_05
+    [Documentation]    Store name in Different Variable Names - Predefined Variable with Values，1. Choose the radio button for 'Let me choose the Variable names'.
+    ...    2. Predefined variable with values should be populated.
+    [Tags]    Regression
+    [Setup]    Create One Variable    test
+    Go To Site Overview
+    Create Address Capture Page
+    Select Let me choose the variable names
+    Predefined variable should be contained    test
+
+Reg_Addrs_06
+    [Documentation]    Destination - View button,1.Click View button,the home page should be open in another tab
+    [Tags]    Regression
+    Click View Button
+    New Window Title Should Be    Angel.com - Message Page
+    Close Popup Window
+
+Reg_Addrs_07
+    [Documentation]    Miscellaneous:View button.1. Check the View button 2. When chooseing a new page, it should not display until saving it.
+    [Tags]    Regression
+    Choose Go To Destination Page    New Message Page
+    The Number of Visible View Button Should Be    2
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+    The Number of Visible View Button Should Be    3

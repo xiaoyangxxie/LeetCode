@@ -1,0 +1,90 @@
+*** Settings ***
+Test Setup        Create Transaction Page
+Resource          ../Testflow/Util.txt
+
+*** Test Cases ***
+Reg_TX_54
+    [Documentation]    Miscellaneous: Edit Site Name
+    ...    "1. Click the edit name link.
+    ...    2. Enter new site name and save."
+    [Tags]    Regression
+    Input Page Name    ${TEST_NAME}
+    Save Page
+    Save Done Tip Should Be Open
+    Go To Site Overview
+    Page Name Should Exist    ${TEST_NAME}
+
+Reg_TX_55
+    [Documentation]    Miscellaneous: Edit Page Number
+    ...    "1. Click the Page# \ link.
+    ...    2. Enter new page number and save."
+    [Tags]    Regression
+    Input Page Number    100
+    Save Page
+    Save Done Tip Should Be Open
+    Go To Site Overview
+    Page Number Should Exist    100
+
+Reg_TX_56
+    [Documentation]    Miscellaneous: Change page type
+    ...    "1. Click the Page icon
+    ...    2. Choose the page type and check the button: commit change and close"
+    [Tags]    Regression
+    Click Page Type Icon
+    Change Page Type To Should Exist
+    Select a Page Type List Should Exsit
+    Select a Page Type    @{VPAGES}[0]
+    Commit Changes In Page Type
+    Verify Page Type Changed    @{VPAGES_IMGS}[0]
+
+Reg_TX_57
+    [Documentation]    Miscellaneous: Comment
+    ...
+    ...    "1. Enter characters or numbers
+    ...    2. Save it and Check the view in Site overview(should have an icon showing page with a comment)"
+    [Tags]    Regression
+    Input Page Comment    this is comment for test.
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+    Page Comments Should Be    this is comment for test.
+
+Reg_TX_58
+    [Documentation]    Miscellaneous: Parent Group
+    ...
+    ...    "1. Click the Parent Group
+    ...    2. Assign the page to any parent group"
+    [Tags]    Regression
+    [Setup]    No Operation
+    Add Page Group    New Group
+    Create Call Queue Page
+    Click Parent Group
+    Select the First Group
+    Save Parent Group
+    Verify Parent Group    New Group
+
+Reg_TX_59
+    [Documentation]    Miscellaneous: Save Button
+    ...
+    ...    "1. Click the Save button.
+    ...    2. The details should be saved in the page"
+    [Tags]    Regression
+    Save Page
+    Save Done Tip Should Be Open
+
+Reg_TX_60
+    [Documentation]    Miscellaneous: Save and Exit Button
+    ...
+    ...    "1. Click the Save and Exit button.
+    ...    2. The details should be saved and navigate to the Site Overview page in yellow"
+    [Tags]    Regression
+    Save&Exit Page Named As Test Case
+    Verify HighLight    true
+
+Reg_TX_61
+    [Documentation]    Miscellaneous: Exit Button
+    ...
+    ...    "1. Click the Exit button.
+    ...    2. The details should not be saved and navigate to the Site Overview page."
+    [Tags]    Regression
+    Exit Page
+    Window Title Should Be    Angel.com - Site Overview

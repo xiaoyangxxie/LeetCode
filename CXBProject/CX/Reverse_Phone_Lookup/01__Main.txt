@@ -1,0 +1,58 @@
+*** Settings ***
+Test Setup        Create Phone Lookup Page
+Resource          ../resource.txt
+
+*** Test Cases ***
+Reg_Rev_01
+    [Documentation]    Main - Select any variable.User can select any variable.Based on the user selection the system looks for the name and address
+    [Tags]    Regression
+    [Setup]    Create One Variable    test
+    Go To Site Overview
+    Create Phone Lookup Page
+    PLR Variable Should Be Contained    test
+
+Reg_Rev_02
+    [Documentation]    Main - Link - Edit variable.1. User can click the Edit variable link to change the variable name.
+    [Tags]    Regression    PEP-144
+    Click Edit Variables Link
+    Site Variables Page Should Be Open
+
+Reg_Rev_03
+    [Documentation]    Store name in Standard Variables.System will store the values in the standard variables (FirstName, LastName, StreetInfo, City, State, ZipCode, FullAddress)
+    [Tags]    Regression
+    Standard variable names should be selected
+    Save Successfully
+    Go To Site Variables
+    Site Variables Page Should Be Open
+    Site Variables Page Should Contain Var    City
+    Site Variables Page Should Contain Var    FullAddress
+    Site Variables Page Should Contain Var    State
+    Site Variables Page Should Contain Var    StreetInfo
+    Site Variables Page Should Contain Var    ZipCode
+    Site Variables Page Should Contain Var    PhoneNumber
+    Site Variables Page Should Contain Var    LastName
+    Site Variables Page Should Contain Var    LookupOutcome
+    Site Variables Page Should Contain Var    FirstName
+
+Reg_Rev_04
+    [Tags]    Regression    PEP-144
+    Select Let me choose the variable names
+    Click Link Edit Variables Under 'Let me choose'
+    Site Variables Page Should Be Open
+
+Reg_Rev_05
+    [Documentation]    Store name in Different Variable Names - Predefined Variable with Values.1. Choose the radio button for 'Let me choose the Variable names'.2. Predefined variable with values should be populated.
+    [Tags]    Regression
+    [Setup]    Create One Variable    test1
+    Go To Site Overview
+    Create Phone Lookup Page
+    Select Let me choose the variable names
+    Variable of let me choose should be contained    test1
+
+Reg_Rev_09
+    [Documentation]    Destination - Link - How to use Reverse Phone Lookup destinations.The link should be open in the new window
+    [Tags]    PEP-580
+    Click Link How to use Reverse Phone Lookup destinations
+    Wait Until Keyword Succeeds    30sec    0.5sec    New Window Title Should Be    How to use Reverse Phone Lookup destinations / IVR Wiki
+    Close Popup Window
+    Window Title Should Be    Angel.com - New Reverse Phone Lookup Page

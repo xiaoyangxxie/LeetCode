@@ -1,0 +1,43 @@
+*** Settings ***
+Resource          Audio Block.txt
+
+*** Variables ***
+${AUDIO FILES PAGE TITLE}    Angel.com - Audio Files
+${CUR_FOLDER_TEXT}    name=curDir
+
+*** Keywords ***
+Delete Folder And Audio Files
+    Go To Top Folder
+    Go To File Manager Frame
+    ${passed}=    Run Keyword And Return Status    Page Should Not Contain    ${EMPTY FOLDER MESSAGE}
+    Run Keyword If    ${passed}    Run Keywords    Execute Delete
+
+Select All Folders
+    Select All Checkboxes    name=dirs
+    #${count}=    Get Matching Xpath Count    //input[@name="dirs"]
+    #@{indexes}=    Evaluate    map(lambda a: str(a+1), range(${count}))
+    #Select From List By Index    name=dirs    @{indexes}
+    #Select Checkbox    name=dirs
+
+Select All Audio Files
+    Select All Checkboxes    name=prompts_audioFilename
+
+Audio Files Page Should Be Open
+    Wait Until Keyword Succeeds    5sec    0.5sec    Title Should Be    ${AUDIO FILES PAGE TITLE}
+
+Go To Top Folder
+    : FOR    ${index}    IN RANGE    10
+    \    ${folder}=    Get Value    ${CUR_FOLDER_TEXT}
+    \    Run Keyword If    '${folder}'=='/'    Exit For Loop
+    \    Folder Up
+
+Execute Delete
+    Go Out Of Frame
+    Go To File Manager Frame
+    Select All Folders
+    Select All Audio Files
+    Go Out Of Frame
+    Click Delete Button
+    Run Keyword And Ignore Error    Click Element    id=pop-dialog-ok-btn
+    Go To File Manager Frame
+    Page Should Contain    ${EMPTY FOLDER MESSAGE}

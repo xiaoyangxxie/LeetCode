@@ -1,0 +1,208 @@
+*** Settings ***
+Test Setup        Create Question Page
+Library           Selenium2Library
+Resource          ../resource.txt
+
+*** Test Cases ***
+Reg_Ques_31
+    [Documentation]    Main Tab - Response Type - Credit Card Number - Capturing Credit Card Informatiom link
+    ...
+    ...    "1. Click on the Capturing Credit Card Information link.
+    ...    2. The Capturing Credit Card Information should be open in the new window."
+    [Tags]    Regression
+    Choose Response Type    Credit Card Number
+    Click Capturing Credit Card Information Link
+    New Window Title Should Be    Capturing Credit Card Information
+    Close Popup Window
+    Window Title Should Be    Angel.com - Question Page
+
+Reg_Ques_32
+    [Documentation]    Main Tab - Response Type - Credit Card Number - When is a CC number valid? Link
+    ...
+    ...    "1. Click on the When is a CC number valid? link.
+    ...    2. The When is a CC number valid? information should be open in the new window."
+    [Tags]    Regression
+    Choose Response Type    Credit Card Number
+    Click When is a CC number valid? Link
+    New Window Title Should Be    When is a credit card number valid?
+    Close Popup Window
+    Window Title Should Be    Angel.com - Question Page
+
+Reg_Ques_33
+    [Documentation]    Main Tab - Response Type - Credit Card Number(new)
+    ...
+    ...    "1. User selects the ""Credit Card Number"" in the 'Response Type' drop down.
+    ...    2. User select the following credit card types should be displayed as check boxes ""Visa"", ""MasterCard"", ""American Express"", ""Discover"" and ""Diners Club"".
+    ...    3. User can specify the voice page based on Response by using the provided drop down downs for ""After the response, go to”"
+    [Tags]    Regression
+    Choose Response Type    Credit Card Number(New)
+    Select New Visa Checkbox
+    Select New MasterCard Checkbox
+    Select New American Express Checkbox
+    Select New Discover Checkbox
+    Select New Diners Club Checkbox
+    Save Successfully
+    New Visa Checkbox Should Be Selected
+    New Master Card Checkbox Should Be Selected
+    New American Express Checkbox Should Be Selected
+    New Discover Checkbox Should Be Selected
+    New Dinner Club Checkbox Should Be Selected
+    Valid Response Destination Should Exist
+
+Reg_Ques_34
+    [Documentation]    Main Tab - Response Type - Credit Card Numbe(new)r - Capturing Credit Card Informatiom link
+    ...
+    ...    "1. Click on the Capturing Credit Card Information link.
+    ...    2. The Capturing Credit Card Information should be open in the new window."
+    [Tags]    Regression
+    Choose Response Type    Credit Card Number(New)
+    Click Capturing Credit Card Information Link
+    New Window Title Should Be    Capturing Credit Card Information
+    Close Popup Window
+    Window Title Should Be    Angel.com - Question Page
+
+Reg_Ques_35
+    [Documentation]    Main Tab - Response Type - Credit Card Number(new) - When is a CC number valid? Link
+    ...
+    ...    "1. Click on the ""When is a CC number valid?"" and ""What is Credit card number(new)? links.
+    ...    2. The two links' information should be open in the new window."
+    [Tags]    Regression
+    Choose Response Type    Credit Card Number(New)
+    Click When is a CC number valid? Link
+    New Window Title Should Be    When is a credit card number valid?
+    Close Popup Window
+    Window Title Should Be    Angel.com - Question Page
+
+Reg_Ques_36
+    [Documentation]    Main Tab - Response Type - Credit Card Expiration.
+    ...
+    ...    "1. User selects the ""Credit Card Expiration"" in the 'Response Type' drop down.
+    ...    2. User can specify the voice page based on the valid and invalid Credit Card Expiration response by using the provided drop down downs for ""If response is valid and If response is Invalid""."
+    [Tags]    Regression
+    Choose Response Type    Credit Card Expiration
+    Vaild CCExpiration Response Destination Should Exist
+    Invaild CCExpiration Response Destination Should Exist
+    Save Successfully
+
+Reg_Ques_37
+    [Documentation]    Main Tab - Response Type - Credit Card Expiration - Capturing Credit Card Information link
+    ...
+    ...    "1. Click on the Capturing Credit Card Information link.
+    ...    2. The Capturing Credit Card Information should be open in the new window."
+    [Tags]    Regression
+    Choose Response Type    Credit Card Expiration
+    Click Capturing Credit Card Information Link
+    New Window Title Should Be    Capturing Credit Card Information
+    Close Popup Window
+    Window Title Should Be    Angel.com - Question Page
+
+Reg_Ques_38
+    [Documentation]    Main Tab - Response Type - Credit Card Expiration - When is an expiration date valid? Link
+    ...
+    ...    "1. Click on the When is an expiration date valid? link.
+    ...    2. The When is an expiration date valid? Information should be open in the new window."
+    [Tags]    Regression
+    Choose Response Type    Credit Card Expiration
+    Click When is an expiration date valid? Link
+    New Window Title Should Be    When is an expiration date valid?
+    Close Popup Window
+    Window Title Should Be    Angel.com - Question Page
+
+Reg_Ques_39
+    [Documentation]    Main Tab - Response Type - Currency
+    ...
+    ...    "1. User selects the ""Currency"" in the 'Response Type' drop down.
+    ...    2. User can specify the voice page after the response by using the provided drop down down for ""After response, go to"""
+    [Tags]    Regression
+    Choose Response Type    Currency
+    Currency After A Response Destination Should Exist
+    Save Successfully
+
+Reg_Ques_40
+    [Documentation]    Main Tab - Response Type - Currency - Sample Responses link
+    ...
+    ...    "1. Click on the Sample Responses link.
+    ...    2. The Sample Responses information should be open in the new window."
+    [Tags]    Regression
+    Choose Response Type    Currency
+    Click Sample Responses Link
+    New Window Title Should Be    Currency
+    Close Popup Window
+    Window Title Should Be    Angel.com - Question Page
+
+Reg_Ques_41
+    [Documentation]    Main Tab - Response Type - Date
+    ...
+    ...    "1. User selects the ""Date"" in the 'Response Type' drop down.
+    ...    2. User can specify the voice page after the response by using the provided drop down down for ""After response, go to"""
+    [Tags]    Regression
+    Choose Response Type    Date
+    After A Response Destination Should Exist
+    If Response Is Invalid Destination Should Exist
+    Save Successfully
+
+Reg_Ques_42
+    [Documentation]    Main Tab - Response Type - Date - Sample Responses link
+    ...
+    ...    "1. Click on the Sample Responses link.
+    ...    2. The Sample Responses information should be open in the new window."
+    [Tags]    Regression
+    Choose Response Type    Date
+    Click Sample Responses Link
+    New Window Title Should Be    Date
+    Close Popup Window
+    Window Title Should Be    Angel.com - Question Page
+
+Reg_Ques_43
+    [Documentation]    Main Tab - Response Type - Time
+    ...
+    ...    "1. User selects the ""Time"" in the 'Response Type' drop down.
+    ...    2. User can select the ""do not prompt caller for am or pm"".or ""prompt caller for am or pm"" radio button to specify the caller response (input).
+    ...    3. User can specify the voice page after the response by using the provided drop down down for ""After response, go to"""
+    [Tags]    Regression
+    Choose Response Type    Time
+    Prompt Caller For "am or pm" Should Be Selected
+    Select Do Not Prompt Caller For "am or pm"
+    Save Successfully
+    Do Not Prompt Caller For "am or pm" Should Be Selected
+
+Reg_Ques_44
+    [Documentation]    Main Tab - Response Type - Time - Sample Responses link
+    ...
+    ...    "1. Click on the Sample Responses link.
+    ...    2. The Sample Responses information should be open in the new window."
+    [Tags]    Regression
+    Choose Response Type    Time
+    Click Sample Responses Link
+    New Window Title Should Be    Time
+    Close Popup Window
+    Window Title Should Be    Angel.com - Question Page
+
+Reg_Ques_45
+    [Documentation]    Main Tab - Response Type - Dynamic Grammar
+    ...
+    ...    "1. User selects the ""Dynamic Grammar"" in the 'Response Type' drop down.
+    ...    2. User can create or choose variables for keywords in ""Use Keywords from"" dropdown list
+    ...    3. User can specify the voice page after the response by using the provided drop down down for ""After response, go to"" \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 4. User can navigate to Site variables to modify variables by clicking ""Edit variables"""
+    [Tags]    Regression    PEP-144
+    Choose Response Type    Dynamic Grammar
+    Dynamic Grammar Use Keywords From Should Exist
+    Page Should Contain Element    name=commonResponses0SelectBox
+    Click Edit Variables Link
+    New Window Title Should Be    Angel.com - Site Variables
+    Go Back To Question Page
+
+Reg_Ques_46
+    [Documentation]    Main Tab - Response Type -Natural Language
+    ...
+    ...    "1. User selects the ""Dynamic Grammar"" in the 'Response Type' drop down.
+    ...    2. User can choose NL Language file in the dropdown list (can set files thru CSR)
+    ...    3. User can specify the voice page after the response by using the provided drop down down for ""After response, go to"""
+    [Tags]    Regression
+    Choose Response Type    Natural Language
+    NL Grammars Dropdown Should Exist
+    Page Should Contain Element    name=commonResponses0SelectBox
+    Save Page
+    Red Notice Should Display    Please select a grammar file.
+
+*** Keywords ***

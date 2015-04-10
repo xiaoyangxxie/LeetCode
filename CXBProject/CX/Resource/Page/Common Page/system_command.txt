@@ -1,0 +1,11 @@
+*** Settings ***
+Resource          ../../../resource.txt
+
+*** Keywords ***
+Input System Command Keyword
+    [Arguments]    ${lan}    ${var}    ${value}
+    Wait Until Keyword Succeeds    10sec    1sec    Input Text    xpath=//tr[@class='${lan}'][${var}]//td[3]//input    ${value}
+
+Input System Command Dtmf
+    [Arguments]    ${lan}    ${var}    ${value}
+    Wait Until Keyword Succeeds    10sec    1sec    Input Text    xpath=//tr[@class='${lan}'][${var}]//td[4]/input    ${value}

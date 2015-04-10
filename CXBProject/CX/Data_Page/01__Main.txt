@@ -1,0 +1,291 @@
+*** Settings ***
+Test Setup        Run Keywords    Create Data Page    AND    Create DP Data File If Not Exist    DPTest.xls    AND    Choose DP Data File
+...               DPTest.xls
+Force Tags
+Resource          ../resource.txt
+
+*** Variables ***
+
+*** Test Cases ***
+Reg_Data_01
+    [Documentation]    Main - Put Data In
+    ...
+    ...    1. Select 'Put data In' radio button and unselect it.
+    [Tags]    Regression
+    [Setup]    Create Data Page
+    DP Put Data In Radio Button Should Be Selected
+    Select DP Get Data Out Radio button
+    DP Put Data In Radio Button Should Not Be Selected
+    Save Page
+    Red Notice Should Display    You must select a data file before continuing.
+
+Reg_Data_02
+    [Documentation]    Main - Select Data File
+    ...
+    ...    "1. Default message should be in 'Data File' drop down.
+    ...    2. Should list all the available data files in the 'Data File' drop down list. \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ "
+    [Tags]    Regression
+    [Setup]    Create Data Page
+    Data File List Should Contain    Please Select a Data File
+    Create DP Data File If Not Exist    DPTest.xls    DPCol1    DPCol2    DPCol3    DPCol4
+    Data File List Should Contain    DPTest.xls
+    Save Page
+    Red Notice Should Display    You must select a data file before continuing.
+
+Reg_Data_03
+    [Documentation]    Main - Put Data in (The system will insert data into a new row)-Insert this Data
+    ...
+    ...    "1. Should list all the available variables: system variables, new variable,select a variable and existed variables in the 'Variable' drop down list
+    ...    2. Column names should be listed in the 'Column' drop downs."
+    [Tags]    Regression
+    DP Data Variable Should Contain All System Variables
+    DP Data Variable Should Contain    New Variable
+    DP Data Variable Should Contain    Select a Variable
+    DP Data Column Should Be    DPCol1
+    DP Data Column Should Be    DPCol2    2
+    DP Data Column Should Be    DPCol3    3
+    DP Data Column Should Be    DPCol4    4
+    DP Data Column Should Contain All Column Data
+    DP Data Column Should Contain All Column Data    2
+    DP Data Column Should Contain All Column Data    3
+    DP Data Column Should Contain All Column Data    4
+    Save Successfully
+
+Reg_Data_04
+    [Documentation]    Main - Put Data in (The system will insert data into a new row)-Insert this Data - Delete button
+    ...
+    ...    1.User can delete the variable and column by selecting the corresponding check box.
+    [Tags]    Regression
+    Select DP Data Checkbox    4
+    Click Delete Button
+    DP Data Checkbox Should Not Exist    4
+    Save Successfully
+
+Reg_Data_05
+    [Documentation]    Main - Put Data in (The system will insert data into a new row)-Insert this Data - "After inserting the row, go to" frame
+    ...
+    ...    1.User can set any type as destination page: New pages, Home Page, Existed pages, A page from another site, Variables.
+    [Tags]    Regression
+    DP Destination Should Contain All Pages
+    DP Destination Should Contain    Home Page
+    DP Destination Should Contain    1 - Greeting
+    DP Destination Should Contain    A Page in Another Site
+    DP Destination Should Contain    Use value from a Variable
+
+Reg_Data_06
+    [Documentation]    Main - Put Data in (Update an existed row instead) -Find the first/last/all row of data where
+    ...
+    ...    "1.Column names should be listed in the 'Column' drop down lists \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 2.Should list all the available variables: system variables, new variable,select a variable and existed variables in the 'Variable' drop down list
+    ...    3.The default value in Test Value frame is blank and can fill the value in it \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 4. Click Run Test and the test results page should display"
+    [Tags]    Regression
+    Click Update An Existing Row Link
+    DP The System Will Insert Data Into Frame Should Not Exist
+    DP Update Row Should Exist
+    DP Update Row Should Contain    First
+    DP Update Row Should Contain    Last
+    DP Update Row Should Contain    All
+    DP Update Row Column Should Exist
+    DP Update Row Variable Should Exist
+    DP Update Row Test Value Should Be Empty
+    Click Run Test Link
+    New Window Title Should Be    Angel.com - Data Page Test Results
+    Close Popup Window
+    Save Successfully
+
+Reg_Data_07
+    [Documentation]    Main - Put Data in (Update an existed row instead) -Find the first/last/all row of data where- Delete button
+    ...
+    ...    1.User can delete the variable and column by selecting the corresponding check box.
+    [Tags]    Regression
+    Click Update An Existing Row Link
+    Select DP Update Row Checkbox
+    Click Visible Delete Button
+    DP Update Row Checkbox Should Not Exist
+    Save Successfully
+
+Reg_Data_08
+    [Documentation]    Main - Put Data in (Update an existed row instead) -Find the first/last/all row of data where- Add Condition button
+    ...
+    ...    1.The button should display when not all the columns display \ \ \ \ \ \ 2.Click the button to add the conditions
+    [Tags]    Regression
+    Click Update An Existing Row Link
+    Click DP Add Condition Button
+    Click DP Add Condition Button
+    Click DP Add Condition Button
+    DP Add Condition Button Should Not Be Visible
+    Save Successfully
+
+Reg_Data_09
+    [Documentation]    Main - Put Data in (Update an existed row instead) -Find the first/last/all row of data where- If no row is found, insert the data into a new row.
+    ...
+    ...    1. Select or unselect the checkbox of this sentence. \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 2. Check it after saving the page, it should be right
+    [Tags]    Regression
+    Click Update An Existing Row Link
+    Select DP Update Row If Now Row Found Checkbox
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_Data_10
+    [Documentation]    Main - Put Data in (Update an existed row instead) -Update this data
+    ...
+    ...    "1. Should list all the available variables: system variables, new variable,select a variable and existed variables in the 'Variable' drop down list
+    ...    2. Column names should be listed in the 'Column' drop downs."
+    [Tags]    Regression
+    Click Update An Existing Row Link
+    DP Update Row Column Should Contain All Column Data
+    DP Update Row Variable Should Contain All System Variables
+    DP Update Row Variable Should Contain    New Variable
+    DP Update Row Variable Should Contain    Select a Variable
+    Save Successfully
+
+Reg_Data_11
+    [Documentation]    Main - Put Data in (Update an existed row instead) -Update this data - delete button
+    ...
+    ...    1.User can delete the variable and column by selecting the corresponding check box.
+    [Tags]    Regression
+    Click Update An Existing Row Link
+    Select DP Update Row Checkbox
+    Click Visible Delete Button
+    DP The System Will Insert Data Into Frame Should Exist
+    Save Successfully
+
+Reg_Data_12
+    [Documentation]    Main - Put Data in (Update an existed row instead) -"If a row is found, go to" destination page
+    ...
+    ...    1.User can set any type as destination page: New pages, Home Page, Existed pages, A page from another site, Variables.
+    [Tags]    Regression
+    Click Update An Existing Row Link
+    DP Destination Should Contain All Pages
+    DP Destination Should Contain    Home Page
+    DP Destination Should Contain    A Page in Another Site
+    DP Destination Should Contain    Use value from a Variable
+    Save Successfully
+
+Reg_Data_13
+    [Documentation]    Main - Put Data in (Update an existed row instead) -"If no row is found, go to" destination page
+    ...
+    ...    1.User can set any type as destination page: New pages, Home Page, Existed pages, A page from another site, Variables.
+    [Tags]    Regression
+    Click Update An Existing Row Link
+    DP No Row Found Destination Should Contain All Pages
+    DP No Row Found Destination Should Contain    Home Page
+    DP No Row Found Destination Should Contain    A Page in Another Site
+    DP No Row Found Destination Should Contain    Use value from a Variable
+    Save Successfully
+
+Reg_Data_14
+    [Documentation]    Main - Get Data out -Find the first/last/all row of data where
+    ...
+    ...    "1.Column names should be listed in the 'Column' drop down lists \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 2.Should list all the available variables: system variables, new variable,select a variable and existed variables in the 'Variable' drop down list
+    ...    3.The default value in Test Value frame is blank and can fill the value in it \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 4. Click Run Test and the test results page should display"
+    [Tags]    Regression
+    Select DP Get Data Out Radio button
+    DP Load Data Column Should Contain All Column Data    1
+    DP Load Data Column Should Contain All Column Data    2
+    DP Load Data Column Should Contain All Column Data    3
+    DP Load Data Column Should Contain All Column Data    4
+    DP Load Data Variable Should Contain    New Variable
+    DP Load Data Variable Should Contain    Select a Variable
+    DP Update Row Test Value Should Be Empty
+    Click Run Test Link
+    New Window Title Should Be    Angel.com - Data Page Test Results
+    Close Popup Window
+    Save Successfully
+
+Reg_Data_15
+    [Documentation]    Main - Get Data out -Find the first/last row of data where- Delete button
+    ...
+    ...    1.User can delete the variable and column by selecting the corresponding check box.
+    [Tags]    Regression
+    Select DP Get Data Out Radio button
+    Click DP Add Condition Button
+    Select DP Update Row Checkbox    2
+    Click Visible Delete Button
+    DP Update Row Checkbox Should Not Exist    2
+    Save Successfully
+
+Reg_Data_16
+    [Documentation]    Main - Get Data out -Find the first/last row of data where- Add Condition button
+    ...
+    ...    1.The button should display when not all the columns display \ \ \ \ \ \ 2.Click the button to add the conditions
+    [Tags]    Regression
+    Select DP Get Data Out Radio button
+    Click DP Add Condition Button
+    Click DP Add Condition Button
+    Click DP Add Condition Button
+    DP Add Condition Button Should Not Be Visible
+    Save Successfully
+
+Reg_Data_17
+    [Documentation]    Main - Get Data out - Load data
+    ...
+    ...    "1. Should list all the available variables: system variables, new variable,select a variable and existed variables in the 'Variable' drop down list
+    ...    2. Column names should be listed in the 'Column' drop downs."
+    [Tags]    Regression
+    Select DP Get Data Out Radio button
+    DP Update Row Variable Should Contain All System Variables
+    DP Update Row Variable Should Contain    New Variable
+    DP Update Row Variable Should Contain    Select a Variable
+    DP Update Row Column Should Contain All Column Data
+    Save Successfully
+
+Reg_Data_18
+    [Documentation]    Main - Get Data out - Load data - Delete button
+    ...
+    ...    1.User can delete the variable and column by selecting the corresponding check box.
+    [Tags]    Regression
+    Select DP Get Data Out Radio button
+    Select DP Load Data Checkbox    4
+    Click Visible Delete Button    2
+    DP Data Checkbox Should Not Exist    4
+    Save Successfully
+
+Reg_Data_19
+    [Documentation]    Main - Get Data out -"If a row is found, go to" destination page
+    ...
+    ...    1.User can set any type as destination page: New pages, Home Page, Existed pages, A page from another site, Variables.
+    [Tags]    Regression
+    Select DP Get Data Out Radio button
+    DP Destination Should Contain All Pages
+    DP Destination Should Contain    Home Page
+    DP Destination Should Contain    A Page in Another Site
+    Save Successfully
+
+Reg_Data_20
+    [Documentation]    Main - Get Data out -"If no row is found, go to" destination page
+    ...
+    ...    1.User can set any type as destination page: New pages, Home Page, Existed pages, A page from another site, Variables.
+    [Tags]    Regression
+    Select DP Get Data Out Radio button
+    DP No Row Found Destination Should Contain All Pages
+    DP No Row Found Destination Should Contain    Home Page
+    DP No Row Found Destination Should Contain    A Page in Another Site
+
+Reg_Data_21
+    [Documentation]    Main - Data File - View
+    ...
+    ...    1. User can view the selected data file in the 'Data File' drop down list box by clicking the 'View' link.
+    [Tags]    Regression
+    Click View Link
+    Window Title Should Be    Angel.com - View Data
+    Go Back To Data Page
+
+Reg_Data_22
+    [Documentation]    Main - Data File - Edit
+    ...
+    ...    1. User can edit the selected data file in the 'Data File' drop down list box by clicking the 'Edit' link.
+    [Tags]    Regression
+    Click Edit Link
+    Edit Data File Page Should Be Open
+    Go Back To Data Page
+
+Reg_Data_23
+    [Documentation]    Main - Data File - New
+    ...
+    ...    1. By clicking the 'New' link, system should navigate to 'New Data File' creation page.
+    [Tags]    Regression
+    Click New Link
+    New Data File Page Should Be Open
+    Go Back To Data Page
+
+*** Keywords ***

@@ -1,0 +1,52 @@
+*** Settings ***
+Test Setup        Run Keywords    Create Address Capture Page    AND    Open Advanced Option Tab
+Resource          ../resource.txt
+
+*** Test Cases ***
+Reg_Addrs_09
+    [Documentation]    Advanced Options - Enable Site Commands.By default,site commands should be enabled.
+    [Tags]    Regression
+    Disable Site Commands Should Not Be Selected
+
+Reg_Addrs_10
+    [Documentation]    Advanced Options - Disable Site Commands.User can disable the site commands for the particular voice page.
+    [Tags]    Regression
+    Select Disable Site Commands
+    Disable Site Commands Should Be Selected
+
+Reg_Addrs_11
+    [Documentation]    Advanced Options - Use system Provided Prompts.By default, system Provided prompts should be selected.
+    [Tags]    Regression
+    Use system provided prompts should be selected
+
+Reg_Addrs_12
+    [Documentation]    Advanced Options - Use my own prompts.User can select \ own prompts by selecting \ the 'choose Folder' options.
+    [Tags]    Regression
+    Select Use my own prompts
+    Use My Own Prompts Should Be Selected
+
+Reg_Addrs_13
+    [Documentation]    Advanced Options - Link Why?.1.Click the link Why? 2.A new window will popup
+    [Tags]    Regression
+    Click Why Link
+    New Window Title Should Be    Why Disable Site Commands?
+    Close Popup Window
+    Window Title Should Be    Angel.com - Address Capture Page
+
+Reg_Addrs_14
+    [Documentation]    Advanced Options - Link \ Choose Folder.1.Click the link Choose Folder 2.A new window will popup
+    [Tags]    Regression
+    Select Use my own prompts
+    Click Link Choose Folder
+    New Window Title Should Be    Angel.com - Choose Folder
+    Close Popup Window
+    Window Title Should Be    Angel.com - Address Capture Page
+
+Reg_Addrs_15
+    [Documentation]    Advanced Options - Link \ How to replace prompts.1.Click the link How to replace prompts 2.A new tab will popup
+    [Tags]    Regression
+    Select Use my own prompts
+    Click Link How to replace prompts
+    New Window Title Should Be    Replacing Prompts in Name and Address Capture Pages / IVR Wiki
+    Close Popup Window
+    Window Title Should Be    Angel.com - Address Capture Page

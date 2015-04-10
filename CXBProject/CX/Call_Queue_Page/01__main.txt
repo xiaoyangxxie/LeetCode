@@ -1,0 +1,114 @@
+*** Settings ***
+Test Setup        Create Call Queue Page
+Resource          ../resource.txt
+Library           Selenium2Library
+Library           OperatingSystem
+
+*** Test Cases ***
+Reg_CQ_01
+    [Documentation]    Main - Link - Learn More about the Agent List
+    ...    "1. Click on the link 'Learn more about the Agent List'.
+    ...    2. System should open the link in new window."
+    [Tags]    Regression
+    Click Learn More About The Agent List Link
+    New Window Title Should Be    Entering people in the Agent List
+    Close Popup Window
+    Window Title Should Be    Angel.com - Call Queue Page
+
+Reg_CQ_02
+    [Documentation]    Main - Save Button after entering Agent Details
+    ...    "1. Enter Agentname,Phone number, Email address ,skills and click on save button.
+    ...    2. System should save the page with the agent details."
+    [Tags]    Regression
+    Input CQ Agent Detail Information    agent1    +8657185292027    11@angel.com    english    yes
+    Save Successfully
+
+Reg_CQ_03
+    [Documentation]    Main - Add an agent
+    ...    "1. Enter Agentname,Phone number, Email address and skills and click on add button.
+    ...    2. System should add another row to add new agent."
+    [Tags]    Regression
+    Input CQ Agent Detail Information    agent1    +8657185292027    11@angel.com    english    yes
+    Click Add Button
+    Input CQ Agent Detail Information    agent2    +8657185292028    22@angel.com    english    yes    2
+    Save Successfully
+
+Reg_CQ_04
+    [Documentation]    Main - Delete an agent
+    ...    "1. Select an agent check box.
+    ...    2. Click on delete button.
+    ...    3. System should delete the selected agent."
+    [Tags]    Regression
+    Input CQ Agent Detail Information    agent1    +8657185292027    11@angel.com    english    yes
+    Click Add Button
+    Input CQ Agent Detail Information    agent2    +8657185292028    22@angel.com    english    yes    2
+    Select CQ Agent Checkbox    2
+    Click Delete Button
+    Page Should Not Contain Agent    2
+
+Reg_CQ_05
+    [Documentation]    Main - .Send Login Instructions
+    ...    "1. Enter agent name, phonenumber, Email Address for two agents.
+    ...    2. Select the agents check box and click on send Login Instructions check box.
+    ...    3. System should send the login instructions link to the email address."
+    [Tags]    Regression
+    Input CQ Agent Detail Information    agent1    +8657185292027    11@angel.com    english    yes
+    Select CQ Agent Checkbox    1
+    Click CQ Send Login Instructions
+    Text Should Be Visible    To send check in instructions to agents it is necessary to assign a phone number to this site. This is the phone number that agents will call in order to check in by phone.
+
+Reg_CQ_06
+    [Documentation]    Main - Routing
+    ...    "1. Enter Agentname, Phone number, Email address, skills.
+    ...    2. Select the 'Enable skills based routing' option and select the option for all agents are able to take calls and click on save button.
+    ...    3. System should save the options and during calls the call will be routed based on the options selected."
+    [Tags]    Regression
+    Voice Page Suite Teardown
+    Voice Page Suite Setup
+    Create Call Queue Page
+    CQ Common Setup
+    Input CQ Agent Detail Information    agent1    +8657185292027    11@angel.com    english    yes
+    Scroll Down Page    400
+    Click CQ Enable Skills Based On Routing
+    Choose CQ Enable Skill Variable    New Variable
+    Click CQ All Agents Are Able To Take Calls
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CQ_07
+    [Documentation]    Agent Selection
+    ...    "1. Enter Agentname, Phone number, Email address, skills.
+    ...    2. Select any option [ Order Entered, Hunt/Round Robin, Most Idle Agent, Least Utilized Agent] and click on save button.
+    ...    3. System should save the options and during calls the call will be routedto agents based on the Agent option selected."
+    [Tags]    Regression
+    Input CQ Agent Detail Information    agent1    +8657185292027    11@angel.com    english    yes
+    Scroll Down Page    400
+    Select CQ Order Entered
+    Select CQ Hunt/Round Robin
+    Select CQ Most Idle Agent
+    Select CQ Least Utilized Agent
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CQ_08
+    [Documentation]    Main - Link - How it works?
+    ...    "1. Click on lhe link 'How it works?'
+    ...    2. System should open the link in new window."
+    [Tags]    Regression
+    Scroll Down Page    400
+    Click CQ Main How It Works Link
+    New Window Title Should Be    Examples of Agent Selection / IVR Wiki
+    Close Popup Window
+    Window Title Should Be    Angel.com - Call Queue Page
+
+Reg_CQ_09
+    [Documentation]    Main - Call Complete
+    ...    "1. Enter Agentname, Phone number, Email address, skills.
+    ...    2. Select any page for the callers to navigate once the agent call completed."
+    [Tags]    Regression
+    [Setup]    run keywords    Voice Page Suite Teardown    Voice Page Suite Setup    Create Call Queue Page
+    Input CQ Agent Detail Information    agent1    +8657185292027    11@angel.com    english    yes
+    Choose CQ Call Destination    Home Page
+    Save Successfully
+
+*** Keywords ***

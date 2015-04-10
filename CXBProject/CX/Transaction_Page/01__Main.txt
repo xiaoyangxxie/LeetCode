@@ -1,0 +1,273 @@
+*** Settings ***
+Test Setup        Create Transaction Page
+Resource          ../Testflow/Util.txt
+
+*** Test Cases ***
+Reg_TX_01-1
+    [Documentation]    Click *Save* button without any value in the URL field, system should allow to save without any error.
+    [Tags]    Regression
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_TX_01-2
+    [Documentation]    Input one URL in transaction url text, click *Save* button without any value in the URL field, system should allow to save without any error.
+    [Tags]    Regression
+    Input Transaction URL    http://www.angel.com
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_TX_02
+    [Documentation]    Check if the switch icon is displayed next to the URL field, Click the switch icon and the varaible field should be displayed
+    [Tags]    Regression
+    Click Use Variable Img    1
+    TX URL Variable Selector Should Be Visible
+    Save Successfully
+
+Reg_TX_03
+    [Documentation]    Check if the default value of variable dropdown list is "select a variable", Create some variables in site variable and check if System variables / select a variable / created variables are displayed in the drodown list, Choose a variable and save it
+    [Tags]    Regression
+    [Setup]
+    Go To Site Variables
+    Create One Variable    ${TEST_NAME}
+    Go To Site Overview
+    Create Transaction Page
+    Transaction Page Should Be Open
+    Click Use Variable Img    1
+    TX URL Variable Selection Should Be    @{SITE VARIABLES}[0]
+    TX Choose URL Variable    @{SITE VARIABLES}[1]
+    TX Choose URL Variable    ${TEST_NAME}
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_TX_04
+    [Documentation]    Select "post" / "Get" as submit type, click *Save* button, system should allow to save without any error.
+    [Tags]    Regression
+    TX URL Submit Type Should Be    post
+    TX Select URL Submit Type    get
+    TX URL Submit Type Should Be    get
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_TX_05
+    [Documentation]    Click *Variable* button, Check if System variables / select a variable / created variables are displayed in the drodown list, Choose a variable, click *Save* button, system should allow to save without any error.
+    [Tags]    Regression
+    Go To Site Variables
+    Create One Variable    ${TEST_NAME}
+    Go To Site Overview
+    Create Transaction Page
+    Transaction Page Should Be Open
+    TX Click Variable Button    1
+    TX Param Block Should Be Open
+    TX Param Variables List Should Contain    @{SITE VARIABLES}[0]    1
+    TX Param Variables List Should Contain    @{SITE VARIABLES}[1]    1
+    TX Param Variables List Should Contain    ${TEST_NAME}    1
+    TX Choose Param Variable    ${TEST_NAME}    1
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_TX_06
+    [Documentation]    Click *Constant* button, input param name and param value, click *Save* button, system should allow to save without any error.
+    [Tags]    Regression
+    TX Click Constant Button    1
+    TX Param Block Should Be Open
+    TX Input Param Name    param_key    1
+    TX Input Param Value    param_value    1
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_TX_07
+    [Documentation]    Click *Constant* button, click *Variable* button, select both param checkboxes, click *Delete* button, both param blocks should be deleted, click *Save* button, system should allow to save without any error.
+    [Tags]    Regression
+    TX Click Constant Button    1
+    TX Click Variable Button    1
+    TX Param Block Should Be Open
+    TX Select Param Block    1
+    TX Select Param Block    2
+    Click Delete Button
+    TX Param Blocks Should Be Deleted
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_TX_08
+    [Documentation]    Click *Send Survey Resposne* button, some parameters are displayed, click *Save* button, system should allow to save without any error.
+    [Tags]    Regression
+    Click SSR Button    1
+    TX Param Block Should Be Open
+    TX Param Name Should Be    SurveyName    1
+    TX Param Value Should Be    Survey    1
+    TX Param Name Should Be    SendEmailTo    2
+    TX Param Value Should Be    ${LOGIN EMAIL}    2
+    TX Param Name Should Be    CallerID    3
+    TX Param Variable Selection Should Be    CallerID    3
+    TX Param Name Should Be    AngelNumber    4
+    TX Param Variable Selection Should Be    DialedNumber    4
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_TX_09
+    [Documentation]    Click *Variable* button, click *Constant* button, input some value in *Test value* field, click *Save* button, system should allow to save without any error.
+    [Tags]    Regression
+    TX Click Variable Button    1
+    Wait Until Element Is visable 10sec    params_0_key
+    Scroll Down Page    300
+    TX Click Constant Button    1
+    Wait Until Element Is visable 10sec    params_1_key
+    Scroll Down Page    300
+    TX Param Block Should Be Open
+    TX Choose Param Variable    @{SITE VARIABLES}[1]    1
+    TX Input Param Test Value    hello    1
+    TX Input Param Name    test    2
+    TX Input Param Value    test    2
+    TX Input Param Test Value    test    2
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_TX_10-1
+    [Documentation]    Click *Variable* button, click *Constant* button, select the checkbox on the left side of *Type* column, all the param checkboxes should be selected, click *Delete* button, all the param checkboxes should be deleted, click *Save* button, system should allow to save without any \ error.
+    [Tags]    Regression
+    TX Click Variable Button    1
+    Wait Until Element Is visable 10sec    params_0_key
+    Scroll Down Page    500
+    TX Click Constant Button    1
+    Scroll Down Page    500
+    Wait Until Element Is visable 10sec    params_1_key
+    TX Param Block Should Be Open
+    TX Select All Param Checkboxes
+    TX Param Checkbox Should Be Selected    1
+    TX Param Checkbox Should Be Selected    2
+    Scroll Down Page    500
+    Click Delete Button
+    TX Param Blocks Should Be Deleted
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_TX_10-2
+    [Documentation]    Click *Variable* button, click three *Question Mark* beside *Parameter Name*, *Parameter Value*, *Test Value* column, new windows should be open with correct titles.
+    [Tags]    Regression
+    TX Click Variable Button    1
+    TX Param Block Should Be Open
+    Click What's This Img    1
+    Switch To New Window    Parameter Name
+    Close Popup Window
+    Click What's This Img    2
+    Switch To New Window    Parameter Value
+    Close Popup Window
+    Click What's This Img    3
+    Switch To New Window    Test Value
+    Close Popup Window
+
+Reg_TX_11
+    [Documentation]    Click *Send Survey Resposne* button， click *Run Test*, new window with correct title should be open, close the window, save page and system should allow to save without any error.
+    [Tags]    Regression
+    Click SSR Button    1
+    TX Param Block Should Be Open
+    TX URL Should Be    ${SEND_SURVEY_RESPONSE_TEST_URL}
+    Save Page
+    Save Done Tip Should Be Open
+    Click Run Test Link    1
+    Switch To New Window    ${TRANSACTION_TEST_PAGE_TITLE}
+    Close Popup Window
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_TX_12
+    [Documentation]    Click *Send Survey Resposne* button， click *Run Test*, new window with correct title should be open, click *HTTP Reponse Codes* link, page should navigate to HTTP Code Responses Page, close the window, save page and system should allow to save without any error.
+    [Tags]    Regression
+    Click SSR Button    1
+    TX Param Block Should Be Open
+    TX URL Should Be    ${SEND_SURVEY_RESPONSE_TEST_URL}
+    Save Page
+    Save Done Tip Should Be Open
+    Click Run Test Link    1
+    Switch To New Window    ${TRANSACTION_TEST_PAGE_TITLE}
+    Click HTTP Response Codes Link
+    HTTP Code Responses Page Should Be Open
+    Close Popup Window
+
+Reg_TX_13
+    [Documentation]    Click *Send Survey Resposne* button， click *Run Test*, new window with correct title should be open, click *HTTP Reponse Codes* link, page should navigate to HTTP Code Responses Page, click *Back to Test Page* link, page should navigate back to *Transaction Page Test Result*, close the window, save page and system should allow to save without any error.
+    [Tags]    Regression
+    Click SSR Button    1
+    TX Param Block Should Be Open
+    TX URL Should Be    ${SEND_SURVEY_RESPONSE_TEST_URL}
+    Save Page
+    Save Done Tip Should Be Open
+    Click Run Test Link    1
+    Switch To New Window    ${TRANSACTION_TEST_PAGE_TITLE}
+    ${location}=    Get Location
+    Click HTTP Response Codes Link
+    HTTP Code Responses Page Should Be Open
+    Click Back To Test Page Link
+    Location Should Be    ${location}
+    Close Popup Window
+
+Reg_TX_14
+    [Documentation]    Click *Send Survey Resposne* button， click *Run Test*, new window with correct title should be open, click *Close Window* link, pop up window should be closed, save page and system should allow to save without any error.
+    [Tags]    Regression
+    Click SSR Button    1
+    TX Param Block Should Be Open
+    TX URL Should Be    ${SEND_SURVEY_RESPONSE_TEST_URL}
+    Save Page
+    Save Done Tip Should Be Open
+    Click Run Test Link    1
+    Switch To New Window    ${TRANSACTION_TEST_PAGE_TITLE}
+    Click Close Window Link
+    Switch To Main Window
+    Window Title Should Be    Angel.com - Transaction Page
+
+Reg_TX_15
+    [Documentation]    Choose "As text to speech" and "Go to" field is displayed, Choose one page and save it, system should allow to save without any error.
+    [Tags]    Regression
+    TX Choose Interpret HTTP Response Type    @{TX HTTP RESPONSE TYPES}[0]
+    TX Choose Interpret HTTP Response GoToPage    @{NEW VPAGES}[0]
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_TX_16
+    [Documentation]    Choose "Audio File Internal" and "Go to" field is displayed, Choose one page and save it, system should allow to save without any error.
+    [Tags]    Regression
+    TX Choose Interpret HTTP Response Type    @{TX HTTP RESPONSE TYPES}[1]
+    TX Choose Interpret HTTP Response GoToPage    @{NEW VPAGES}[0]
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_TX_17
+    [Documentation]    Choose "URL to Audio File External" and "Go to" field is displayed, Choose one page and save it, system should allow to save without any error.
+    [Tags]    Regression
+    TX Choose Interpret HTTP Response Type    @{TX HTTP RESPONSE TYPES}[2]
+    TX Choose Interpret HTTP Response GoToPage    @{NEW VPAGES}[0]
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_TX_18
+    [Documentation]    Choose "Link to Voice Page" and "Go to" field is not displayed, save page, system should allow to save without any error.
+    [Tags]    Regression
+    TX Choose Interpret HTTP Response Type    @{TX HTTP RESPONSE TYPES}[3]
+    TX Interpret HTTP Response GoToPage Selector Should Not Be Visible
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_TX_19
+    [Documentation]    Choose "Link to Phone Number" and "Go to" field is not displayed, save page, system should allow to save without any error.
+    [Tags]    Regression
+    TX Choose Interpret HTTP Response Type    @{TX HTTP RESPONSE TYPES}[4]
+    TX Interpret HTTP Response GoToPage Selector Should Not Be Visible
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_TX_20
+    [Documentation]    Choose "AngelXML" and "Go to" field is not displayed, save page, system should allow to save without any error.
+    [Tags]    Regression
+    TX Choose Interpret HTTP Response Type    @{TX HTTP RESPONSE TYPES}[5]
+    TX Interpret HTTP Response GoToPage Selector Should Not Be Visible
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_TX_21
+    [Documentation]    Click *Question Mark* beside Interpret HTTP Response block, new window with correct title should be open, close popup window, save page, system should allow to save without any error.
+    [Tags]    Regression
+    Click What's This Img    1
+    Switch To New Window    Parameter Value
+    Close Popup Window
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open

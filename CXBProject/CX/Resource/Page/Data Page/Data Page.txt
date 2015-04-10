@@ -1,0 +1,18 @@
+*** Settings ***
+Resource          ../../../resource.txt
+Resource          DP Main.txt
+
+*** Keywords ***
+Create Data Page
+    Choose Voice Page    @{VPAGES}[3]
+    Data Page Should Be Open
+
+Data Page Should Be Open
+    Wait Util Page Fully Loaded
+    Title Should Be    Angel.com - Data Page
+    ${pageURL}    Get Location
+    Set Test Variable    ${pageURL}
+    ${expectLink}=    Get Expect Navi Link    @{NEWVPages}[4]
+    NaviLink Should Be    ${expectLink}
+    Page Name Should Be    @{NEWVPages}[4]
+    Page Number Should Be    ${PAGE NUMBER}

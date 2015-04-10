@@ -1,0 +1,26 @@
+*** Settings ***
+Resource          ../../../resource.txt
+Library           Selenium2Library
+
+*** Keywords ***
+Select Standard Variable Names
+    Select Radio Button    radiobutton    defaultRadio
+
+Select Let me choose the variable names
+    Select Radio Button    radiobutton    manualRadio
+
+Standard variable names should be selected
+    radio_button_should_be_selected    defaultRadio
+
+Predefined variable should be contained
+    [Arguments]    ${value}
+    Element Should Contain    streetInfoVarRef_varID    ${value}
+
+The Number of Visible View Button Should Be
+    [Arguments]    ${value}
+    Run Keyword If    ${runsInFirefox}    xpath should match x times    //input[@class='common-btn buttonNavGo']    ${value}    message=    loglevel=INFO
+    Run Keyword If    ${runsInChrome}    xpath should match x times    //input[@class='common-btn buttonNavGo' and @value='View']    ${value}    message=    loglevel=INFO
+
+NO1 View Button Should Be Visible
+    [Arguments]    ${value}
+    xpath should match x times    //input[@class='buttonNavGo']    ${value}    message=    loglevel=INFO

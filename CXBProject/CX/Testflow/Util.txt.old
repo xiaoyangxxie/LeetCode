@@ -1,0 +1,74 @@
+*** Settings ***
+Library		  Selenium2Library
+Resource	  ../Resource/Global Resource.txt
+Resource	  ../config.txt
+Resource	  Login.txt
+Resource	  Voice Site.txt
+Resource	  ../resource.txt
+Resource	  ../Resource/Page/Common Page/CX Builder Page.txt
+Resource	  ../Resource/Page/Common Page/Audio Files.txt
+
+*** Keywords ***
+Open Firefox Browser
+    ${runOnWindows}    Set Variable If	  '${:}'==';'	 ${True}
+    Run Keyword If    ${runOnWindows}	 Open Firefox Browser In Windows
+    ...	   ELSE	   Open Firefox Browser In Linux
+
+Voice Page Suite Setup
+    Init set
+    Open New Browser
+    Login With Valid Credentials
+    Create Voice Site	 ${SUITE_NAME}
+    ${SiteOverviewURL}	  Get Location
+    Set Global Variable	   ${SiteOverviewURL}
+
+Voice Page Test Teardown
+    Go To Site Overview
+    Site Overview Should Be Open
+
+Init set
+    Set Selenium Implicit Wait	  ${IMPLICT WAIT}
+    Set Selenium Speed	  ${EXECUTE SPEED}
+    Set Selenium Timeout    ${SELENIUM_TIMEOUT}
+    Run Keyword If    '${SCREENSHOT ON ERROR}' == 'no'	  Register Keyword To Run On Failure	Nothing
+    Generate Baseline Path
+    Generate Download Path
+
+Open Other Browser
+    Open Browser    ${BASE URL}	   ${BROWSER}
+
+Open New Browser
+    ${runsInFirefox}=	 Set Variable If    "${BROWSER}".lower() in ['ff','firefox']	${True}
+    Run Keyword If    ${runsInFirefox}	  Open Firefox Browser	  ELSE	  Open Other Browser
+
+Voice Page Suite Teardown
+    Close All Browsers
+
+Voice Page Suite Teardown For Delete Audio Files
+    ${token}=	 Get ADC_TOKEN
+    Open Header Tab    ${CXBUILDER_TAB_ACTIVE}
+    CX Builder Page Should Be Open
+    Go To Audio Files Page    ${token}
+    Audio Files Page Should Be Open
+    Delete Folder And Audio Files
+    Go Out Of Frame
+    Go To    ${SiteOverviewURL}
+    Site Overview Should Be Open
+
+Get ADC_TOKEN
+    ${url}=    Get Location
+    ${ADC_TOKEN_STR}	${others}=    Split String    ${url}	&    1
+    ${others}	 ${ADC_TOKEN}=	  Split String From Right    ${ADC_TOKEN_STR}	 =    1
+    [Return]	${ADC_TOKEN}
+
+Go Back To Voice Page
+    Go To    ${pageURL}
+
+Open Firefox Browser In Windows
+    Run Keyword If    '${ENABLE PROFILE}'=='no'	   Open Browser	   ${BASE URL}	  ${BROWSER}	ff_profile_dir=${FF PROFILE DIR NO PROXY}    ELSE
+    ...	   Open Browser	   ${BASE URL}	  ${BROWSER}	ff_profile_dir=${FF PROFILE DIR PROXY}
+
+Open Firefox Browser In Linux
+    log	   {LINUX PROFILE PROXY}
+    Run Keyword If    '${ENABLE PROFILE}'=='no'	   Open Browser	   ${BASE URL}	  ${BROWSER}	ff_profile_dir=${LINUX PROFILE NO PROXY}    ELSE
+    ...	   Open Browser	   ${BASE URL}	  ${BROWSER}	ff_profile_dir=${LINUX PROFILE PROXY}

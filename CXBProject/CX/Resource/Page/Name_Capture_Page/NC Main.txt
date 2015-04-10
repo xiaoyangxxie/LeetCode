@@ -1,0 +1,29 @@
+*** Settings ***
+Resource          ../../../resource.txt
+Library           Selenium2Library
+
+*** Keywords ***
+Collect First Name Should Be Selected
+    Checkbox Should Be Selected    collectFirstNameDisplay
+
+Collect Last Name Should Be Selected
+    Checkbox Should Be Selected    collectLastNameDisplay
+
+Unselect Collect First Name
+    Unselect Checkbox    collectFirstNameDisplay
+    Checkbox Should Not Be Selected    collectFirstNameDisplay
+
+Unselect Collect Last Name
+    Unselect Checkbox    collectLastNameDisplay
+    Checkbox Should Not Be Selected    collectLastNameDisplay
+
+Please select a first and/or last name to be captured Should Be Showed
+    Page Should Contain    Please select a first and/or last name to be captured
+
+Variables Should Be Contained
+    [Arguments]    ${value}
+    Element Should Contain    firstNameVarRef_varID    ${value}
+
+Red Notice Should Display
+    [Arguments]    ${value}
+    Page Should Contain    ${value}

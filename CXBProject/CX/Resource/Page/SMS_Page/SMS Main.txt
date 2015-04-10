@@ -1,0 +1,121 @@
+*** Settings ***
+Resource          ../../../resource.txt
+Library           Selenium2Library
+
+*** Variables ***
+${SMS_SentDest}    name=smsSent0SelectBox
+${SMS_NoSentDest}    name=noSmsSent0SelectBox
+${SMS_ErrorDest}    name=advancedTab0SelectBox
+
+*** Keywords ***
+Caller ID Should Be Selected
+    List Selection Should Be    smsToVar_varID    CallerID
+
+Select a variable Should Be Existed
+    Element Should Contain    smsToVar_varID    Select a Variable
+
+New Variable Should Be Existed
+    Element Should Contain    smsToVar_varID    New Variable
+
+Click To_Switch Icon
+    Click Element    smsToVarBtn
+
+Static value field is displayed
+    Element Should Be Visible    smsTo
+
+Input Less than 10 digits
+    [Arguments]    ${value}
+    Input Text    smsTo    ${value}
+
+Red notice of 10 digits should display
+    [Arguments]    ${value}
+    Page Should Contain    ${value}
+
+Click Link SMS Page Help
+    Click link    link=SMS Page Help
+
+Static Value of text message should be visible
+    Element Should Be Visible    smsText
+
+Default value of Text Message should be Correct
+    ${text}    get text    smsText
+    Should Be Equal    ${text}    Type your text message content here or use a variable
+
+Click Text_Switch Icon
+    Click Element    smsTextBtn
+
+Value Filed should display
+    Element Should Be Visible    smsTextVar_varID
+
+Select a variable of text should be Existed
+    Element Should Contain    smsTextVar_varID    Select a Variable
+
+New Variable of text Should Be Existed
+    Element Should Contain    smsTextVar_varID    New Variable
+
+Click Link Character Limit
+    Click Link    link=Character Limit ?
+
+Run Test Should Be Visible
+    Element Should Be Visible    id=runTestBtn
+
+Input 10 Digits
+    [Arguments]    ${value}
+    Input Text    smsTo    ${value}
+
+Test Results Page Should Display
+    New Window Title Should Be    Angel.com - SMSPage Test Results
+
+Click Run Test
+    Click Element    id=runTestBtn
+
+Click Link Close Window
+    Click Link    link=Close Window
+
+Test Results Window Should Be Closed
+    ${passd}    Run Keyword If    ${runsInFirefox}    Run Keyword And Return Status    Window Title Should Be    title=Angel.com - SMS Page Test Results
+    Run Keyword If    ${runsInFirefox}    Should Be Equal As Strings    ${passd}    False
+    Run Keyword If    ${runsInChrome}    Select Window    title=Angel.com - SMS Page
+    Run Keyword If    ${runsInFirefox}    Select Window
+
+Click Link ?
+    Click image    /images/icons/questionIcon.png
+
+SMS Variable Should Be Contained
+    [Arguments]    ${value}
+    Element Should Contain    smsToVar_varID    ${value}
+
+SMS Text Variable Should Be Contained
+    [Arguments]    ${value}
+    Element Should Contain    smsTextVar_varID    ${value}
+
+Sent Dropdown List Should Contain All Pages
+    Sent Destination Should Contain List    ${SMS_SentDest}    ${NEW VPAGES}
+    Element Should Contain    ${SMS_SentDest}    Home Page
+    Element Should Contain    ${SMS_SentDest}    1 - Greeting
+    Element Should Contain    ${SMS_SentDest}    A Page in Another Site
+    Element Should Contain    ${SMS_SentDest}    Use value from a Variable
+
+Sent Destination Should Contain List
+    [Arguments]    ${dest}    ${value}
+    Dropdown Should Contain List    ${dest}    ${value}
+
+No Sent Destination Should Contain List
+    [Arguments]    ${value}
+    Dropdown Should Contain List    ${SMS_NoSentDest}    ${value}
+    Element Should Contain    ${SMS_NoSentDest}    Home Page
+    Element Should Contain    ${SMS_NoSentDest}    1 - Greeting
+    Element Should Contain    ${SMS_NoSentDest}    A Page in Another Site
+    Element Should Contain    ${SMS_NoSentDest}    Use value from a Variable
+
+No Sent Dropdown List Should Contain All Pages
+    No Sent Destination Should Contain List    ${NEW VPAGES}
+
+Click Choose folder img
+    Click Image    Browse Voice Pages
+
+SMS_Error Destination Should Contain All Pages
+    Sent Destination Should Contain List    ${SMS_ErrorDest}    ${NEW VPAGES}
+    Element Should Contain    ${SMS_ErrorDest}    Home Page
+    Element Should Contain    ${SMS_ErrorDest}    1 - Greeting
+    Element Should Contain    ${SMS_ErrorDest}    A Page in Another Site

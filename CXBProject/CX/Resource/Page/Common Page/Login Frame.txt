@@ -1,0 +1,23 @@
+*** Settings ***
+Library           Selenium2Library
+
+*** Variables ***
+${LOGIN_FRAME}    xpath=//*[@id="loginbox"]/iframe
+${EMAIL_TEXT}     name=email
+${PASSWD_TEXT}    name=password_string
+${LOGIN_SUBMIT_BUTTON}    name=GO
+
+*** Keywords ***
+Input Email
+    [Arguments]    ${email}
+    Wait Until Keyword Succeeds    60sec    0.5sec    Input Text    ${EMAIL_TEXT}    ${email}
+
+Input Passwd
+    [Arguments]    ${password}
+    Wait Until Keyword Succeeds    60sec    0.5sec    Input Password    ${PASSWD_TEXT}    ${password}
+
+Submit Credentials
+    Run Keyword If    ${RunInQE}==False    Click Button    ${LOGIN_SUBMIT_BUTTON}    ELSE    Click Image    css=input[type="image"]
+
+Go To Login Frame
+    Run Keyword If    ${RunInQE}==True    Select Frame    ${LOGIN_FRAME}

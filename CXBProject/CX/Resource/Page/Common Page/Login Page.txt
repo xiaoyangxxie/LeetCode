@@ -1,0 +1,17 @@
+*** Settings ***
+Resource          ../../../config.txt
+Library           Selenium2Library
+Resource          ../../Global Resource.txt
+
+*** Variables ***
+${LOGIN PAGE TITLE}    Customer Login \| Angel.com
+
+*** Keywords ***
+Go To Login Page
+    Comment    Run Keyword If    ${RunInQE}==True    Go To    ${BASE URL}    ELSE    Go To
+    ...    ${BASE URL}
+    Comment    Run Keyword If    ${RunInQE}==True    Go To    ${BASE URL}/login.php    ELSE    Go To
+    ...    ${BASE URL}/login/login-page.jsp?LOGGING_INTO_CALL_QUEUE=null&domainCode=null&pageCode=null&message=&etl.failure.message=null&messageColor=null
+    Run Keyword If    ${RunInQE}==True    log    ${BASE URL}    ELSE    Go To    ${BASE URL}/login/login-page.jsp?LOGGING_INTO_CALL_QUEUE=null&domainCode=null&pageCode=null&message=&etl.failure.message=null&messageColor=null
+    Maximize Browser Window
+    #comment    Title Should Be    ${LOGIN PAGE TITLE}

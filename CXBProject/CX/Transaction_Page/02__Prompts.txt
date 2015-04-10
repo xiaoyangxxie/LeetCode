@@ -1,0 +1,149 @@
+*** Settings ***
+Test Setup        Run Keywords    Create Transaction Page    AND    Open Prompts Tab    AND    TX Prompts Tab Should Be Open
+Resource          ../Testflow/Util.txt
+
+*** Test Cases ***
+Reg_TX_22
+    [Documentation]    Click the 'Link to Audio' link, system should navigate to page where user can select the audio files.
+    [Tags]    Regression
+    Click Link Audio Link    1
+    Audio Handler Should Be Open
+    Go Out Of Frame
+    Save Successfully
+
+Reg_TX_23
+    [Documentation]    1. Add audio file.
+    ...    2. Click Clear link.
+    ...    3. System should clear the selected wav file.
+    [Tags]    Regression
+    Link Audio File To Page    ${AUDIO FILE}    1
+    TX Prompt Audio File Should Be    Sent.wav
+    Click Clear Link    1
+    TX Prompt Audio File Should Be    None
+    Save Successfully
+
+Reg_TX_24
+    [Documentation]    1. Add audio file.
+    ...    2. Click play link.
+    ...    3. System should play the selected wav file.
+    [Tags]    Debug    chrome
+    Link Audio File To Page    ${AUDIO FILE}    1
+    TX Prompt Audio File Should Be    Sent.wav
+    Play Audio File    Sent.wav    1
+    Save Successfully
+
+Reg_TX_25
+    [Documentation]    1. User can change the Text to speech option to Audio and vice versa.
+    ...    2. In this user can link any audio files to play.
+    [Tags]    Regression
+    Change To TTS    1
+    TX Prompt TTS Block Should Be Visible    1
+    Change To Audio    1
+    TX Prompt Audio File Should Be    None    1
+    Save Successfully
+
+Reg_TX_26
+    [Documentation]    1. Click on the *Audio* button to add audio block.
+    ...    2. User can add as much as can audio blocks to the voice pages.
+    [Tags]    Regression
+    Click Audio Button
+    TX Audio Prompt Block Should Be Open    2
+    Save Successfully
+
+Reg_TX_27
+    [Documentation]    1. Click on the *Text-to-Speech* button.
+    ...    2. System should add new Text -to-speech prompt.
+    [Tags]    Regression
+    Click Text-to-Speech Button
+    TX TTS Prompt Block Should Be Open    2
+    Save Successfully
+
+Reg_TX_28
+    [Documentation]    1. Click on the *Variable* button.
+    ...    2. System should add the new variable prompt.
+    [Tags]    Regression
+    Click Visible Variable Button    1
+    TX Variable Prompt Block Should Be Open    2
+    Save Page
+    Red Notice Should Display    The name of the variable cannot be blank.
+
+Reg_TX_29
+    [Documentation]    1. Click on the *Using Variables* link.
+    ...    2. The Working with Variables link should be open in the new window.
+    [Tags]    Regression
+    Click Using Variables Link
+    Switch To New Window    Working with Variables / IVR Wiki
+    Close Popup Window
+
+Reg_TX_30
+    [Documentation]    1. Select any audio prompt or Text-to-speech prompt or variable prompt.
+    ...    2. Click the delete buton.
+    ...    3. System should delete the selected prompt.
+    [Tags]    Regression
+    Click Audio Button
+    Click Text-to-Speech Button
+    Click Visible Variable Button    1
+    TX Select Prompt Block    2
+    TX Select Prompt Block    3
+    TX Select Prompt Block    4
+    Click Visible Delete Button    1
+    TX Prompt Block Should Be Deleted    2
+    TX Prompt Block Should Be Deleted    3
+    TX Prompt Block Should Be Deleted    4
+    Save Successfully
+
+Reg_TX_31-1
+    [Documentation]    1. User can use the 'Up' and 'Down' button to reorder the audio prompts, text-to-speech and variables.
+    [Tags]    Regression
+    Click Text-to-Speech Button
+    TX Select Prompt Block    2
+    Click Up Button
+    TX TTS Prompt Block Should Be Open    1
+    Save Successfully
+
+Reg_TX_31-2
+    [Documentation]    1. User can use the 'Up' and 'Down' button to reorder the audio prompts, text-to-speech and variables.
+    [Tags]    Regression
+    Click Text-to-Speech Button
+    TX Select Prompt Block    1
+    Click Down Button
+    TX TTS Prompt Block Should Be Open    1
+    Save Successfully
+
+Reg_TX_32
+    [Documentation]    1. Click the *Link to Audio* link.
+    ...    2. System should navigate to page where user can select the audio files.
+    [Tags]    Regression
+    Click Link Audio Link    2
+    Audio Handler Should Be Open
+    Go Out Of Frame
+    Save Successfully
+
+Reg_TX_33
+    [Documentation]    1. Add audio file.
+    ...    2. Click *Clear* link.
+    ...    3. System should clear the selected wav file.
+    [Tags]    Regression
+    Link Audio File To Page    ${AUDIO FILE}    2
+    TX Wait Prompt Audio File Should Be    Sent.wav
+    Click Clear Link    2
+    TX Wait Prompt Audio File Should Be    None
+    Save Successfully
+
+Reg_TX_34
+    [Documentation]    1. Add audio file.
+    ...    2. Click *Play* link.
+    ...    3. System should play the selected wav file.
+    [Tags]    Debug    chrome
+    Link Audio File To Page    ${AUDIO FILE}    2
+    TX Wait Prompt Audio File Should Be    Sent.wav
+    Play Audio File    Sent.wav    2
+    Save Successfully
+
+Reg_TX_35
+    [Documentation]    Click "why" Link and "Close the window" can work.
+    [Tags]    Regression
+    Click Why Link    1
+    Switch To New Window    Wait Prompt
+    Click Close Window Link
+    Switch To Main Window

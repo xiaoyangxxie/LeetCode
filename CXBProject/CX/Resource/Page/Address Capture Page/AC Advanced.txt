@@ -1,0 +1,32 @@
+*** Settings ***
+Resource          ../../../resource.txt
+Library           Selenium2Library
+
+*** Keywords ***
+Disable Site Commands Should Not Be Selected
+    Checkbox Should Not Be Selected    disableSiteCommandsCheckbox
+
+Select Disable Site Commands
+    select checkbox    disableSiteCommandsCheckbox
+
+Use system provided prompts should be selected
+    ${status}    Run Keyword And Return Status    Radio Button Should Be Set To    customAudio    FALSE
+    Run Keyword If    ${status}==False    Radio Button Should Be Set To    customAudio    false
+
+Select Use my own prompts
+    Select Radio Button    customAudio    TRUE
+
+Click Link Choose Folder
+    click link    link=Choose Folder
+
+Click Link How to replace prompts
+    click link    link=How to Replace Prompts
+
+Disable Site Commands Should Be Selected
+    Checkbox Should Be Selected    disableSiteCommandsCheckbox
+
+Use My Own Prompts Should Be Selected
+    ${status}    Run Keyword And Return Status    Radio Button Should Be Set To    customAudio    TRUE
+    Run Keyword If    ${status}==False    Radio Button Should Be Set To    customAudio    true
+    Element Should Be Visible    link=Choose Folder
+    Element Should Be Visible    link=How to Replace Prompts

@@ -1,0 +1,107 @@
+*** Settings ***
+Resource          ../Testflow/Logic Page.txt
+Resource          ../Testflow/Util.txt
+Resource          ../Resource/Page/Logic Page/Logic Page.txt
+Resource          ../resource.txt
+
+*** Test Cases ***
+Create Logic Page TC-1
+    [Tags]    Regression
+    Create Logic Page
+
+Change Logic Page Name&Number TC-12
+    [Documentation]    Change *Page Name* and *Page Number*, the system shoule allow to save without any erros and the modification should be successful.
+    [Tags]    Regression
+    Create Logic Page
+    Input Page Name    ${TEST_NAME}
+    Input Page Number    100
+    Save Page
+    Save Done Tip Should Be Open
+    Go To Site Overview
+    Page Name Should Exist    ${TEST_NAME}
+    Page Number Should Exist    100
+
+Change Logic Page Type TC-13.1
+    [Documentation]    click *Logic Page Icon*, click *Close*, the change page type div disappear.
+    [Tags]    Regression
+    Create Logic Page
+    Click Page Type Icon
+    Change Page Type To Should Exist
+    Select a Page Type List Should Exsit
+    Close Page Type Icon
+    Change Page Type To Should Not Exist
+
+Change Logic Page Type TC-13.2
+    [Documentation]    click *Logic Page Icon*, choose different page type and commit, system should allow to save without any errors.
+    [Tags]    Regression
+    Create Logic Page
+    Page Type Icon Should Be    @{VPAGES_IMGS}[4]
+    Click Page Type Icon
+    Change Page Type To Should Exist
+    Select a Page Type List Should Exsit
+    Select a Page Type    @{VPAGES}[0]
+    Commit Changes In Page Type
+    Verify Page Type Changed    @{VPAGES_IMGS}[0]
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Change Logic Page Parent Group TC-14.1
+    [Documentation]    Click *Parent Group* link, then click *Close* button. The page parent group should be *Home*.
+    [Tags]    Regression
+    Create Logic Page
+    Click Parent Group
+    Close Parent Group
+    Page Group Should Be    HOME
+
+Change Logic Page Parent Group TC-14.2
+    [Documentation]    Click *Parent Group* link, then click *Save* button. The page parent group should be *Home*.
+    [Tags]    Regression
+    Create Logic Page
+    Click Parent Group
+    Save Parent Group
+    Verify Parent Group    HOME
+
+Change Logic Page Parent Group TC-14.3
+    [Documentation]    Add a page group in site overview, then create logic page, click *Parent Group* link, then click the new group, then click *Save* button. The page parent group should be the new group.
+    [Tags]    Regression
+    Add Page Group    New Group
+    Create Logic Page
+    Click Parent Group
+    Select the First Group
+    Save Parent Group
+    Verify Parent Group    New Group
+
+Save Logic Page TC-15.1
+    [Documentation]    Create *Logic Page* and click *Save* button. The system should allow to save without any errors.
+    [Tags]    Regression
+    Create Logic Page
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Save Logic Page TC-15.2
+    [Documentation]    Create *Logic Page* and click *Save&Exit* button. The system should allow to save without any errors.
+    [Tags]    Regression
+    Create Logic Page
+    Save&Exit Page Named As Test Case
+    Page Name Should Exist    ${TEST_NAME}
+    Verify HighLight    true
+
+Save Logic Page TC-15.3
+    [Documentation]    Create *Logic Page* and click *Save* button, then click *Exit* button. The system should allow to save without any errors.
+    [Tags]    Regression
+    Create Logic Page
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+    Exit Page
+    Page Name Should Exist    ${TEST_NAME}
+    Verify HighLight    null
+
+Save Logic Page TC-15.4
+    [Documentation]    Create *Logic Page* and click *Exit* button. The system should allow to save without any errors.
+    [Tags]    Regression
+    Create Logic Page
+    Exit Page
+    Verify Page Title    ${VOICE SITE PAGE TITLE}
+    Page Number Should Not Exist    ${PAGE NUMBER}
+
+*** Keywords ***

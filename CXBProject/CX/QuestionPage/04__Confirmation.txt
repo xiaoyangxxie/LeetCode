@@ -1,0 +1,94 @@
+*** Settings ***
+Test Setup        Run Keywords    Create Question Page    AND    Open Confirmation Tab
+Resource          ../resource.txt
+
+*** Variables ***
+
+*** Test Cases ***
+Reg_Ques_61
+    [Documentation]    Confirmation - How to Replace
+    ...    User can click on the link to know How Confirmation Works. System should pop up a new window.
+    [Tags]    Regression
+    Select Ques Recording Confirmation As Confirm
+    Confirmation Prompts Block Should Be Visible
+    Click How To Replace Link
+    New Window Title Should Be    Replacing Confirmation Prompts
+    Close Popup Window
+
+Reg_Ques_62
+    [Documentation]    Confirmation - Reset to default values
+    ...    User can reset the defualt audio files in the 'Confirmation' initial, NI and NM prompts.
+    [Tags]    Regression
+    Select Ques Recording Confirmation As Confirm
+    Confirmation Prompts Block Should Be Visible
+    ${confirm_initial_prompt_audio_file}=    Get Confirmation Prompt Audio File    1
+    Link Audio File To Page    ${AUDIO FILE}    1
+    Confirmation Prompt Audio File Should Be    Sent.wav    1
+    ${review_initial_prompt_audio_file}=    Get Confirmation Prompt Audio File    6
+    Link Audio File To Page    ${AUDIO FILE}    6
+    Confirmation Prompt Audio File Should Be    Sent.wav    6
+    Click Reset To Default Values Link    1
+    Confirmation Prompt Audio File Should Be    ${confirm_initial_prompt_audio_file}    1
+    Confirmation Prompt Audio File Should Be    ${review_initial_prompt_audio_file}    6
+    Save Successfully
+
+Reg_Ques_63
+    [Documentation]    Confirmation - Confirmation Threshold
+    ...
+    ...    "1. User can specify the ""Confirmation Threshold"" value if the caller's response (on a successful match) when the confidence is below this level.
+    ...    2. User can reset the Confirmation Threshold"" value by clicking the 'Reset' link."
+    [Tags]    Regression
+    Select Ques Recording Confirmation As Confirm
+    Confirmation Prompts Block Should Be Visible
+    Confirmation Threshold Value Should Be    1
+    Set Confirmation Threshold To    0.5
+    Save Page
+    Confirmation Threshold Value Should Be    0.5
+    Click Reset Link
+    Save Page
+    Confirmation Threshold Value Should Be    1
+    Save Successfully
+
+Reg_Ques_64
+    [Documentation]    Confirmation - Do Not Confirm
+    ...    "1. User can select the ""Do Not Confirm"" option.
+    ...    2. The ""Confirmation Prompts"" should not displayed if the user select the 'do Not Confirm' option."
+    [Tags]    Regression
+    Select Ques Recording Confirmation As Do Not Confirm
+    Confirmation Prompts Block Should Not Be Visible
+
+Reg_Ques_65
+    [Documentation]    Confirmation - Confirm
+    ...    "1. User can select the ""Confirm"" option.
+    ...    2. The ""Confirmation Prompts"" should be displayed if the user select the 'Confirm' option."
+    [Tags]    Regression
+    Select Ques Recording Confirmation As Confirm
+    Confirmation Prompts Block Should Be Visible
+    Save Successfully
+
+Reg_Ques_66
+    [Documentation]    Confirmation - Link Audio
+    ...    "1. Click the 'Link to Audio' link.
+    ...    2. System should navigate to page where user can select the audio files.
+    ...    Note: This test cases should be executed for all the initial, no input and no match prompts."
+    [Tags]    Regression
+    Select Ques Recording Confirmation As Confirm
+    Confirmation Prompts Block Should Be Visible
+    Click Link Audio Link    1
+    Audio Handler Should Be Open
+    Save Successfully
+
+Reg_Ques_67
+    [Documentation]    Confirmation - Play
+    ...    "1. Click play link.
+    ...    2. System should play the selected wav file.
+    ...    Note: This test cases should be executed for all the initial, no input and no match prompts."
+    [Tags]    Debug    chrome
+    Select Ques Recording Confirmation As Confirm
+    Confirmation Prompts Block Should Be Visible
+    Link Audio File To Page    ${AUDIO FILE}    1
+    Confirmation Prompt Audio File Should Be    Sent.wav    1
+    Play Audio File    Sent.wav    1
+    Save Successfully
+
+*** Keywords ***

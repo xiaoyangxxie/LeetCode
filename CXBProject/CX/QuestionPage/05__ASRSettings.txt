@@ -1,0 +1,87 @@
+*** Settings ***
+Test Setup        Run Keywords    Create Question Page    AND    ASR Settings Test Set Up
+Force Tags        asr
+Resource          ../resource.txt
+
+*** Variables ***
+
+*** Test Cases ***
+Reg_Ques_68
+    [Documentation]    Open *ASR Settings* tab, change the value for confidence level, click *Reset* link, the confidence level value should be reset to the old value.
+    [Tags]    Regression
+    Change Confidence Level    0.9
+    Click Reset Link    1
+    Confidence Level Should Be    0.45
+    Save Successfully
+
+Reg_Ques_69
+    [Documentation]    Open *ASR Settings* tab, click *More* link in the confidence level field, system should display full description for confidence level.
+    [Tags]    Regression
+    Confidence Level Desc Should Be Collapse
+    Click More Link    1
+    Confidence Level Desc Should Be Expanded
+    Save Successfully
+
+Reg_Ques_70
+    [Documentation]    Open *ASR Settings* tab, change the value for sensitivity, click *Reset* link, the sensitivity value should be reset to the old value.
+    [Tags]    Regression
+    Change Sensitivity    0.9
+    Click Reset Link    2
+    Sensitivity Should Be    0.5
+    Save Successfully
+
+Reg_Ques_71
+    [Documentation]    Open *ASR Settings* tab, click *More* link in the sensitivity field, system should display full description for sensitivity.
+    [Tags]    Regression
+    Sensitivity Desc Should Be Collapse
+    Click More Link    2
+    Sensitivity Desc Should Be Expanded
+    Save Successfully
+
+Reg_Ques_72
+    [Documentation]    Open *ASR Settings* tab, change the value for speedvsaccuracy, click *Reset* link, the speedvsaccuracy value should be reset to the old value.
+    [Tags]    Regression
+    Change Speed Vs Accuracy    0.9
+    Click Reset Link    3
+    Speed VS Accuracy Should Be    0.5
+    Save Successfully
+
+Reg_Ques_73
+    [Documentation]    Open *ASR Settings* tab, change the value for timeout, click *Reset* link, the timeout value should be reset to the old value.
+    [Tags]    Regression
+    Change ASR Time Out    1
+    Click Reset Link    4
+    ASR Time Out Should Be    5
+    Save Successfully
+
+Reg_Ques_74
+    [Documentation]    Open *ASR Settings* tab, change the value for completetimeout, click *Reset* link, the completetimeout value should be reset to the old value.
+    [Tags]    Regression
+    Change Ques Complete Time Out    0.9
+    Click Complete Time Out Reset Link
+    Save Successfully
+    Ques Complete Time Out Should Be    0.3
+
+Reg_Ques_75
+    [Documentation]    Open *ASR Settings* tab, click *More* link in the completetimeout field, system should display full description for completetimeout.
+    [Tags]    Regression
+    Ques Complete Time Out Desc Should Be Collapse
+    Click More Link    3
+    Ques Complete Time Out Desc Should Be Expanded
+    Save Successfully
+
+Reg_Ques_76
+    [Documentation]    Open *ASR Settings* tab, change the value for incompletetimeout, click *Reset* link, the incompletetimeout value should be reset to the old value.
+    [Tags]    Regression
+    Change Ques Incomplete Time Out    0.9
+    Click Incomplete Time Out Reset Link
+    Save Successfully
+    Ques Incomplete Time Out Should Be    2.25
+
+Reg_Ques_77
+    [Documentation]    Open *ASR Settings* tab, click *More* link in the incompletetimeout field, system should display full description for incompletetimeout.
+    [Tags]    Regression
+    Change Interdigit Time Out    0.9
+    Click Interdigit Time Out Reset Link
+    Save Successfully
+    InterDigit Time Out Should Be    2.25

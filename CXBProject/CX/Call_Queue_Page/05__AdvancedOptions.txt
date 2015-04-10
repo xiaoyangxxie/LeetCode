@@ -1,0 +1,127 @@
+*** Settings ***
+Test Setup        Run Keywords    Create Call Queue Page    AND    Switch To Advanced Option Tab
+Resource          ../resource.txt
+
+*** Test Cases ***
+Reg_CQ_41
+    [Documentation]    Advanced Options - Agent Settings - System command
+    ...    "1. Click on System command.
+    ...    2. System should navigate to the system command page.User can check the 'For Agents' check box."
+    [Tags]    Regression
+    Click System Command Link
+    Window Title Should Be    Angel.com - System Commands
+    Go Back
+
+Reg_CQ_42
+    [Documentation]    Advanced Options - Wrap up time -why?
+    ...    "1. Click on lhe link 'why?'
+    ...    2. System should open the link in new window."
+    [Tags]    Regression
+    Scroll Down Page    1000
+    Click CQ AO What's This Link
+    Scroll Down Page    450
+    Click Why Link
+    New Window Title Should Be    Wrap Up Time
+    Close Popup Window
+    Window Title Should Be    Angel.com - Call Queue Page
+
+Reg_CQ_43
+    [Documentation]    Advanced Options - Wrap up time
+    ...    "1. Enter number of seconds to wrap up the call.
+    ...    And also user can add the extended wrap up time.
+    ...    2. System should allow the user to enter the number of seconds for wrap up and extended wrap up."
+    [Tags]    Regression
+    Scroll Down Page    300
+    CQ AO Wrap Up Time Should Be    120
+    CQ AO Extended Wrap Up Time Should Be    120
+    Scroll Down Page    300
+    Input CQ AO Wrap Up Time    200
+    Input CQ AO Extended Wrap Up Time    100
+    Save Page Named As Test Case
+    CQ AO Wrap Up Time Should Be    200
+    CQ AO Extended Wrap Up Time Should Be    100
+    Save Successfully
+
+Reg_CQ_44
+    [Documentation]    Advanced Options - Missed call Automatic check out
+    ...    "1. Enter the number of missed calls allow for the agent.
+    ...    2. System should automatically check out the agent after the specified number of missed calls."
+    [Tags]    Regression
+    Scroll Down Page    400
+    Input CQ AO Missed Call    10
+    Save Successfully
+    CQ AO Missed Call Should Be    10
+
+Reg_CQ_45
+    [Documentation]    Advanced Options - Missed call Email alerts
+    ...
+    ...    User can enter the email address to get the details about every missed call.User can also select the option 'Send a copy of the Missed Call Email to the Agent who missed the call."
+    [Tags]    Regression
+    Scroll Down Page    500
+    CQ AO Supervisor Email Address Should Be    ${EMPTY}
+    CQ AO Email Alerts Checkbox Should Be Selected
+    Input CQ AO Supervisor Email Address    xieyang@angel.com
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+    Scroll Down Page    500
+    CQ AO Supervisor Email Address Should Be    xieyang@angel.com
+
+Reg_CQ_46
+    [Documentation]    Advanced Options - Limit Call duration
+    ...
+    ...    "User can enter the number of seconds for the call duration.
+    ...    User can also select the option toWarn the caller about the expire number of seconds before end of the call. \ And also specify the page after the expiration of call limit."
+    [Tags]    Regression
+    Scroll Down Page    600
+    CQ AO Limit Call Duration Checkbox Should Be Selected
+    Input CQ AO Limit Call Duration    3000
+    Select CQ AO Limit Call Duration Warn Checkbox
+    Input CQ AO Limit Call Duration Warn Time    65
+    Choose CQ AO Limit Call Duration Destination    1 - Greeting
+    Save Successfully
+    Scroll Down Page    600
+    CQ AO Limit Call Duration Should Be    3000
+    CQ AO Limit Call Duration Warn Time Should Be    65
+    CQ AO Limit Call Duration Destination Should Be    1 - Greeting
+
+Reg_CQ_47
+    [Documentation]    Advanced Options - Report Settings
+    ...
+    ...    Verify the user can able to set variables \ for the report settings
+    [Tags]    Regression
+    Choose CQ AO Agent Name Variable    New Variable
+    Choose CQ AO Call Outcome Variable    New Variable
+    Choose CQ AO Talk Time Variable    New Variable
+    Choose CQ AO Wait Time Variable    New Variable
+    Choose CQ AO Dispostion Variable    New Variable
+    Choose CQ AO Call Note1 Variable    New Variable
+    Choose CQ AO Transfer Point Variable    New Variable
+    Choose CQ AO Referrer Variable    New Variable
+    Save Successfully
+
+Reg_CQ_48
+    [Documentation]    Advanced Options - \ Service Level Threshold- Whats this?
+    ...    "1. Click \ on 'What's This? Link.
+    ...    2. System should open the link in new window."
+    [Tags]    Regression
+    Scroll Down Page    1000
+    Click CQ AO What's This Link
+    Wait Until Keyword Succeeds    10sec    1sec    Select Window    title=Service Level Threshold
+    Window Title Should Be    Service Level Threshold
+    Go Back To CQ page
+    Window Title Should Be    Angel.com - Call Queue Page
+
+Reg_CQ_49
+    [Documentation]    Advanced Options - Service Level Thershold
+    ...
+    ...    Verify the User can able to set the Service Level Threshold seconds.
+    [Tags]    Regression    Debug
+    Voice Page Suite Teardown
+    Voice Page Suite Setup
+     Create Call Queue Page
+    Switch To Advanced Option Tab
+    Scroll Down Page    1050
+    Input CQ AO Service Level Threshold    200
+    Save Successfully
+    Scroll Down Page    1050
+    CQ AO Service Level Threshold Should Be    200

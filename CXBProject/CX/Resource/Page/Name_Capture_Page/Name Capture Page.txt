@@ -1,0 +1,21 @@
+*** Settings ***
+Resource          ../../../resource.txt
+Library           Selenium2Library
+Resource          NC Main.txt
+
+*** Keywords ***
+Create Name Capture Page
+    Set Selenium Implicit Wait    0
+    Select Label    ${PAGE_TYPE_SELECTOR}    Name Capture Page
+    Set Selenium Implicit Wait    ${IMPLICT WAIT}
+    Name Capture Page Should Be Open
+
+Name Capture Page Should Be Open
+    Wait Util Page Fully Loaded
+    Title Should Be    Angel.com - Name Capture Page
+    ${pageURL}    Get Location
+    Set Test Variable    ${pageURL}
+    ${expectLink}=    Get Expect Navi Link    @{NEW VPAGES}[2]
+    NaviLink Should Be    ${expectLink}
+    Page Name Should Be    @{NEWVPages}[2]
+    Page Number Should Be    ${PAGE NUMBER}

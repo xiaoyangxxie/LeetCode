@@ -1,0 +1,195 @@
+*** Settings ***
+Resource          ../Common Elements.txt
+Library           Selenium2Library
+
+*** Variables ***
+${CONFIDENCE_LEVEL_VALUE_TEXT}    name=ASRSettings_confidencelevel
+${SENSITIVITY_VALUE_TEXT}    name=ASRSettings_sensitivity
+${SPEED_VS_ACCURACY_VALUE_TEXT}    name=ASRSettings_speedvsaccuracy
+${ASR_TIME_OUT_VALUE_TEXT}    name=ASRSettings_timeout
+${COMPLETE_TIME_OUT_VALUE_TEXT}    name=ASRSettings_completetimeout
+${RESET_LINK}     link=Reset
+${INCOMPLETE_TIME_OUT_VALUE_TEXT}    name=ASRSettings_incompletetimeout
+${MORE_LINK}      link=More...
+${QUES_COMPLETE_TIME_OUT_VALUE_TEXT}    id=vfresponse_numberASR_completetimeoutDiv
+${QUES_INCOMPLETE_TIME_OUT_VALUE_TEXT}    id=vfresponse_numberASR_incompletetimeoutDiv
+${INTER_DIGIT_TIME_OUT}    id=vfresponse_numberASR_interdigittimeoutDiv
+
+*** Keywords ***
+Open ASR Settings Tab
+    Open Setting Tab    @{SETTINGS_BOX_TABS}[3]    #Open ASR Settings Tab
+
+ASR Settings Tab Should Be Open
+    Wait Until Keyword Succeeds    20s    1s    Wait Util Page Fully Loaded
+    Wait Until Keyword Succeeds    30s    1s    Confidence Level Should Be    0.45
+    Wait Until Keyword Succeeds    30s    1s    Sensitivity Should Be    0.5
+    Wait Until Keyword Succeeds    30s    1s    Speed VS Accuracy Should Be    0.5
+    Wait Until Keyword Succeeds    30s    1s    ASR Time Out Should Be    5
+
+Confidence Level Should Be
+    [Arguments]    ${level}
+    Wait Until Keyword Succeeds    30sec    1sec    Textfield Value Should Be    ${CONFIDENCE_LEVEL_VALUE_TEXT}    ${level}
+
+Sensitivity Should Be
+    [Arguments]    ${sens}
+    Wait Until Keyword Succeeds    30sec    1sec    Textfield Value Should Be    ${SENSITIVITY_VALUE_TEXT}    ${sens}
+
+Speed VS Accuracy Should Be
+    [Arguments]    ${svsa}
+    Wait Until Keyword Succeeds    30sec    1sec    Textfield Value Should Be    ${SPEED_VS_ACCURACY_VALUE_TEXT}    ${svsa}
+
+ASR Time Out Should Be
+    [Arguments]    ${to}
+    Wait Until Keyword Succeeds    30sec    1sec    Textfield Value Should Be    ${ASR_TIME_OUT_VALUE_TEXT}    ${to}
+
+Complete Time Out Should Be
+    [Arguments]    ${to}
+    Wait Until Keyword Succeeds    30sec    1sec    Textfield Value Should Be    ${COMPLETE_TIME_OUT_VALUE_TEXT}    ${to}
+
+Incomplete Time Out Should Be
+    [Arguments]    ${to}
+    Textfield Value Should Be    vfASRSettings_incompletetimeoutDiv    ${to}
+
+Change Confidence Level
+    [Arguments]    ${level}
+    Wait Until Keyword Succeeds    15sec    0.5sec    Wait Until Page Contains Element    vfASRSettings_confidencelevelDiv
+    Execute Javascript    window.document.getElementById("vfASRSettings_confidencelevelDiv").value='${level}'
+    Save Page
+    Wait Until Keyword Succeeds    5sec    0.5sec    Confidence Level Should Be    ${level}
+
+Click Reset Link
+    [Arguments]    ${no}=1
+    Click Visible Element    ${RESET_LINK}    ${no}
+
+Change Sensitivity
+    [Arguments]    ${sens}
+    Wait Until Keyword Succeeds    15sec    0.5sec    Wait Until Page Contains Element    vfASRSettings_sensitivityDiv
+    Execute Javascript    window.document.getElementById('vfASRSettings_sensitivityDiv').setAttribute('value', '${sens}')
+    Save Page
+    Wait Until Keyword Succeeds    5sec    0.5sec    Sensitivity Should Be    ${sens}
+
+Change Speed Vs Accuracy
+    [Arguments]    ${svsa}
+    Execute Javascript    window.document.getElementById('vfASRSettings_speedvsaccuracyDiv').setAttribute('value', '${svsa}')
+    Save Page
+    Wait Until Keyword Succeeds    5sec    0.5sec    Speed VS Accuracy Should Be    ${svsa}
+
+Change ASR Time Out
+    [Arguments]    ${time}
+    Execute Javascript    window.document.getElementById('vfASRSettings_timeoutDiv').setAttribute('value', '${time}')
+    Save Page
+    Wait Until Keyword Succeeds    5sec    0.5sec    ASR Time Out Should Be    ${time}
+
+Change Complete Time Out
+    [Arguments]    ${to}
+    Execute Javascript    window.document.getElementById('vfASRSettings_completetimeoutDiv').setAttribute('value', '${to}')
+    Save Page
+    Wait Until Keyword Succeeds    5sec    1sec    Complete Time Out Should Be    ${to}
+
+Change Incomplete Time Out
+    [Arguments]    ${to}
+    Execute Javascript    window.document.getElementById('vfASRSettings_incompletetimeoutDiv').setAttribute('value', '${to}')
+    Save Page
+    Wait Until Keyword Succeeds    5sec    1sec    Incomplete Time Out Should Be    ${to}
+
+Click More Link
+    [Arguments]    ${no}=1
+    Click Visible Element    ${MORE_LINK}    ${no}
+
+Confidence Level Desc Should Be Collapse
+    Wait Until Keyword Succeeds    5sec    0.5sec    Element Should Be Visible    id=ASRSettings_confidencelevelCollapsed
+    Element Should Not Be Visible    id=ASRSettings_confidencelevelExpanded
+
+Sensitivity Desc Should Be Collapse
+    Wait Until Keyword Succeeds    5sec    0.5sec    Element Should Be Visible    id=ASRSettings_sensitivityCollapsed
+    Element Should Not Be Visible    id=ASRSettings_sensitivityExpanded
+
+Complete Time Out Desc Should Be Collapse
+    Wait Until Keyword Succeeds    5sec    0.5sec    Element Should Be Visible    id=ASRSettings_completetimeoutCollapsed
+    Element Should Not Be Visible    id=ASRSettings_completetimeoutExpanded
+
+Incomplete Time Out Desc Should Be Collapse
+    Wait Until Keyword Succeeds    5sec    0.5sec    Element Should Be Visible    id=ASRSettings_incompletetimeoutCollapsed
+    Element Should Not Be Visible    id=ASRSettings_incompletetimeoutExpanded
+
+Confidence Level Desc Should Be Expanded
+    Wait Until Keyword Succeeds    5sec    0.5sec    Element Should Not Be Visible    id=ASRSettings_confidencelevelCollapsed
+    Element Should Be Visible    id=ASRSettings_confidencelevelExpanded
+
+Sensitivity Desc Should Be Expanded
+    Wait Until Keyword Succeeds    5sec    0.5sec    Element Should Not Be Visible    id=ASRSettings_sensitivityCollapsed
+    Element Should Be Visible    id=ASRSettings_sensitivityExpanded
+
+Complete Time Out Desc Should Be Expanded
+    Wait Until Keyword Succeeds    5sec    0.5sec    Element Should Not Be Visible    id=ASRSettings_completetimeoutCollapsed
+    Element Should Be Visible    id=ASRSettings_completetimeoutExpanded
+
+Incomplete Time Out Desc Should Be Expanded
+    Wait Until Keyword Succeeds    5sec    0.5sec    Element Should Not Be Visible    id=ASRSettings_incompletetimeoutCollapsed
+    Element Should Be Visible    id=ASRSettings_incompletetimeoutExpanded
+
+ASR Settings Test Set Up
+    Open ASR Settings Tab
+    ${passed}=    Run Keyword And Return Status    ASR Settings Tab Should Be Open
+    Run Keyword If    ${passed}==False    Reopen ASR Settings Tab
+
+Change Ques Complete Time Out
+    [Arguments]    ${to}
+    Execute Javascript    window.document.getElementById('vfresponse_numberASR_completetimeoutDiv').setAttribute('value', '${to}')
+    Save Page
+    Wait Until Keyword Succeeds    5sec    1sec    Ques Complete Time Out Should Be    ${to}
+
+Ques Complete Time Out Should Be
+    [Arguments]    ${to}
+    Wait Until Keyword Succeeds    30sec    1sec    Textfield Value Should Be    ${QUES_COMPLETE_TIME_OUT_VALUE_TEXT}    ${to}
+
+Ques Complete Time Out Desc Should Be Collapse
+    Wait Until Keyword Succeeds    5sec    0.5sec    Element Should Be Visible    response_numberASR_completetimeoutCollapsed
+    Element Should Not Be Visible    response_numberASR_completetimeoutExpanded
+
+Ques Complete Time Out Desc Should Be Expanded
+    Wait Until Keyword Succeeds    5sec    1sec    Element Should Not Be Visible    response_numberASR_completetimeoutCollapsed
+    Element Should Be Visible    response_numberASR_completetimeoutExpanded
+
+Change Ques Incomplete Time Out
+    [Arguments]    ${to}
+    Execute Javascript    window.document.getElementById('vfresponse_numberASR_incompletetimeoutDiv').setAttribute('value', '${to}')
+    Save Page
+    Wait Until Keyword Succeeds    5sec    1sec    Ques Incomplete Time Out Should Be    ${to}
+
+Ques Incomplete Time Out Should Be
+    [Arguments]    ${to}
+    Textfield Value Should Be    ${QUES_INCOMPLETE_TIME_OUT_VALUE_TEXT}    ${to}
+
+Ques Incomplete Time Out Desc Should Be Collapse
+    Wait Until Keyword Succeeds    5sec    0.5sec    Element Should Be Visible    id=ASRSettings_incompletetimeoutCollapsed
+    Element Should Not Be Visible    id=ASRSettings_incompletetimeoutExpanded
+
+Change Interdigit Time Out
+    [Arguments]    ${to}
+    Execute Javascript    window.document.getElementById('vfresponse_numberASR_interdigittimeoutDiv').setAttribute('value', '${to}')
+    Save Page
+    Wait Until Keyword Succeeds    5sec    1sec    Interdigit Time Out Should Be    ${to}
+
+InterDigit Time Out Should Be
+    [Arguments]    ${to}
+    Textfield Value Should Be    ${INTER_DIGIT_TIME_OUT}    ${to}
+
+Click Complete Time Out Reset Link
+    Click Reset Link    6
+
+Click Incomplete Time Out Reset Link
+    Click Reset Link    7
+
+Click Interdigit Time Out Reset Link
+    Click Reset Link    8
+
+Reopen ASR Settings Tab
+    Open Setting Tab    @{SETTINGS_BOX_TABS}[0]    #Open ASR Settings Tab
+    Wait Until Keyword Succeeds    20s    1s    Wait Util Page Fully Loaded
+    Open Setting Tab    @{SETTINGS_BOX_TABS}[3]    #Open ASR Settings Tab
+    Wait Until Keyword Succeeds    20s    1s    Wait Util Page Fully Loaded
+    Wait Until Keyword Succeeds    30s    1s    Confidence Level Should Be    0.45
+    Wait Until Keyword Succeeds    30s    1s    Sensitivity Should Be    0.5
+    Wait Until Keyword Succeeds    30s    1s    Speed VS Accuracy Should Be    0.5
+    Wait Until Keyword Succeeds    30s    1s    ASR Time Out Should Be    5

@@ -1,0 +1,64 @@
+*** Settings ***
+Test Setup        Run Keywords    Create Call Queue Page    AND    Switch To Whisper Tab
+Force Tags
+Resource          ../resource.txt
+
+*** Test Cases ***
+Reg_CQ_19
+    [Documentation]    Whisper - Screen the Call – How it Works
+    ...    "1. Click on the How it Works link.
+    ...    2. The How it Works informations should be open in the new window."
+    [Tags]    Regression
+    Click Whisper How It Works Link
+    New Window Title Should Be    Call Screening
+    Close Popup Window
+    Window Title Should Be    Angel.com - Call Queue Page
+
+Reg_CQ_20
+    [Documentation]    Whisper - Screen the Call - Check boxes
+    ...    "1. User can select the 'Check Box' to Whisper call information to the Agent before connecting the caller.
+    ...    2. System should display the check box for 'Record the caller's name and announce it to the agent' and drop down for go to page if the agent rejects the call."
+    [Tags]    Regression
+    Whisper Record The Caller's Name Checkbox Should Not Be Visible
+    Select Whisper Screen The Call Checkbox
+    Whisper Record The Caller's Name Checkbox Should Be Visible
+    Save Successfully
+
+Reg_CQ_21
+    [Documentation]    Whisper - Record the caller's name and announce it to the Agent - Check Box
+    ...    "1. User can select ""Record the caller's name and announce it to the Agent."" check box to record the callers name for the agent.
+    ...    2. If the user not select the ""Record the caller's name and announce it to the Agent."" check box, the variables and prompt selections drop down should be displayed instead of ""Recording of caller's name""."
+    [Tags]    Regression
+    Select Whisper Screen The Call Checkbox
+    Whisper Variable Prompt Var Dropdown Should Exist
+    Select Whisper Record Caller's Name Checkbox
+    Whisper Variable Prompt Var Dropdown Should Not Exist
+    Text Should Be Visible    Recording of caller's name.
+
+Reg_CQ_23
+    [Documentation]    Whisper - Give the Agent call control options before connecting the caller.- Check Box
+    ...    User can select the "Give the Agent call control options before connecting the caller." check box to provide control for the Agent to connect or to disconnect.
+    [Tags]    Regression
+    Select Whisper Screen The Call Checkbox
+    Select Whisper Give The Agent Call Control Checkbox
+    Scroll Down Page    500
+    Whisper Agent Command Layer Should Be Visible
+    Save Successfully
+
+Reg_CQ_24
+    [Documentation]    Whisper - Agent's - No Input
+    ...    User can select the destination voice page, if the agent rmaintain the no input's max try.
+    [Tags]    Regression
+    Select Whisper Screen The Call Checkbox
+    Choose Whisper NoInput Count    2nd
+    Choose Whisper NoInput Destination    1 - Greeting
+    Save Successfully
+
+Reg_CQ_25
+    [Documentation]    Agent's - No Match
+    ...    User can select the destination voice page, if the agent rmaintain the no match max try.
+    [Tags]    Regression
+    Select Whisper Screen The Call Checkbox
+    Choose Whisper NoMatch Count    2nd
+    Choose Whisper NoMatch Destination    1 - Greeting
+    Save Successfully

@@ -1,0 +1,170 @@
+*** Settings ***
+Resource          ../../../resource.txt
+Resource          Assignment Block.txt
+Resource          Condition Block.txt
+Resource          Transformation Block.txt
+
+*** Variables ***
+${COND_BUTTON}    css=input[value="Condition"]
+${ASSIGN_BUTTON}    css=input[value="Assignment"]
+${TRAN_BUTTON}    css=input.buttonTransformation
+${GOTOPAGE_SELECTOR}    name=anyOtherTime0SelectBox
+${LOGIC PAGE TITLE}    ${EMPTY}
+${LOGIC_PAGE_ICON}    name=logicPageIcon
+${BOOL_OP_SELECTOR}    name=destinations_@INDEX@_booleanOperator
+${OR_TOP_IMG}     css=img[src="/images/angel/sb/orTop.gif"]
+${OTHERWISE_BOTTOM_IMG}    css=img[src="/images/angel/sb/otherwiseBottom.gif"]
+${OR_BOTTOM_IMG}    css=img[src="/images/angel/sb/orBottom.gif"]
+${OTHERWISE_TOP_IMG}    css=img[src="/images/angel/sb/otherwiseTop.gif"]
+${CONTINUE_TOP_IMG}    css=img[src="/images/angel/sb/continueTop.gif"]
+${CONTINUE_BOTTOM_IMG}    css=img[src="/images/angel/sb/continueBottom.gif"]
+${OP_RULES_LINK}    link=Operation Rules
+${ERR_DEST_SELECTOR}    name=advancedTab0SelectBox
+${LOG_TYPE_SELECTOR}    id=logType
+@{LOG TYPES}      Never    On Error Only    Always
+${LOG_EMAIL_TEXT}    name=logEmail
+${LOGIC_VIEW_BUTTON}    //div[@id='anyOtherTime0SelectLayer']/input
+${ASSIGN_TRAN_CHECKBOX}    blocks_@INDEX@_selected
+
+*** Keywords ***
+Logic Page Should Be Open
+    Wait Util Page Fully Loaded
+    Title Should Be    Angel.com - Logic Page
+    Header Tab Should Be Active    ${CXBuilderTabActive}    # Verify CX Builder Tab
+    ${expectLink}=    Get Expect Navi Link    @{NEWVPages}[5]    # Verify the header navigation links appear: Site Builder > Voice Sites > [SITE NAME] \# [SITE NUMBER] > New Logic Page
+    NaviLink Should Be    ${expectLink}
+    Page Name Should Be    @{NEWVPages}[5]    # Verify default Logic Page name
+    Page Number Should Be    ${PAGE NUMBER}    # Verify default Logic Page number
+    Page Comments Should Be    ${EMPTY}    # Verify default page comments is empty.
+    Page Group Should Be    HOME    # Verify default page group
+    Main Tab Should Be Active    # Verify MAIN tab is actived.
+    GoToPage Should Be    Home Page    # Verify the option "Home Page" in goto designated dropdown list with "View" button.
+    View Button Should Be Visible
+    Save&SE&Exit Buttons Should Be Visible    # Verify the display of SAVE, SAVE & EXIT and EXIT buttons.
+    Logic Page Icon Should Be Visible    # Verify icon to the left of the title appears.
+    Logic Buttons Should Be Visible
+    ${pageURL}    Get Location
+    Set Test Variable    ${pageURL}
+
+GoToPage Should Be
+    [Arguments]    ${expectedPage}
+    List Selection Should Be    ${GOTOPAGE_SELECTOR}    ${expectedPage}
+
+Logic Buttons Should Be Visible
+    Element Should Be Visible    ${COND_BUTTON}
+    Element Should Be Visible    ${ASSIGN_BUTTON}
+    Element Should Be Visible    ${TRAN_BUTTON}
+
+Add Condition
+    [Arguments]    ${index}=1
+    Click Button    ${COND_BUTTON}
+    Condition Block Should Be Open    ${index}
+
+Add Assignment
+    [Arguments]    ${index}=1
+    Wait Until Element Is Visible    ${ASSIGN_BUTTON}
+    Wait Until Keyword Succeeds    10sec    0.1sec    Execute Javascript    $("input[value='Assignment']").click()
+    Comment    Click Button    ${ASSIGN_BUTTON}
+    Assignment Block Should Be Open    ${index}
+
+Add Transformation
+    [Arguments]    ${index}=1
+    Click Button    ${TRAN_BUTTON}
+    Transformation Block Should Be Open    ${index}
+
+View Button Should Be Visible
+    Element Should Be Visible    ${LOGIC_VIEW_BUTTON}
+
+Logic Page Icon Should Be Visible
+    Page Should Contain Element    ${LOGIC_PAGE_ICON}
+
+Choose Logic GoTo Page
+    [Arguments]    ${page}
+    Click Element    ${GOTOPAGE_SELECTOR}
+    Run Keyword And Ignore Error    Click Element    ${COMMENTS_TEXT}
+    Select From List By Label    ${GOTOPAGE_SELECTOR}    ${page}
+
+Logic Advanced Options Should Be Open
+    Wait Until Page Contains Element    ${ERR_DEST_SELECTOR}
+    Page Should Contain Element    ${LOG_TYPE_SELECTOR}
+
+Choose Error Destination Randomly
+    Click Element    ${ERR_DEST_SELECTOR}
+    Run Keyword And Ignore Error    Click Element    ${COMMENTS_TEXT}
+    ${ranOption}=    Get Random Option From X    ${NEW VPAGES}    0
+    Select From List By Label    ${ERR_DEST_SELECTOR}    ${ranOption}
+    Set Test Variable    ${ranOption}
+
+Choose Log Type
+    [Arguments]    ${type}
+    Select From List By Label    ${LOG_TYPE_SELECTOR}    ${type}
+
+Input Log Email
+    [Arguments]    ${mail}
+    Input Text    ${LOG_EMAIL_TEXT}    ${mail}
+
+Click Page Type Icon
+    Click Element    ${CHANGE_PAGE_TYPE_LINK}
+
+Create Logic Page
+    Choose Voice Page    @{VPAGES}[4]
+    Logic Page Should Be Open    # Verify Logic Page is displayed.
+
+Page Should Not Contain Assignment/Transformation Checkbox
+    [Arguments]    ${index}=1
+    ${ASSIGN_TRAN_CHECKBOX}    Generate Locator By Decreasing One    ${ASSIGN_TRAN_CHECKBOX}    ${index}
+    Page Should Not Contain Element    ${ASSIGN_TRAN_CHECKBOX}
+
+Select Assignment/Transformation Checkbox
+    [Arguments]    ${index}=1
+    ${ASSIGN_TRAN_CHECKBOX}    Generate Locator By Decreasing One    ${ASSIGN_TRAN_CHECKBOX}    ${index}
+    Wait Until Element Is Visible    ${ASSIGN_TRAN_CHECKBOX}
+    Wait Until Keyword Succeeds    10sec    1sec    Execute Javascript    $("input[name=${ASSIGN_TRAN_CHECKBOX}]").click()
+    Comment    Select Checkbox    ${ASSIGN_TRAN_CHECKBOX}
+
+Page Should Contain Assignment/Transformation Checkbox
+    [Arguments]    ${index}=1
+    ${ASSIGN_TRAN_CHECKBOX}    Generate Locator By Decreasing One    ${ASSIGN_TRAN_CHECKBOX}    ${index}
+    Page Should Contain Element    ${ASSIGN_TRAN_CHECKBOX}
+
+Choose Assignment/Transformation Variable
+    [Arguments]    ${var}    ${index}=1
+    ${ASSIGNTO_VAR_SELECTOR}    Generate Locator By Decreasing One    ${ASSIGNTO_VAR_SELECTOR}    ${index}
+    Click Element    ${ASSIGNTO_VAR_SELECTOR}
+    Run Keyword And Ignore Error    Click Element    ${COMMENTS_TEXT}
+    Select From List By Label    ${ASSIGNTO_VAR_SELECTOR}    ${var}
+
+Click Condition Button
+    Click Button    ${COND_BUTTON}
+
+Assignment/Transformation Checkbox Should Be Selected
+    [Arguments]    ${index}=1
+    ${ASSIGN_TRAN_CHECKBOX}    Generate Locator By Decreasing One    ${ASSIGN_TRAN_CHECKBOX}    ${index}
+    Checkbox Should Be Selected    ${ASSIGN_TRAN_CHECKBOX}
+
+Choose Logic GoTo Page Randomly
+    ${randOption}=    Get Random Option From X    ${NEW VPAGES}    0
+    Choose Logic GoTo Page    ${randOption}
+
+Site Number In GoTo Should Be
+    [Arguments]    ${value}
+    Textfield Value Should Be    ${SITE_NUM_SELECT_TEXT}    ${value}
+
+Page Number In GoTo Should Be
+    [Arguments]    ${value}
+    Textfield Value Should Be    ${PAGE_NUM_SELECT_TEXT}    ${value}
+
+Open Operation Rules Window
+    Click Link    ${OP_RULES_LINK}
+    New Window Title Should Be    Rules for Assignment
+
+Open Rules for Comparison Window
+    Click Link    link=Rules for Comparison
+    Wait Until Keyword Succeeds    5sec    1sec    Title Should Be    Rules for Comparison
+
+Open Rules for Assignment Window
+    Click Link    link=Rules for Assignment
+    Window Title Should Be    Rules for Assignment
+
+Logic Error Page Link Should Exist
+    Wait Until Page Contains Element    link=Logic Error Page

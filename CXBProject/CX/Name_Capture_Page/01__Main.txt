@@ -1,0 +1,51 @@
+*** Settings ***
+Test Setup        Create Name Capture Page
+Resource          ../resource.txt
+
+*** Test Cases ***
+Reg_Name_01
+    [Documentation]    Default- Radio button,Check the default selections of Collect First Name and Collect Last Name are both checked
+    [Tags]    Regression
+    Collect First Name Should Be Selected
+    Collect Last Name Should Be Selected
+    Save Successfully
+    Collect First Name Should Be Selected
+    Collect Last Name Should Be Selected
+
+Reg_Name_02
+    [Documentation]    Radio button- unchecked both.1.Unselected the Collect First Name and Collect Last Name Check ,check if It should not be allowed to save
+    [Tags]    Regression
+    Unselect Collect First Name
+    Unselect Collect Last Name
+    Save Page Named As Test Case
+    Red Notice Should Display    Please select a first and/or last name to be captured.
+    Go To Site Overview
+    Verify Page Title    ${VOICE SITE PAGE TITLE}
+    Page Number Should Not Exist    ${PAGE NUMBER}
+
+Reg_Name_03
+    [Documentation]    Store name in Standard Variables.1. Check the default selection is Standard Variables \ 2. Save it, check if the new created variables should be listed in Site Variables
+    [Tags]    Regression
+    Standard variable names should be selected
+    Save Successfully
+    Go To Site Variables
+    Site Variables Page Should Be Open
+    Site Variables Page Should Contain Var    FirstName
+    Site Variables Page Should Contain Var    LastName
+
+Reg_Name_04
+    [Documentation]    Store name in Different Variable Names - Predefined Variable with Values.1. Select \ the radio button for 'Let me choose the Variable names'. 2. Predefined variable with values should be populated.
+    [Tags]    Regression
+    [Setup]    Create One Variable    test
+    Go To Site Overview
+    Create Name Capture Page
+    Select Let me choose the variable names
+    Variables Should Be Contained    test
+    Save Successfully
+
+Reg_Name_05
+    [Documentation]    Store name in Different Variable Names - Link - Edit Variables.1. Select \ the radio button for 'Let me choose the Variable names'. 2. User can click the Edit variable link to change the variable name.
+    [Tags]    Regression    PEP-144
+    Select Let me choose the variable names
+    Click Edit Variables Link
+    Site Variables Page Should Be Open

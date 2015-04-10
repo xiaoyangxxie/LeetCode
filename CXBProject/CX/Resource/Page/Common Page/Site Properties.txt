@@ -1,0 +1,20 @@
+*** Settings ***
+Resource          ../../../resource.txt
+
+*** Variables ***
+${asr_var}        asrengine
+${tts_var}        ttsengine
+
+*** Keywords ***
+Define ASR TTS Varible And Select ASR TTS Variable
+    [Arguments]    ${var1}    ${var2}    ${asr_lan}    ${tts_lan}
+    Create One Variable With Value    ${asr_var}    ${asr_lan}
+    Create One Variable With Value    ${tts_var}    ${tts_lan}
+    Click Site Properties
+    Select TTS Control
+    click TTS variable
+    select tts variable    ${var1}
+    Select ASR Control
+    select asr variable    ${var2}
+    Save Page
+    Save Done Tip Should Be Open

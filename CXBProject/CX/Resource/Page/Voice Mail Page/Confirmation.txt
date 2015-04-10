@@ -1,0 +1,12 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../Common Elements.txt
+Resource          ../Common Page/Audio Block.txt
+
+*** Variables ***
+${RECORDING_CONFIRM_RADIO}    confirmation
+${VM_CONFIRM_PROMPT_DIV}    id=VoicemailExtraPrompts
+${REPLACE CONFIRM PROMPT PAGE TITLE}    Replacing Confirmation Prompts
+${VM_CONFIRM_PROMPTS_AUDIO_FILE_TEXT}    name=extrPrompts_filetag
+
+*** Keywords ***

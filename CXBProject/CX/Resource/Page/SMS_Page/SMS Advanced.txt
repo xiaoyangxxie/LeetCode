@@ -1,0 +1,26 @@
+*** Settings ***
+Resource          ../../../resource.txt
+Library           Selenium2Library
+
+*** Keywords ***
+Choose On Error Only
+    Select From List    logType    On Error Only
+
+On Error Only Should Be Choosed
+    List Selection Should Be    logType    On Error Only
+
+Choose Always
+    Select From List    logType    Always
+
+Always Should Be Choosed
+    List Selection Should Be    logType    Always
+
+Choose Never
+    Select From List    logType    Never
+
+Never Should Be Choosed
+    List Selection Should Be    logType    Never
+
+Mail Logs Should ReadOnly
+    ${value}=    Get Element Attribute    logEmail@readonly
+    Should Be Equal    ${value}    true

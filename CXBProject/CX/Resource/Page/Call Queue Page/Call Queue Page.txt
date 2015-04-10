@@ -1,0 +1,52 @@
+*** Settings ***
+Resource          ../../../resource.txt
+Library           Selenium2Library
+Resource          CQ Main.txt
+Resource          CQ On Hold.txt
+Resource          ../Common Page/Whisper.txt
+Resource          CQ Monitor.txt
+Resource          CQ Advanced Option.txt
+
+*** Keywords ***
+Create Call Queue Page
+    Choose Voice Page    @{VPAGES}[1]
+    Call Queue Page Should Be Open
+
+Call Queue Page Should Be Open
+    Wait Util Page Fully Loaded
+    Title Should Be    Angel.com - Call Queue Page
+    ${pageURL}    Get Location
+    Set Test Variable    ${pageURL}
+    ${expectLink}=    Get Expect Navi Link    @{NEWVPages}[0]
+    NaviLink Should Be    ${expectLink}
+    Page Name Should Be    @{NEWVPages}[0]
+    Page Number Should Be    ${PAGE NUMBER}
+
+Switch To On Hold Tab
+    Input CQ Agent Detail Information    agent1    +8657185292027    11@angel.com    english    yes
+    Open OnHold Tab
+
+Switch To Whisper Tab
+    Input CQ Agent Detail Information    agent1    +8657185292027    11@angel.com    english    yes
+    Open Whisper Tab
+
+Switch To Monitor Tab
+    Input CQ Agent Detail Information    agent1    +8657185292027    11@angel.com    english    yes
+    Open Monitor Tab
+
+Open OnHold Tab
+    Open Setting Tab    IN QUEUE
+
+Open Monitor Tab
+    Open Setting Tab    MONITOR
+
+Go Back To CQ page
+    Go To    ${pageURL}
+    Window Title Should Be    Angel.com - Call Queue Page
+
+Switch To AdvancedOption Tab
+    Input CQ Agent Detail Information    agent1    +8657185292027    11@angel.com    english    yes
+    Open Advanced Option Tab
+
+CQ Common Setup
+    Input CQ Agent Detail Information    agent1    +8657185292027    11@angel.com    english    yes

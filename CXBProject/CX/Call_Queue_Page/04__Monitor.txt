@@ -1,0 +1,242 @@
+*** Settings ***
+Test Setup        Run Keywords    Create Call Queue Page    AND    Switch To Monitor Tab
+Force Tags
+Resource          ../resource.txt
+Library           OperatingSystem
+
+*** Test Cases ***
+Reg_CQ_26
+    [Documentation]    Monitor - Call Information display - How it works?
+    ...    "1. Click on lhe link 'How it works?'
+    ...    2. System should open the link in new window."
+    [Tags]    PEP-579
+    Click CQ Monitor How It Works Link
+    New Window Title Should Be    url=https://www.socialtext.net/ivrwiki/call_information_display
+    Comment    New Window Title Should Be    Call Information Display / IVR Wiki
+    Close Popup Window
+    Window Title Should Be    Angel.com - Call Queue Page
+
+Reg_CQ_27
+    [Documentation]    Monitor - Call Information display
+    ...    "1. User \ can select from the list of \ available variables to selected variables.
+    ...    2. The selected variables should be displayed on the Agent and Supervisor Monitors."
+    [Tags]    Regression
+    CQ Monitor Selected Variables Should Be Empty
+    Select CQ Monitor Avaiable Variables    Agent
+    Click CQ Monitor Switch Available Variables To Selected Variables Button
+    Select CQ Monitor Avaiable Variables    CallDuration
+    Click CQ Monitor Switch Available Variables To Selected Variables Button
+    CQ Monitor Available Variables Should Not Contain    Agent
+    CQ Monitor Available Variables Should Not Contain    CallDuration
+    CQ Monitor Selected Variables Should Contain    Agent
+    CQ Monitor Selected Variables Should Contain    CallDuration
+    Select CQ Monitor Selected Variables    CallDuration
+    Click CQ Monitor Switch Selected Variables To Available Variables Button
+    CQ Monitor Selected Variables Should Not Contain    CallDuration
+    CQ Monitor Available Variables Should Contain    CallDuration
+    Save Successfully
+
+Reg_CQ_28
+    [Documentation]    Disposition codes -How it works?
+    ...    "1. Click on lhe link 'How it works?'
+    ...    2. System should open the link in new window."
+    [Tags]    Regression
+    Click CQ Monitor Disposition Code How It Works Link
+    New Window Title Should Be    Disposition Codes / IVR Wiki
+    Close Popup Window
+    Window Title Should Be    Angel.com - Call Queue Page
+
+Reg_CQ_29
+    [Documentation]    Disposition codes \ - Add Disposition code
+    ...    "1. Select \ Enable Disposition Codes option and select option for 'Allow Agents to enter custom disposition codes on Agent Monitor' option.
+    ...    2. Click on Add button.
+    ...    3. Enter any disposition code and save."
+    [Tags]    Regression
+    Select CQ Monitor Enable Disposition Codes Checkbox
+    Select CQ Monitor Allow Agents To Enter Custom Disposition Code Checkbox
+    Click Visible Add Button
+    Input CQ Monitor Custom Disposition Code    11
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+    CQ Monitor Custom Disposition Code Should Be    11
+    Save Successfully
+
+Reg_CQ_30
+    [Documentation]    Away messages -How it works?
+    ...    "1. Click on lhe link 'How it works?'
+    ...    2. System should open the link in new window."
+    [Tags]    Regression
+    Click CQ Monitor Away Message How It Works Link
+    New Window Title Should Be    Away Messages / IVR Wiki
+    Close Popup Window
+    Window Title Should Be    Angel.com - Call Queue Page
+
+Reg_CQ_31
+    [Documentation]    Add Away messages
+    ...    "1. Select \ Enable Away messages option and select option for Allow Agents to enter custom away messages on Agent Monitor' option.
+    ...    2. Click on Add button.
+    ...    3. Enter any Away messages and save."
+    [Tags]    Regression
+    Scroll Down Page    550
+    Select CQ Monitor Enable Away Message Checkbox
+    Select CQ Monitor Allow Agents To Enter Custom Away Message Checkbox
+    Click Visible Add Button
+    Scroll Down Page    600
+    Input CQ Monitor Custom Away Message    away for lunch
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+    CQ Monitor Custom Away Message Should Be    away for lunch
+
+Reg_CQ_32
+    [Documentation]    Transfer Points - How it works?
+    ...    "1. Click on lhe link 'How it works?'
+    ...    2. System should open the link in new window."
+    [Tags]    Regression
+    Scroll Down Page    1000
+    Click CQ Monitor Transfer Points How It Works Link
+    New Window Title Should Be    Call Transfer Points / IVR Wiki
+    Close Popup Window
+    Window Title Should Be    Angel.com - Call Queue Page
+
+Reg_CQ_33
+    [Documentation]    Transfer Points - Transfer to Voice pages
+    ...    "1. User \ can select from the list of \ available voice pages to selected voice pages and favourites.
+    ...    2. The selected voice pages should be displayed on the Agent's monitors."
+    [Tags]    Regression
+    Select CQ Monitor Available Voice Pages    1 - Greeting
+    Scroll Down Page    800
+    Click CQ Monitor Switch Available Voice Pages To Selected Button
+    CQ Monitor Selected Voice Pages Should Contain    1 - Greeting
+    CQ Monitor Available Voice Pages Should Not Contain    1 - Greeting
+    CQ Monitor Favorite Voice Pages Should Not Contain    1 - Greeting
+    Select CQ Monitor Selected Voice Pages    1 - Greeting
+    Scroll Down Page    1500
+    Click CQ Monitor Switch Selected Voice Pages To Favorite Button
+    CQ Monitor Selected Voice Pages Should Contain    1 - Greeting
+    CQ Monitor Favorite Voice Pages Should Contain    1 - Greeting
+    Select CQ Monitor Favorites Voice Pages    1 - Greeting
+    Scroll Down Page    1000
+    Click CQ Monitor Switch Favorite Voice Pages To Selected Button
+    CQ Monitor Favorite Voice Pages Should Not Contain    1 - Greeting
+    Select CQ Monitor Selected Voice Pages    1 - Greeting
+    Scroll Down Page    1500
+    Click CQ Monitor Switch Selected Voice Pages To Favorite Button
+    Select CQ Monitor Selected Voice Pages    1 - Greeting
+    Run Keyword If    ${RunsInFirefox}    Click CQ Monitor Switch Selected Voice Pages To Available Button
+    Run Keyword If    ${RunsInFirefox}    CQ Monitor Favorite Voice Pages Should Not Contain    1 - Greeting
+    Run Keyword If    ${RunsInFirefox}    CQ Monitor Selected Voice Pages Should Not Contain    1 - Greeting
+    Save Successfully
+
+Reg_CQ_34
+    [Documentation]    Transfer Points - Transfer to Agents
+    ...    "1. User \ can select from the list of \ available agents to selected agents and favourites.
+    ...    2. The selected agents should be displayed on the Agent's monitors."
+    [Tags]    Regression
+    [Setup]    Run Keywords    Create Call Queue Page    AND    Switch To Monitor Tab    AND    Add CQ Monitor Test Agent For Transfer Points
+    Select CQ Monitor Available Agents    transferTest
+    Scroll Down Page    800
+    Click CQ Monitor Switch Available Agents To Selected Button
+    CQ Monitor Available Agents Should Not Contain    transferTest
+    CQ Monitor Selected Agents Should Contain    transferTest
+    Select CQ Monitor Selected Agents    transferTest
+    Scroll Down Page    800
+    Click CQ Monitor Switch Selected Agent To Favorite Button
+    CQ Monitor Favorite Agents Should Contain    transferTest
+    CQ Monitor Selected Agents Should Contain    transferTest
+    Select CQ Monitor Favorite Agents    transferTest
+    Click CQ Monitor Switch Favorite Agents To Selected Button
+    CQ Monitor Favorite Agents Should Not Contain    transferTest
+    CQ Monitor Selected Agents Should Contain    transferTest
+    Select CQ Monitor Selected Agents    transferTest
+    Scroll Down Page    950
+    Click CQ Monitor Switch Selected Agent To Favorite Button
+    Select CQ Monitor Selected Agents    transferTest
+    Scroll Down Page    950
+    Click CQ Monitor Switch Selected Agent To Available Button
+    CQ Monitor Favorite Agents Should Not Contain    transferTest
+    CQ Monitor Selected Agents Should Not Contain    transferTest
+    Set Selenium Timeout    30
+    Save Page Named As Test Case
+    Set Selenium Timeout    ${SELENIUM_TIMEOUT}
+
+Reg_CQ_35
+    [Documentation]    Transfer to contacts - How it works?
+    ...    "1. Click on the link 'How it works?'
+    ...    2. System should open the link in new window."
+    [Tags]    Regression
+    Scroll Down Page    1000
+    Click CQ Monitor Transfer To Contact How It Works Link
+    New Window Title Should Be    Call Transfer Points / IVR Wiki
+    Close Popup Window
+    Window Title Should Be    Angel.com - Call Queue Page
+
+Reg_CQ_36
+    [Documentation]    Transfer to Contacts - Link - View sample data file
+    ...    "1. Click on the link 'View sample data file'.
+    ...    2. System should open the link in new window."
+    [Tags]    Debug
+    Delete Download File From Disk    Contacts.xls
+    Scroll Down Page    1250
+    Click CQ Monitor View Sample Data Link
+    File Should Be Downloaded    Contacts.xls
+
+Reg_CQ_37
+    [Documentation]    Transfer to Contacts- View Data File
+    ...    "1. Select a data file in the drop down.
+    ...    2. Click on view button.
+    ...    3. System should navigate to the site builder -> View data file."
+    [Tags]    Regression
+    Save Page Named As Test Case
+    Create CQ Monitor Data File If Not Exist    CQTest.xls
+    Choose CQ Monitor Data File    CQTest.xls
+    Scroll Down Page    1500
+    Click View Link
+    Window Title Should Be    Angel.com - View Data
+    Go Back To CQ page
+    [Teardown]    Run Keywords    Go Back To CQ page    AND    Voice Page Test Teardown
+
+Reg_CQ_38
+    [Documentation]    Transfer to Contacts - Edit Data File
+    ...    "1. Select a data file in the drop down.
+    ...    2. Click on edit button.
+    ...    3. System should navigate to the site builder -> Edit data file.User can edit the data file."
+    [Tags]    Regression
+    Save Successfully
+    Create CQ Monitor Data File If Not Exist    CQTest.xls
+    Choose CQ Monitor Data File    CQTest.xls
+    Scroll Down Page    1500
+    Click Edit Link
+    Window Title Should Be    Angel.com - Data File Properties
+    [Teardown]    Run Keywords    Go Back To CQ page    AND    Voice Page Test Teardown
+
+Reg_CQ_39
+    [Documentation]    Transfer to Contacts - New Data File
+    ...    "1. Select a data file in the drop down.
+    ...    2. Click on New button.
+    ...    3. System should navigate to the site builder -> new data file.User can add a new data file"
+    [Tags]    Regression
+    Save Successfully
+    Scroll Down Page    1000
+    Click New Link
+    Window Title Should Be    Angel.com - Data File Properties
+    [Teardown]    Run Keywords    Go Back To CQ page    AND    Voice Page Test Teardown
+
+Reg_CQ_40
+    [Documentation]    Transfer to Contacts - Clear Contacts
+    ...    "1. Select a data file in the drop down.
+    ...    2. Click on Clear contacts button.
+    ...    3. System should clear the Parameter and column \ dropdown."
+    [Tags]    Regression
+    Save Successfully
+    Create CQ Monitor Data File If Not Exist    CQTest.xls
+    Choose CQ Monitor Data File    CQTest.xls
+    CQ Monitor Parameter Column Dropdown Should Be Visible    1
+    CQ Monitor Parameter Column Dropdown Should Be Visible    2
+    CQ Monitor Parameter Column Dropdown Should Be Visible    3
+    CQ Monitor Parameter Column Dropdown Should Be Visible    4
+    Scroll Down Page    1000
+    Click Clear Contacts Link
+    CQ Monitor Parameter Column Dropdown Should Not Be Visible    1
+    CQ Monitor Parameter Column Dropdown Should Not Be Visible    2
+    CQ Monitor Parameter Column Dropdown Should Not Be Visible    3
+    CQ Monitor Parameter Column Dropdown Should Not Be Visible    4

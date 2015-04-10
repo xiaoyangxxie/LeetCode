@@ -1,0 +1,136 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../Common Elements.txt
+
+*** Variables ***
+${CQ_MAIN_AGENT_NAME}    name=operators_@INDEX@_operatorName
+${CQ_MAIN_AGENT_PHONENUMBER}    id=operators_@INDEX@_phoneNumberInputId
+${CQ_MAIN_AGENT_EMAIL}    name=operators_@INDEX@_email
+${CQ_MAIN_AGENT_SKILL}    name=operators_@INDEX@_skillsEncodedString
+${CQ_MAIN_AGENT_SUPERVISOR}    id=operators_@INDEX@_agentSupervisorCheckbox
+${CQ_MAIN_AGENT_CHECKBOX}    xpath=(//input[@name='sequentialOBjSelector'])[@INDEX@]
+${CQ_MAIN_AGENT_ALL_CHECKBOX}    name=checkBox
+${CQ_MAIN_COUNTRY_CODE_TABLE}    xpath=//div[@id='divOfCountryCodeTable_0']
+${CQ_MAIN_AGENT_PHONENUMBER_MERGE_IMG}    xpath=//td[@id='operators_@INDEX@_mergePhoneNumberButton']/a/img
+${CQ_MAIN_AGENTSELECTION}    xpath=(//input[@name='radiobutton'])[@INDEX@]
+${CQ_MAIN_ENABLE_SKILL_VARIABLE}    id=operatorSkillVariable_varID
+${CQ_MAIN_CALL_COMPLETE_DESTINATION}    name=CallComplete0SelectBox
+${CQ_MAIN_AGENT_COUNTRY_INFO_TEXT}    id=operators_@INDEX@_appendedCountryInfoText
+
+*** Keywords ***
+Click Learn More About The Agent List Link
+    Click Link    Learn more about the agent list.
+
+Input CQ Agent Name
+    [Arguments]    ${value}    ${index}=1
+    ${CQ_MAIN_AGENT_NAME}    Generate Locator By Decreasing One    ${CQ_MAIN_AGENT_NAME}    ${index}
+    Comment    Input Text    ${CQ_MAIN_AGENT_NAME}    ${value}
+    Wait Until Element Is Visible    ${CQ_MAIN_AGENT_NAME}
+    Wait Until Keyword Succeeds    10sec    1sec    Execute Javascript    $("input[${CQ_MAIN_AGENT_NAME}]").val("${value}")
+
+Input CQ Agent PhoneNumber
+    [Arguments]    ${value}    ${index}=1
+    ${CQ_MAIN_AGENT_PHONENUMBER_MERGE_IMG}    Generate Locator By Decreasing One    ${CQ_MAIN_AGENT_PHONENUMBER_MERGE_IMG}    ${index}
+    ${CQ_MAIN_AGENT_COUNTRY_INFO_TEXT}    Generate Locator By Decreasing One    ${CQ_MAIN_AGENT_COUNTRY_INFO_TEXT}    ${index}
+    ${text}    Get Text    ${CQ_MAIN_AGENT_COUNTRY_INFO_TEXT}
+    ${status}    Run Keyword And Return Status    Should Not Be Empty    ${text}
+    Run Keyword If    ${status}    Click Element    ${CQ_MAIN_AGENT_PHONENUMBER_MERGE_IMG}
+    ${CQ_MAIN_AGENT_PHONENUMBER}    Generate Locator By Decreasing One    ${CQ_MAIN_AGENT_PHONENUMBER}    ${index}
+    Comment    Input Text    ${CQ_MAIN_AGENT_PHONENUMBER}    ${value}
+    Wait Until Element Is Visible    ${CQ_MAIN_AGENT_PHONENUMBER}
+    Wait Until Keyword Succeeds    10sec    1sec    Execute Javascript    $("input[${CQ_MAIN_AGENT_PHONENUMBER}]").val("${value}")
+
+Input CQ Agent Email
+    [Arguments]    ${value}    ${index}=1
+    ${CQ_MAIN_AGENT_EMAIL}    Generate Locator By Decreasing One    ${CQ_MAIN_AGENT_EMAIL}    ${index}
+    Comment    Input Text    ${CQ_MAIN_AGENT_EMAIL}    ${value}
+    Wait Until Element Is Visible    ${CQ_MAIN_AGENT_EMAIL}
+    Wait Until Keyword Succeeds    10sec    1sec    Execute Javascript    $("input[${CQ_MAIN_AGENT_EMAIL}]").val("${value}")
+
+Input CQ Agent Skill
+    [Arguments]    ${value}    ${index}=1
+    ${CQ_MAIN_AGENT_SKILL}    Generate Locator By Decreasing One    ${CQ_MAIN_AGENT_SKILL}    ${index}
+    Comment    Input Text    ${CQ_MAIN_AGENT_SKILL}    ${value}
+    Wait Until Element Is Visible    ${CQ_MAIN_AGENT_SKILL}
+    Wait Until Keyword Succeeds    10sec    1sec    Execute Javascript    $("input[${CQ_MAIN_AGENT_SKILL}]").val("${value}")
+
+Select CQ Agent Supervisor
+    [Arguments]    ${index}=1
+    Comment    ${CQ_MAIN_AGENT_SKILL}    Generate Locator By Decreasing One    ${CQ_MAIN_AGENT_SKILL}    ${index}
+    Comment    Select Checkbox    ${CQ_MAIN_AGENT_SKILL}
+    ${CQ_MAIN_AGENT_SUPERVISOR}    Generate Locator By Decreasing One    ${CQ_MAIN_AGENT_SUPERVISOR}    ${index}
+    Wait Until Page Contains Element    ${CQ_MAIN_AGENT_SUPERVISOR}
+    Select Checkbox    ${CQ_MAIN_AGENT_SUPERVISOR}
+
+Unselect CQ Agent Supervisor
+    [Arguments]    ${value}    ${index}=1
+    ${CQ_MAIN_AGENT_SKILL}    Generate Locator    ${CQ_MAIN_AGENT_SKILL}    ${index}
+    Unselect Checkbox    ${CQ_MAIN_AGENT_SKILL}
+
+Input CQ Agent Detail Information
+    [Arguments]    ${name}    ${phonenumber}    ${email}    ${skill}=${EMPTY}    ${supervisor}='no'    ${index}=1
+    Input CQ Agent Name    ${name}    ${index}
+    Input CQ Agent PhoneNumber    ${phonenumber}    ${index}
+    Input CQ Agent Email    ${email}    ${index}
+    Input CQ Agent Skill    ${skill}    ${index}
+    Comment    Run Keyword If    "${supervisor}".lower() in ['y','yes']    Select CQ Agent Supervisor    ${index}    ELSE    Unselect CQ Agent Supervisor
+    ...    ${index}
+
+Select CQ Agent Checkbox
+    [Arguments]    ${index}=1
+    ${CQ_MAIN_AGENT_CHECKBOX}    Generate Locator    ${CQ_MAIN_AGENT_CHECKBOX}    ${index}
+    Select Checkbox    ${CQ_MAIN_AGENT_CHECKBOX}
+
+Select CQ All Agent Checkbox
+    [Arguments]    ${index}=1
+    Select Checkbox    ${CQ_MAIN_AGENT_ALL_CHECKBOX}
+
+Unselect CQ All Agent Checkbox
+    [Arguments]    ${index}=1
+    Unselect Checkbox    ${CQ_MAIN_AGENT_ALL_CHECKBOX}
+
+Page Should Contain Country Code Table
+    Page Should Contain Element
+
+Page Should Not Contain Agent
+    [Arguments]    ${index}=1
+    ${index}    Evaluate    int(${index})+1
+    ${CQ_MAIN_AGENT_CHECKBOX}    Generate Locator By Decreasing One    ${CQ_MAIN_AGENT_CHECKBOX}    ${index}
+    Page Should Not Contain Checkbox    ${CQ_MAIN_AGENT_CHECKBOX}
+
+Click CQ Send Login Instructions
+    Click Button    css=input.buttonSendCQLogin
+
+Click CQ Enable Skills Based On Routing
+    Select Checkbox    id=operatorSkillVariable_overridesPropertyCheckbox
+
+Click CQ All Agents Are Able To Take Calls
+    Click Element    id=operatorIgnoreSkillIfNotAvailableCheckbox
+
+Choose CQ Enable Skill Variable
+    [Arguments]    ${value}
+    Select From List By Label    ${CQ_MAIN_ENABLE_SKILL_VARIABLE}    ${value}
+
+Select CQ Agent Selection
+    [Arguments]    ${index}
+    ${CQ_MAIN_AGENTSELECTION}    Generate Locator    ${CQ_MAIN_AGENTSELECTION}    ${index}
+    Click Element    ${CQ_MAIN_AGENTSELECTION}
+
+Select CQ Most Idle Agent
+    Select CQ Agent Selection    3
+
+Choose CQ Call Destination
+    [Arguments]    ${value}
+    Select From List By Label    ${CQ_MAIN_CALL_COMPLETE_DESTINATION}    ${value}
+
+Select CQ Order Entered
+    Select CQ Agent Selection    1
+
+Select CQ Hunt/Round Robin
+    Select CQ Agent Selection    2
+
+Select CQ Least Utilized Agent
+    Select CQ Agent Selection    4
+
+Click CQ Main How It Works Link
+    click link    How it Works

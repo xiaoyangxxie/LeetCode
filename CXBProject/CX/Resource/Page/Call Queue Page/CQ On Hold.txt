@@ -1,0 +1,36 @@
+*** Settings ***
+Library           Selenium2Library
+
+*** Variables ***
+${CQ_ONHOLD_MAXIMUM_HOLD_TIME}    name=maxTimeInQueue
+${CQ_ONHOLD_MAXIMUN_HOLD_TIME_DESTINATION}    name=maxTimeInQueueDestination0SelectBox
+${CQ_ONHOLD_EXIT_COMMAND_DTMF}    name=outOfQueueKeyword_DTMF
+${CQ_ONHOLD_EXIT_COMMAND_DESTINATION}    name=outOfQueueKeyword0SelectBox
+
+*** Keywords ***
+Click CQ OnHold How It Works Link
+    Wait Until Element Is Visible    link=How It Works    30sec
+    Wait Until Keyword Succeeds    30sec    0.5sec    Click Link    How It Works
+
+Input CQ OnHold Maximum Time
+    [Arguments]    ${value}
+    Input Text    ${CQ_ONHOLD_MAXIMUM_HOLD_TIME}    ${value}
+
+Choose CQ OnHold Maximum Time Destination
+    [Arguments]    ${value}
+    Select From List By Label    ${CQ_ONHOLD_MAXIMUN_HOLD_TIME_DESTINATION}    ${value}
+
+Click What's This Link
+    Click Link    What's This?
+
+Input CQ OnHold Exit Command DTMF
+    [Arguments]    ${value}
+    Wait Until Element Is Visible    ${CQ_ONHOLD_EXIT_COMMAND_DTMF}
+    Input Text    ${CQ_ONHOLD_EXIT_COMMAND_DTMF}    ${value}
+
+Choose CQ OnHold Exit Command Destination
+    [Arguments]    ${value}
+    Select From List By Label    ${CQ_ONHOLD_EXIT_COMMAND_DESTINATION}    ${value}
+
+Click CQ OnHold Delete Button
+    Click Button    css=td > table > tbody > tr > td > input.buttonDelete

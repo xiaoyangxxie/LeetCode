@@ -1,0 +1,334 @@
+*** Settings ***
+Resource          ../../../resource.txt
+Resource          ../../Dictionary.txt
+Library           Selenium2Library
+
+*** Variables ***
+${RESPONSE_TYPE_NAME}    id=responseClass
+${RESPONSE_TYPE_NUMBER}    response_numberType
+${LIMIT_NATURAL_NUMBER}    limitNaturalNumberCheckbox
+${LIMIT_DIGIT_SEQUENCE}    limitDigitSequenceCheckbox
+${QN_MIN_NUMBER}    response_minNumber
+${QN_MAX_NUMBER}    response_maxNumber
+${QN_MIN_DIGIT}    response_minNumberLength
+${QN_MAX_DIGIT}    response_maxNumberLength
+${ADD_PG_CMD_CHECKBOX}    responecheckbox
+${SAVE_VALUE_TXT}    keywordResponseLinks_@INDEX@_value
+${FORMATTED_KEYWORDS_TXT}    keywordResponseLinks_@INDEX@_formattedKeywords
+${ADD_ONE_KEYWORD_BUTTON}    css=input.button1
+${QN_KEYWORD_CHECKBOX}    xpath=(//input[@name='deleteLinks'])[@INDEX@]
+${KEYWORD_DELETE_BUTTON}    xpath=//*[@id="Tab0"]/table/tbody/tr/td/table[8]/tbody/tr[2]/td[1]/input
+${SINGLE_DEST_DROPDOWN}    name=singleDestination0SelectBox
+${QN_PG_YES_GOTO_DROPDOWN}    name=yes0SelectBox
+${QN_PG_NO_GOTO_DROPDOWN}    name=no0SelectBox
+${GOTO_PAGE_NAME_QN_PG_YES}    Yes
+${GOTO_PAGE_NAME_QN_PG_NO}    No
+${RESPONSE_NO_VIEW_BUTTON}    xpath=//*[@id="no0SelectLayer"]//*[@value='View']
+${RESPONSE_CC_VISA}    response_visa
+${RESPONSE_CC_MASTER}    response_masterCard
+${RESPONSE_CC_AMEX}    response_amex
+${RESPONSE_CC_DISCOVER}    response_discover
+${RESPONSE_CC_DINERS}    response_dinersClub
+@{RESPONSE_TYPE}    Number    Keyword    Yes / No    Credit Card Number    Credit Card Expiration    Currency    Date
+...               Time    Dynamic Grammar    Natural Language
+@{ASR_LANGUAGE}    English    Spanish
+${ADD_PAGE_COMMANDS_PRESS_TEXT}    name=keywordResponseLinks_@INDEX@_DTMF
+${QUES_ADD_PAGE_COMMANDS_CHECKBOX}    name=responecheckbox
+${QUES_ASR_LANGUAGE_DROPDOWN}    id=asrLangVPage
+${ADD_PAGE_COMMANDS_CHECKBOX}    xpath=(//input[@name='deleteLinks'])[@INDEX@]
+${ADD_PAGE_COMMANDS_DESTINATION}    name=links@INDEX@SelectBox
+${VALID_CC_EXP_RESPONSE_DROPDOWN}    name=validCCExp0SelectBox
+${INVALID_CC_EXP_RESPONSE_DROPDOWN}    name=invalidCCExp0SelectBox
+${DYNAMIC_GRAMMAR_USE_KEYWORDS_FROM_DROPDOWN}    id=response_dynamicGrammarVariable_varID
+
+*** Keywords ***
+Create Question Page
+    Choose Voice Page    @{VPAGES}[7]
+    Question Page Should Be Open
+
+Question Page Should Be Open
+    Wait Util Page Fully Loaded
+    Title Should Be    Angel.com - Question Page
+    ${pageURL}    Get Location
+    Set Test Variable    ${pageURL}
+    ${expectLink}=    Get Expect Navi Link    @{NEWVPages}[7]
+    NaviLink Should Be    ${expectLink}
+    Page Name Should Be    @{NEWVPages}[7]
+    Page Number Should Be    ${PAGE NUMBER}
+
+Play Audio File In Qn Page
+    [Arguments]    ${filename}    ${no}=1
+    ${pageid}=    Get Element Attribute    name=subscriberID@value
+    Click Visible Element    ${PLAY_LINK}    ${no}
+    Run Keyword If    '${BROWSER}'=='ff'    Play Audio File In FF Qn Pg    ${filename}
+    Run Keyword If    '${BROWSER}'=='chrome'    Play Audio File In Chrome    ${filename}
+
+Play Audio File In FF Qn Pg
+    [Arguments]    ${filename}
+    File Should Be Downloaded In Disk    ${filename}
+    Delete File From Downloaded Location In Disk    ${filename}
+
+Choose Response Type
+    [Arguments]    ${value}
+    Select From List By Label    ${RESPONSE_TYPE_NAME}    ${value}
+
+Select Number Response Type
+    [Arguments]    ${value}
+    Run Keyword If    '${value}'=='Natural Number'    Select Radio Button    ${RESPONSE_TYPE_NUMBER}    number    ELSE    Select Radio Button
+    ...    ${RESPONSE_TYPE_NUMBER}    digitSequence
+
+Input Limit Number Range
+    [Arguments]    ${min}    ${max}
+    Select Checkbox    ${LIMIT_NATURAL_NUMBER}
+    Input Text    ${QN_MIN_NUMBER}    ${min}
+    Input Text    ${QN_MAX_NUMBER}    ${max}
+
+Limit Digit Range
+    Select Checkbox    ${LIMIT_DIGIT_SEQUENCE}
+    Input Text    ${QN_MIN_DIGIT}    1
+    Input Text    ${QN_MAX_DIGIT}    5
+
+Select Question Page Keyword Checkbox
+    [Arguments]    ${index}=1
+    ${QN_KEYWORD_CHECKBOX}    Generate Locator    ${QN_KEYWORD_CHECKBOX}    ${index}
+    Select Checkbox    ${QN_KEYWORD_CHECKBOX}
+
+Keyword Checkbox Should Be Delete
+    [Arguments]    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${QN_KEYWORD_CHECKBOX}    ${no}
+    Page Should Not Contain Element    ${locator}
+
+Choose New Goto Page If No In Same Site
+    [Arguments]    ${QN_PG_NO_GOTO_DROPDOWN}    ${goto_page}    ${GOTO_PAGE_NAME}
+    Select From List By Label    ${QN_PG_NO_GOTO_DROPDOWN}    ${goto_page}
+    Save Page
+    Save Done Tip Should Be Open
+    Click Response No View Button
+    Switch To New Window    Angel.com - Voicemail Page
+    Window Title Should Be    Angel.com - Voicemail Page
+    Page Name Should Be    ${GOTO_PAGE_NAME}
+    Switch To Main Window
+
+Click Response No View Button
+    Click Button    ${RESPONSE_NO_VIEW_BUTTON}
+
+Prompts Should Exist
+    [Arguments]    ${index}=1
+    ${PROMPTS_MSG_TEXT}    Generate Locator By Decreasing One    ${PROMPTS_MSG_TEXT}    ${index}
+    Page Should Contain Element    ${PROMPTS_MSG_TEXT}
+
+Response Type Dropdown Should Contain All Types
+    Dropdown Should Contain List    ${RESPONSE_TYPE_NAME}    ${RESPONSE_TYPE}
+
+Asr Language Should Contain All Languages
+    Dropdown Should Contain List    ${QUES_ASR_LANGUAGE_DROPDOWN}    ${ASR_LANGUAGE}
+
+Select Add Page Commands Checkbox
+    Select Checkbox    ${QUES_ADD_PAGE_COMMANDS_CHECKBOX}
+
+Limit Number Range Should Be
+    [Arguments]    ${min}    ${max}
+    Textfield Value Should Be    ${QN_MIN_NUMBER}    ${min}
+    Textfield Value Should Be    ${QN_MAX_NUMBER}    ${max}
+
+Limit Digit Sequence Range Should Be
+    [Arguments]    ${min}    ${max}
+    Textfield Value Should Be    ${QN_MIN_DIGIT}    ${min}
+    Textfield Value Should Be    ${QN_MAX_DIGIT}    ${max}
+
+Input Ques Save Value
+    [Arguments]    ${value}    ${index}=1
+    ${SAVE_VALUE_TXT}    Generate Locator By Decreasing One    ${SAVE_VALUE_TXT}    ${index}
+    Input Text    ${SAVE_VALUE_TXT}    ${value}
+
+Input Limit Digit Sequence Range
+    [Arguments]    ${min}    ${max}
+    Input Text    ${QN_MIN_DIGIT}    ${min}
+    Input Text    ${QN_MAX_DIGIT}    ${max}
+
+Add Page Commands Checkbox Should Exist
+    [Arguments]    ${index}=1
+    ${ADD_PAGE_COMMANDS_CHECKBOX}    Generate Locator    ${ADD_PAGE_COMMANDS_CHECKBOX}    ${index}
+    Page Should Contain Checkbox    ${ADD_PAGE_COMMANDS_CHECKBOX}
+
+Click Add One Button
+    Click Button    css=input.button1
+
+Click Add Five Button
+    Click Button    css=input.button5
+
+Click Add Ten Button
+    Click Button    css=input.button10
+
+Select Add Page Commands Sub Checkbox
+    [Arguments]    ${index}=1
+    ${ADD_PAGE_COMMANDS_CHECKBOX}    Generate Locator    ${ADD_PAGE_COMMANDS_CHECKBOX}    ${index}
+    Select Checkbox    ${ADD_PAGE_COMMANDS_CHECKBOX}
+
+Add Page Commands Checkbox Should Not Exist
+    [Arguments]    ${index}=1
+    ${ADD_PAGE_COMMANDS_CHECKBOX}    Generate Locator    ${ADD_PAGE_COMMANDS_CHECKBOX}    ${index}
+    Page Should Not Contain Checkbox    ${ADD_PAGE_COMMANDS_CHECKBOX}
+
+Unselect Ques Add Page Commands Checkbox
+    Unselect Checkbox    ${QUES_ADD_PAGE_COMMANDS_CHECKBOX}
+
+Page Should Contain Use Single Destination Link
+    Page Should Contain Link    Use Single Destination
+
+Page Should Contain Use Multiple Destinations Link
+    Page Should Contain Link    Use Multiple Destinations
+
+Add Page Commands Destination Should Exist
+    [Arguments]    ${index}=1
+    ${ADD_PAGE_COMMANDS_DESTINATION}    Generate Locator By Decreasing One    ${ADD_PAGE_COMMANDS_DESTINATION}    ${index}
+    Page Should Contain Element    ${ADD_PAGE_COMMANDS_DESTINATION}
+
+Click Use Single Destination Link
+    Click Link    Use Single Destination
+
+Add Page Commands Destination Should Not Exist
+    [Arguments]    ${index}=1
+    ${ADD_PAGE_COMMANDS_DESTINATION}    Generate Locator By Decreasing One    ${ADD_PAGE_COMMANDS_DESTINATION}    ${index}
+    Page Should Not Contain Element    ${ADD_PAGE_COMMANDS_DESTINATION}
+
+Input Ques Say Value
+    [Arguments]    ${value}    ${index}=1
+    ${FORMATTED_KEYWORDS_TXT}    Generate Locator By Decreasing One    ${FORMATTED_KEYWORDS_TXT}    ${index}
+    Input Text    ${FORMATTED_KEYWORDS_TXT}    ${value}
+
+Select Allow Multiple Choice Checkbox
+    Select Checkbox    ${ADD_PG_CMD_CHECKBOX}
+
+Add Page Commands Press Text Should Be Readonly
+    [Arguments]    ${index}=1
+    ${ADD_PAGE_COMMANDS_PRESS_TEXT}    Generate Locator By Decreasing One    ${ADD_PAGE_COMMANDS_PRESS_TEXT}    ${index}
+    Page Should Not Contain Textfield    ${ADD_PAGE_COMMANDS_PRESS_TEXT}
+
+Click Use Multiple Destinations Link
+    Click Link    Use Multiple Destinations
+
+Yes Response Destination Should Exist
+    Page Should Contain Element    name=yes0SelectBox
+
+No Response Destination Should Exist
+    Page Should Contain Element    name=no0SelectBox
+
+Select Visa Checkbox
+    Select Checkbox    name=response_visa
+
+Select MasterCard Checkbox
+    Select Checkbox    name=response_masterCard
+
+Select American Express Checkbox
+    Select Checkbox    name=response_amex
+
+Select Discover Checkbox
+    Select Checkbox    name=response_discover
+
+Select Diners Club Checkbox
+    Select Checkbox    name=response_dinersClub
+
+Visa Checkbox Should Be Selected
+    Checkbox Should Be Selected    name=response_visa
+
+Master Card Checkbox Should Be Selected
+    Checkbox Should Be Selected    name=response_masterCard
+
+American Express Checkbox Should Be Selected
+    Checkbox Should Be Selected    name=response_amex
+
+Discover Checkbox Should Be Selected
+    Checkbox Should Be Selected    name=response_discover
+
+Dinner Club Checkbox Should Be Selected
+    Checkbox Should Be Selected    name=response_dinersClub
+
+Valid Response Destination Should Exist
+    Page Should Contain Element    name=validCC0SelectBox
+
+Invalid Response Destination Should Exist
+    Page Should Contain Element    name=invalidCC0SelectBox
+
+Click Capturing Credit Card Information Link
+    Click Link    Capturing Credit Card Information
+
+Click When is a CC number valid? Link
+    Click Link    When is a CC number valid?
+
+Valid After A Response Destination Should Exist
+    Page Should Contain Element    name=validCC0SelectBox
+
+Select New Visa Checkbox
+    Select Checkbox    name=response_builtinVisa
+
+Select New MasterCard Checkbox
+    Select Checkbox    name=response_builtinMasterCard
+
+Select New American Express Checkbox
+    Select Checkbox    name=response_builtinAmex
+
+Select New Discover Checkbox
+    Select Checkbox    name=response_builtinDiscover
+
+Select New Diners Club Checkbox
+    Select Checkbox    name=response_builtinDinersClub
+
+New Visa Checkbox Should Be Selected
+    Checkbox Should Be Selected    name=response_builtinVisa
+
+New Master Card Checkbox Should Be Selected
+    Checkbox Should Be Selected    name=response_builtinMasterCard
+
+New American Express Checkbox Should Be Selected
+    Checkbox Should Be Selected    name=response_builtinAmex
+
+New Discover Checkbox Should Be Selected
+    Checkbox Should Be Selected    name=response_builtinDiscover
+
+New Dinner Club Checkbox Should Be Selected
+    Checkbox Should Be Selected    name=response_builtinDinersClub
+
+Vaild CCExpiration Response Destination Should Exist
+    Page Should Contain Element    ${VALID_CC_EXP_RESPONSE_DROPDOWN}
+
+Invaild CCExpiration Response Destination Should Exist
+    Page Should Contain Element    ${INVALID_CC_EXP_RESPONSE_DROPDOWN}
+
+Click When is an expiration date valid? Link
+    Click Link    When is an expiration date valid?
+
+Currency After A Response Destination Should Exist
+    Page Should Contain Element    name=commonResponses0SelectBox
+
+Prompt Caller For "am or pm" Should Be Selected
+    Radio Button Should Be Set To    timeConfirm    true
+
+Select Do Not Prompt Caller For "am or pm"
+    Select Radio Button    timeConfirm    false
+
+Do Not Prompt Caller For "am or pm" Should Be Selected
+    Radio Button Should Be Set To    timeConfirm    false
+
+Go Back To Question Page
+    Go To    ${pageURL}
+    Window Title Should Be    Angel.com - Question Page
+
+Dynamic Grammar Use Keywords From Should Exist
+    Page Should Contain Element    ${DYNAMIC_GRAMMAR_USE_KEYWORDS_FROM_DROPDOWN}
+
+NL Grammars Dropdown Should Exist
+    Page Should Contain Element    name=response_customGrammarFileReference
+
+After A Response Destination Should Exist
+    Page Should Contain Element    name=validDate0SelectBox
+
+Asr Language Block Should Be Open
+    Page Should Contain    ASR Language
+    Page Should Contain Element    name=asrLangVPage
+
+Click Sample Responses Link
+    Click Link    Sample Responses
+
+If Response Is Invalid Destination Should Exist
+    Page Should Contain Element    name=invalidDate0SelectBox

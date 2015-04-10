@@ -1,0 +1,8 @@
+*** Settings ***
+Resource          Logic Page.txt
+Resource          Login.txt
+Resource          Util.txt
+Resource          Voice Site.txt
+Resource          messpage.txt
+Resource          system_command.txt
+Resource          sitecmd.txt

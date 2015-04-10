@@ -1,0 +1,44 @@
+*** Settings ***
+Library           Selenium2Library
+Library           Collections
+Resource          ../../Global Resource.txt
+
+*** Variables ***
+${SITE_NUM_SELECT_TEXT}    id=inputSiteCode_0
+${PAGE_NUM_SELECT_TEXT}    id=defaultDestination_pageCode_0
+${GO_BACK_TO_VPAGE_IMG}    css=img[alt="Back"]
+${OPEN_SITE_PAGE_IMG}    css=img[alt="Browse Voice Pages"]
+${BROWSER ALL PAGES TITLE}    Angel.com - Browse Voice Pages
+${CLOSE_WINDOW_LINK}    link=Close Window
+${SITE_PASTE_LINK}    xpath=/html/body/table[2]/tbody/tr/td[2]/table/tbody/tr[3]/td[4]/a
+${PAGE_PASTE_LINK}    xpath=/html/body/table[2]/tbody/tr/td[2]/table/tbody/tr[5]/td[4]/a
+${SITE_NUM_TEXT}    xpath=/html/body/table[2]/tbody/tr/td[2]/table/tbody/tr[3]/td[3]/b
+${PAGE_NUM_TEXT}    xpath=/html/body/table[2]/tbody/tr/td[2]/table/tbody/tr[5]/td[3]
+
+*** Keywords ***
+VPage Select Should Be Open
+    Wait Until Page Contains Element    ${SITE_NUM_SELECT_TEXT}
+
+Go Back To VPage Selector
+    Click Image    ${GO_BACK_TO_VPAGE_IMG}
+
+Go To Choose Another Site Page
+    [Arguments]    ${no}=1
+    Click Visible Element    ${OPEN_SITE_PAGE_IMG}    ${no}
+
+Choose Voice Site In Browse Voice Pages
+    [Arguments]    ${value}
+    [Documentation]    input the site number
+    ${code}    Run Keyword If    ${runsInFirefox}    Set Variable    setMagGlassFields('0a3f143f-02-137252e92f9-7ece5f89-06e', '','${value}');
+    Run Keyword If    ${runsInFirefox}    Execute Javascript    ${code}
+    Run Keyword If    ${runsInChrome}    Choose Voice Site In Browse Voice Pages For Chrome    setMagGlassFields('0a3f143f-02-137252e92f9-7ece5f89-06e', '','${value}');    title=Angel.com - Transaction Page
+
+Choose Voice Page In Browse Voice Pages
+    [Arguments]    ${site}    ${page}
+    [Documentation]    input the site number
+    ${code}    Set Variable    javascript:setMagGlassFields('0a3f143f-02-1370c7eed73-319c9cb4-6a6', ${page}, '${site}');
+    Execute Javascript    ${code}
+
+VPage Chosen Site Number Should Be
+    [Arguments]    ${num}
+    Textfield Value Should Be    ${SITE_NUM_SELECT_TEXT}    ${num}

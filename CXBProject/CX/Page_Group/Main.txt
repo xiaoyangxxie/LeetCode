@@ -1,0 +1,109 @@
+*** Settings ***
+Test Setup        Create Voice Site    ${SUITE_NAME}
+Test Teardown     Click CX Builder Active Tab
+Resource          ../resource.txt
+
+*** Test Cases ***
+Reg_PG_1
+    [Documentation]    Author: Amy
+    ...    Created:4/3/2015
+    ...
+    ...    Add New page group
+    ...    "1. Login to Site Builder
+    ...
+    ...    2. Create a voice site
+    ...
+    ...    3.Click the button:NEW PAGE GROUP
+    ...
+    ...    4.Create the name of the new group and
+    ...    Choose one which is set as the parent
+    ...    group from all existed groups and Click Save"
+    ...
+    ...    expected:
+    ...    "1.The overview of site should display with Greeting page \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 2.ONE Enabled new buttons: NEW PAGE GROUP displays
+    ...
+    ...    3.A new group is created successfully with highlight in yellow(By defauly, the new page Group belongs to Home Group)"
+    Add Page Group    New Group
+    New Group Is Highlight    1    rgb(255, 255, 0)
+
+Reg_PG_2
+    Click Add New Page Group
+    Input New Group Name    ${EMPTY}
+    Save New Group
+    Group Group Error Mes Should Be    ${GROUP_SHOULD_NOT_EMPTY}
+    Text Color Should Be    ${GROUP_ERROR_ID}    rgb(255, 0, 0)
+
+Reg_PG_3
+    Click Add New Page Group
+    Close Parent Group
+
+Reg_PG_4
+    : FOR    ${i}    IN RANGE    3
+    \    Add Page Group    Group${i}
+    Wait Until Keyword Succeeds    20sec    2sec    Open Page Group    Group0
+    Page Group Should Be Expend    3
+    Select the First Group
+    Input New Group Name    amy
+    Save Parent Group
+    Wait Until Element Is visable 10sec    link=amy
+
+Reg_PG_5
+    Assige Page Group For New Page    Sales    @{VPAGES}[5]    1    Sales
+    Assige Page Group For New Page    Suport    @{VPAGES}[5]    2    Suport
+    Expand Page Group
+    Click Page Selector    1
+    Click Page Selector    2
+    Click Assign Page Group
+    Group Group Error Mes Should Be    ${SHOULD_SAME_GROUP}
+
+Reg_PG_6
+    Assige Page Group For New Page    Sales    @{VPAGES}[5]    1    Sales
+    Assige Page Group For New Page    Suport    @{VPAGES}[5]    1    Sales
+    Expand Page Group
+    Click Page Selector    1
+    Click Page Selector    2
+    Click Assign Page Group
+    Select the ith Group    2
+    Save Assign Group
+
+Reg_PG_7
+    Assige Page Group For New Page    Sales    @{VPAGES}[5]    1    Sales
+    Assige Page Group For New Page    Suport    @{VPAGES}[5]    2    Suport
+    Expand Page Group
+    Add Page Group    Amy
+    Wait Until Keyword Succeeds    20sec    2sec    Open Page Group    Sales
+    Select the ith Group    2
+    Save New Group
+    Wait Until Keyword Succeeds    20sec    1sec    Click Group Selector    Amy
+    Click Assign Page Group
+    Select the ith Group    1
+    Save Assign Group
+    Wait Until Page Contains Element    link=Suport
+    Get Sub Group    New Message Page    2
+    Get Sub Group    Amy    6
+
+Reg_PG_8
+    : FOR    ${i}    IN RANGE    30
+    \    Choose Voice Page    @{VPAGES}[5]
+    \    Save&Exit Page
+    Click Add New Page Group
+    Page Group Box Is Opend
+    [Teardown]    Close Parent Group
+
+Reg_PG_9
+    Assige Page Group For New Page    Sales    @{VPAGES}[5]    1    Sales
+    Assige Page Group For New Page    Suport    @{VPAGES}[5]    2    Suport
+    Expand Page Group
+    Add Page Group    Amy
+    Wait Until Keyword Succeeds    20sec    2sec    Open Page Group    Sales
+    Select the ith Group    2
+    Save New Group
+    Wait Until Keyword Succeeds    20sec    1sec    Click Group Selector    Amy
+    Click Assign Page Group
+    Select the ith Group    1
+    Save Assign Group
+    Wait Until Page Contains Element    link=Suport
+    Wait Until Keyword Succeeds    20sec    1sec    Click Group Selector    Suport
+    Click Delete Button
+    Click OK Button
+    Get Page/Group \ Number Should Be    1    0

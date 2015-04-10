@@ -1,0 +1,78 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../../../resource.txt
+
+*** Variables ***
+${ACTION_SELECTOR}    id=finalActionType
+@{ACTIONS}        Listen for Site Commands    Listen for Site & Page Commands    Go Back    Go to Designated Page    End the Call
+${ASR_LANG_SELECTOR}    id=asrLangVPage
+@{ASRLANGUAGES}    English    Spanish
+${ASR_CMD_TABLE}    id=asrCommandsTable
+${PAGE_CMD_CHECKBOX}    css=input[name="deleteLinks"][value="@INDEX@"]
+${SAY_WORDS_TEXT}    name=links_@INDEX@_formattedKeywords
+${DTMF_TEXT}      name=links_@INDEX@_DTMF
+${GO_TO_PAGE_SELECTOR_MP}    name=links@INDEX@SelectBox
+${DESIGNATED_PAGE_SELECTOR_MP}    name=destination0SelectBox
+
+*** Keywords ***
+Action Should Be
+    [Arguments]    ${expectedAction}
+    List Selection Should Be    ${ACTION_SELECTOR}    ${expectedAction}
+
+ASR Language Should Be
+    [Arguments]    ${expectedLang}
+    List Selection Should Be    ${ASR_LANG_SELECTOR}    ${expectedLang}
+
+Choose Listen for Site & Page Commands Action
+    Select From List By Label    ${ACTION_SELECTOR}    @{ACTIONS}[1]
+
+Select All Page Commands
+    Select Checkbox    name=linkCheckBox
+
+Select Page Command
+    [Arguments]    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${PAGE_CMD_CHECKBOX}    ${no}
+    Select Checkbox    ${locator}
+
+Input Words To Say
+    [Arguments]    ${word}    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${SAY_WORDS_TEXT}    ${no}
+    Input Text    ${locator}    ${word}
+
+Input DTMF
+    [Arguments]    ${num}    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${DTMF_TEXT}    ${no}
+    Input Text    ${locator}    ${num}
+
+Select Go To Page In MP
+    [Arguments]    ${page}    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${GO_TO_PAGE_SELECTOR_MP}    ${no}
+    Select From List By Label    ${locator}    ${page}
+
+MP Go To Page Should Be
+    [Arguments]    ${page}    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${GO_TO_PAGE_SELECTOR_MP}    ${no}
+    List Selection Should Be    ${locator}    ${page}
+
+View Go To Page
+    [Arguments]    ${no}=1
+    Click Element By No    ${no}    ${VIEW_BUTTON}
+
+Action Selector Should Be
+    [Arguments]    ${command}
+    List Selection Should Be    ${ACTION_SELECTOR}    ${command}
+
+Go To Designated Page
+    [Arguments]    ${page}
+    Select From List By Label    ${DESIGNATED_PAGE_SELECTOR_MP}    ${page}
+
+GoToDesignated Page Should Be
+    [Arguments]    ${page}
+    List Selection Should Be    ${DESIGNATED_PAGE_SELECTOR_MP}    ${page}
+
+Select Action Type
+    [Arguments]    ${action}
+    Select From List By Label    ${ACTION_SELECTOR}    ${action}
+
+ASR Commands Block Should Be Open
+    Element Should Be Visible    ${ASR_CMD_TABLE}

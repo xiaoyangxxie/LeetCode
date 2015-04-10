@@ -1,0 +1,69 @@
+*** Settings ***
+Test Teardown     Voice Page Test Teardown
+Resource          ../resource.txt
+
+*** Test Cases ***
+AC_Main
+    [Tags]    imageCompare    Regression
+    [Setup]    Create Address Capture Page
+    Compare The Page
+
+AC_AdvancedOptions
+    [Tags]    imageCompare    Regression
+    [Setup]    Run Keywords    Create Address Capture Page    AND    Open Advanced Option Tab
+    Compare The Page
+
+CQ_MainTab
+    [Tags]    imageCompare    Regression
+    [Setup]    Create Call Queue Page
+    Compare The Page
+
+CQ_OnHoldTab
+    [Tags]    imageCompare    Regression
+    [Setup]    Run Keywords    Create Call Queue Page    AND    Switch To On Hold Tab
+    Compare The Page
+
+CQ_WhisperTab
+    [Tags]    imageCompare    Regression
+    [Setup]    Run Keywords    Create Call Queue Page    AND    Switch To Whisper Tab
+    Compare The Page
+
+CQ_Monitor
+    [Tags]    imageCompare    Regression
+    [Setup]    Run Keywords    Create Call Queue Page    AND    Switch To Monitor Tab
+    Compare The Page
+
+CQ_AdvanceOptions
+    [Tags]    imageCompare    Regression
+    [Setup]    Run Keywords    Create Call Queue Page    AND    Switch To Advanced Option Tab
+    Compare The Page
+
+CT_Main
+    [Tags]    imageCompare    Regression
+    [Setup]    Create Call Transfer Page
+    Compare The Page
+
+CT_NoMatch
+    [Tags]    imageCompare    Regression
+    [Setup]    Run Keywords    Create Call Transfer Page    AND    Open No Match Tab    AND    No Match Tab Should Be Open
+    Compare The Page
+
+CT_Whisper
+    [Tags]    imageCompare    Regression
+    [Setup]    Run Keywords    Create Call Transfer Page    AND    Whisper.Open Whisper Tab
+    Compare The Page
+
+CT_CallScenarios
+    [Tags]    imageCompare    Regression
+    [Setup]    Run Keywords    Create Call Transfer Page    AND    Open Call Scenarios Tab    AND    Call Scenarios Tab Should Be Open
+    Compare The Page
+
+CT_AsrSettings
+    [Tags]    imageCompare    Regression
+    [Setup]    Run Keywords    Create Call Transfer Page    AND    Open ASR Settings Tab
+    Compare The Page
+
+CT_AdancedOptions
+    [Tags]    imageCompare    Regression
+    [Setup]    Run Keywords    Create Call Transfer Page    AND    Open Advanced Option Tab    AND    CT Advanced Option Tab Should Be Open
+    Compare The Page

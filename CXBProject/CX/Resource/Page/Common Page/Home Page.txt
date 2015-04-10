@@ -1,0 +1,17 @@
+*** Settings ***
+Resource          ../../../resource.txt
+
+*** Variables ***
+${HOME PAGE TITLE}    Angel.com - Home
+${SITE LANGUAGE}    selected_country
+
+*** Keywords ***
+Home Page Should Be Open
+    Wait Until Keyword Succeeds    30s    1s    Title Should Be    ${HOME PAGE TITLE}
+    Site Language Should Be    English
+    Welcome Message Should StartWith Hello
+    Header Tab Should Be Active    ${HOME_TAB_ACTIVE}
+
+Site Language Should Be
+    [Arguments]    ${value}
+    Element Text Should Be    ${SITE LANGUAGE}    ${value}

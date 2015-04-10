@@ -1,0 +1,110 @@
+*** Settings ***
+Library           S2ExLibrary
+Library           Selenium2Library
+Resource          ../../Global Resource.txt
+Resource          ../Common Elements.txt
+Resource          ../../../resource.txt
+
+*** Variables ***
+${SITE VARIABLES PAGE TITLE}    Angel.com - Site Variables
+${VAR COUNT}      ${EMPTY}
+${FIRST_VAR_TEXT}    id=0_varName
+${CUR_VAR_TEXT}    id=${VAR COUNT}_varName
+${SITE_VAR_NAME_TEXT}    id=@INDEX@_varName
+
+*** Keywords ***
+Site Variables Page Should Be Open
+    Wait Until Page Contains    Add Site Variables:
+    Title Should Be    ${SITE VARIABLES PAGE TITLE}
+    ${expectLink}=    Catenate    SEPARATOR=${SPACE}>${SPACE}    CX Builder    Voice Sites    ${SITE NAME}    Site Variables
+    ${actualLink}=    Get Text    xpath=//*[@id="sbRightBodyContainer"]/table/tbody/tr[1]/td[2]
+    Should Be Equal As Strings    ${expectLink}    ${actualLink}
+
+Create One Variable
+    [Arguments]    ${var}
+    Go To Site Variables
+    Site Variables Page Should Be Open
+    Click Button    ${ADD_ONE_BUTTON}
+    Wait Until Page Contains Element    ${FIRST_VAR_TEXT}
+    Input Site Variable    ${var}
+    Save Site Variables
+    Save Done Tip Should Be Open
+
+Create One Variable with private
+    [Arguments]    ${var}
+    Go To Site Variables
+    Site Variables Page Should Be Open
+    Click Button    ${ADD_ONE_BUTTON}
+    Wait Until Page Contains Element    ${FIRST_VAR_TEXT}
+    Input Site Variable with private    ${var}
+    Save Site Variables
+    Save Done Tip Should Be Open
+
+Input Site Variable
+    [Arguments]    ${var}
+    ${VAR COUNT}=    Get Matching Xpath Count    //input[contains(@id, '_varName')]
+    ${VAR COUNT}=    Evaluate    ${VAR COUNT} - 1
+    Set Suite Variable    ${VAR COUNT}
+    Input Text    id=${VAR COUNT}_varName    ${var}
+
+Input Site Variable with private
+    [Arguments]    ${var}
+    ${VAR COUNT}=    Get Matching Xpath Count    //input[contains(@id, '_varName')]
+    ${VAR COUNT}=    Evaluate    ${VAR COUNT} - 1
+    Set Suite Variable    ${VAR COUNT}
+    Input Text    id=${VAR COUNT}_varName    ${var}
+    Select Checkbox    id=${VAR COUNT}_privateVariable
+
+Save Site Variables
+    Click Button    ${SAVE_BUTTON}
+
+Site Variables Page Should Contain Var
+    [Arguments]    ${var}
+    Page Should Contain Element    css=input[value="${var}"]
+
+Add One Variable
+    [Arguments]    ${var}
+    Click Button    ${ADD_ONE_BUTTON}
+    Wait Until Page Contains Element    ${FIRST_VAR_TEXT}
+    Input Site Variable    ${var}
+
+Modify Site Variable By Row Num
+    [Arguments]    ${var}    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${SITE_VAR_NAME_TEXT}    ${no}
+    Input Text    ${locator}    ${var}
+
+Modify Site Variable By Name
+    [Arguments]    ${name}    ${newName}
+    Input Text    css=input[value='${name}']    ${newName}
+
+Input Variable Value
+    [Arguments]    ${var}
+    ${VAR COUNT}=    Get Matching Xpath Count    //input[contains(@id, '_varName')]
+    ${VAR COUNT}=    Evaluate    ${VAR COUNT} - 1
+    Set Suite Variable    ${VAR COUNT}
+    Input Text    id=${VAR COUNT}_value    ${var}
+
+Delete Site Variable By Name
+    [Arguments]    ${name}
+    ${no}=    get_element_index_by_inputValue    tag=input    ${name}
+    ${no}=    Evaluate    ${no} + 1
+    select checkbox    xpath=(//input[@name='deleteIndex'])[${no}]
+    click element    css=input.common-btn.buttonDelete
+
+Input Site Variable And Value
+    [Arguments]    ${var}    ${value}
+    ${VAR COUNT}=    Get Matching Xpath Count    //input[contains(@id, '_varName')]
+    ${VAR COUNT}=    Evaluate    ${VAR COUNT} - 1
+    Set Suite Variable    ${VAR COUNT}
+    Input Text    id=${VAR COUNT}_varName    ${var}
+    Input Text    ID=${VAR COUNT}_value    ${value}
+
+Create One Variable With Value
+    [Arguments]    ${var}    ${value}
+    Go To Site Variables
+    Site Variables Page Should Be Open
+    Click Button    ${ADD_ONE_BUTTON}
+    Wait Until Page Contains Element    ${FIRST_VAR_TEXT}
+    Input Site Variable And Value    ${var}    ${value}
+    Save Site Variables
+    Save Done Tip Should Be Open

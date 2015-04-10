@@ -1,0 +1,74 @@
+*** Settings ***
+Test Setup        Create Schedule Page
+Resource          ../resource.txt
+
+*** Test Cases ***
+Reg_Sch_13
+    [Documentation]    Edit page number
+    ...    "1. Create page with a specific page name and number
+    ...    2. Enter new page number and save page
+    ...    3. Verify edited page number."
+    [Tags]    Regression
+    Input Page Name    ${TEST_NAME}
+    Input Page Number    150
+    Save Page
+    Save Done Tip Should Be Open
+    Input Page Number    200
+    Save&Exit Page
+    Page Name Should Exist    ${TEST_NAME}
+    Page Number Should Exist    200
+
+Reg_Sch_14
+    [Documentation]    On clicking 'Save&Exit', details should be saved and navigate to the Site Overview page.
+    ...    "1. Enter details
+    ...    2. Save Page
+    ...    3. The details should be saved and the saved confirmation message should be displayed in the same page"
+    [Tags]    Regression
+    Input Page Name    ${TEST_NAME}
+    Input Page Number    310
+    Save&Exit Page
+    Page Name Should Exist    ${TEST_NAME}
+    Page Number Should Exist    310
+
+Reg_Sch_15
+    [Documentation]    Check whether the user can create site commands to reach Schedule Page from any pages.
+    ...    "1. Create Schedule Page
+    ...    2. Navigate to Site Commands Link
+    ...    3. Click on Add Site Command
+    ...    4. Add site command by specifying the word, DTMF number and goto page
+    ...    5. View the Goto page."
+    [Tags]    Regression
+    Input Page Name    ${TEST_NAME}
+    Input Page Number    300
+    Save Page
+    Save Done Tip Should Be Open
+    Go To Site Commands
+    Click Add Site Command Button
+    Create Site Command
+    Save Page
+    Save Done Tip Should Be Open
+
+Reg_Sch_16
+    [Documentation]    Add Comments to the Schedule page and save
+    ...    "1. Enter comments and save page
+    ...    2. Verify edited comments."
+    [Tags]    Regression
+    Page Comments Should Be    ${EMPTY}
+    Input Page Comment    ${expectedComments}
+    Save Page Named As Test Case
+    Page Comments Should Be    ${expectedComments}
+
+Reg_Sch_17
+    [Documentation]    Select a parent group and assign Schedule page to it
+    ...    "1. Create Page Group
+    ...    2. Create Schedule Page
+    ...    3. Assign page to newly created page group
+    ...    4. Verify parent group"
+    [Tags]    Regression
+    Go to Site Overview
+    Add Page Group    New Group
+    Create Schedule Page
+    Click Parent Group
+    Select the First Group
+    Save Parent Group
+    Verify Parent Group    New Group

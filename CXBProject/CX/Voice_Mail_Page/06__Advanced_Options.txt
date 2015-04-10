@@ -1,0 +1,68 @@
+*** Settings ***
+Test Setup        Run Keywords    Create Voice Mail Page    AND    Open Advanced Option Tab    AND    VM Advanced Option Tab Should Be Open
+Resource          ../Testflow/Util.txt
+
+*** Test Cases ***
+Reg_VM_55
+    [Documentation]    click *Why?* link, The message should be open in new window.
+    [Tags]    Regression
+    Click Why Link    1
+    Switch To New Window    Barge-in
+    Close Popup Window
+
+Reg_VM_56
+    [Documentation]    select *On* radio button in Barge In block, User can make the checkbox selected and callers can interrupt prompt playback with voice or touch-tone input
+    [Tags]    Regression
+    Turn On Barge In
+    Barge In Should Be On
+    Save Successfully
+
+Reg_VM_57
+    [Documentation]    select *Off* radio button in Barge In block, User can make the checkbox selected and callers can interrupt prompt playback with voice or touch-tone input
+    [Tags]    Regression
+    Turn Off Barge In
+    Barge In Should Be Off
+    Save Successfully
+
+Reg_VM_58-1
+    [Documentation]    Input max record time 1800, save page and system should allow to save without any error.
+    [Tags]    Regression
+    VM Input Max Record Time    1800
+    Save Successfully
+
+Reg_VM_58-2
+    [Documentation]    Input max record time 5, save page and system should allow to save without any error.
+    [Tags]    Regression
+    VM Input Max Record Time    5
+    Save Successfully
+
+Reg_VM_58-3
+    [Documentation]    Input max record time 1801, save page and system should pop up error message and not allow to save.
+    [Tags]    Regression
+    VM Input Max Record Time    1801
+    VM Max Record Time Error Alert Should Be Open    1801
+
+Reg_VM_58-4
+    [Documentation]    Input max record time 4, save page and system should pop up error message and not allow to save.
+    [Tags]    Regression
+    VM Input Max Record Time    4
+    VM Max Record Time Error Alert Should Be Open    4
+
+Reg_VM_59
+    [Documentation]    User can define the silence time to end the voice message.
+    [Tags]    Regression
+    VM Choose End Of Recording Silence Time    @{VM END RECORDING SILENCE TIMES}[0]
+    Save Successfully
+
+Reg_VM_60
+    [Documentation]    User can disable and enable Site Commands by selecting checkbox.
+    [Tags]    Regression
+    VM Disable Site Commands
+    Save Successfully
+
+Reg_VM_61
+    [Documentation]    click *Why?* link beside Disabel Site Command block, The message should be open in new window.
+    [Tags]    Regression
+    Click Why Link    2
+    Switch To New Window    Why Disable Site Commands?
+    Close Popup Window

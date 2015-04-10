@@ -1,0 +1,43 @@
+*** Settings ***
+Resource          ../resource.txt
+
+*** Keywords ***
+Upload Audio In Page
+    [Arguments]    ${audio_file}    ${page}
+    ChangeToAudio And Upload Audio    ${audio_file}
+    Save Successfully    ${page}
+    Exit Page
+
+Create Home Page
+    Create Message Page
+    Change To Audio    1
+    Click Link Audio Link
+    Audio Handler Should Be Open
+    Go To Audio Frame
+    Link To Page    dtmf_1.wav
+    Go Out Of Frame
+    Save Successfully    home page
+
+Get Domain Code And Page Id by Name
+    [Arguments]    ${page}
+    Wait Until Keyword Succeeds    13sec    1sec    Click Existing Page    ${page}
+    Get Page Id
+
+Create Home Page Dtmf0
+    Create Message Page
+    Change To Audio    1
+    Click Link Audio Link
+    Audio Handler Should Be Open
+    Go To Audio Frame
+    Link To Page    dtmf_0.wav
+    Go Out Of Frame
+    Save Successfully    home page
+
+ChangeToAudio And Upload Audio
+    [Arguments]    ${audio_file}
+    Change To Audio    1
+    Click Link Audio Link
+    Audio Handler Should Be Open
+    Go To Audio Frame
+    Link To Page    ${audio_file}
+    Go Out Of Frame

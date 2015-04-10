@@ -1,0 +1,266 @@
+*** Settings ***
+Test Setup        Create Question Page
+Library           Selenium2Library
+Resource          ../resource.txt
+
+*** Test Cases ***
+Reg_Ques_16
+    [Documentation]    Main Tab - Delete button
+    ...
+    ...    "1. Select any audio prompt or Text-to-speech prompt or variable prompt.
+    ...    2. Click on the Delete button..
+    ...    3. System should delete the selected prompt."
+    [Tags]    Regression
+    Add Audio Prompt Block    2
+    Add TTS Prompt Block    3
+    Add Variable Prompt Block    4
+    Select Audio Prompts Checkbox    2
+    Select Audio Prompts Checkbox    3
+    Select Audio Prompts Checkbox    4
+    Click Delete Button
+    Audio Prompt Block Should Not Exist    2
+    Audio Prompt Block Should Not Exist    3
+    Audio Prompt Block Should Not Exist    4
+    Save Successfully
+
+Reg_Ques_17-1
+    [Documentation]    Main Tab - Up and Down Button
+    ...
+    ...    1. User can use the 'Up' and 'Down' button to reorder the audio prompts, text-to-speech and variables.
+    [Tags]    Regression
+    Add TTS Prompt Block    2
+    Select Prompts Checkbox    2
+    Click Up Button
+    Prompt Checkbox Should Be Selected    1
+    Save Successfully
+
+Reg_Ques_17-2
+    [Documentation]    Create Question Page, click *Text-to-Speech* button, *Down* button should be visible, select audio checkbox, click *Down* button, audio block should get down.
+    [Tags]    Regression
+    Add TTS Prompt Block    2
+    Select Prompts Checkbox    1
+    Click Down Button
+    Prompt Checkbox Should Be Selected    2
+    Save Successfully
+
+Reg_Ques_18
+    [Documentation]    Main Tab - Response Type
+    ...
+    ...    "1. User can specify the response type for the questions by using the 'Response Type' drop down.
+    ...    2. Response type drop down should have the following types for ASR voice site ""Number"", ""Keyword"", ""Yes/No"", ""Credit Card Number"", ""Credit Card Expiration"", ""Currency"", ""Date"" and ""Time"".
+    ...    2. Response type drop down should have the following types for DTMF voice site ""Number"", ""Touch-Tone Sequence"", ""Yes/No"", ""Credit Card Number"", ""Credit Card Number(new)""""Credit Card Expiration"", ""Currency"", ""Date"" ,""Time"",""Dynamic Grammar"",""Natural Language""."
+    [Tags]    Regression
+    Response Type Dropdown Should Contain All Types
+
+Reg_Ques_19
+    [Documentation]    Main Tab- ASR Language
+    ...
+    ...    Check the ASR Language dropdown list: the default selection is set according to the setting in Site properties. Enable or disable in CSR, check the ASR Language setting
+    [Tags]    Regression
+    Select Add Page Commands Checkbox
+    Asr Language Block Should Be Open
+    Asr Language Should be    English
+    Save Page
+    Red Notice Should Display    'Save Value' field cannot be left blank.
+
+Reg_Ques_20
+    [Documentation]    Main Tab - Store in Variables
+    ...
+    ...    "1. User can select the variables or create new variables to save the response in the variables.
+    ...    2. User can edit the variables by using the 'Edit Variables' link."
+    [Tags]    Regression
+    Choose Response Type    Keyword
+    Choose Response Type    Yes / No
+    Choose Response Type    Credit Card Number
+    Choose Response Type    Credit Card Number(New)
+    Choose Response Type    Credit Card Expiration
+    Choose Response Type    Currency
+    Choose Response Type    Date
+    Choose Response Type    Time
+    Click Edit Variables Link
+    New Window Title Should Be    Angel.com - Site Variables
+
+Reg_Ques_21
+    [Documentation]    Main Tab - Response Type - Number - Sample Responses link
+    ...
+    ...    User can click on the "Sample Responses" link to view the Sample Responses information's in new window.
+    [Tags]    Regression
+    Click Sample Responses Link
+    New Window Title Should Be    Number
+    Close Popup Window
+    Window Title Should Be    Angel.com - Question Page
+
+Reg_Ques_22-1
+    [Documentation]    Main Tab - Response Type - Number - Callers can enter a numeric, touch-tone response
+    ...
+    ...    "1. User can select the ""Natural Number"" radio button to receive the response as Natural Number.
+    ...    2. User can select the ""Digit Sequence"" radio button to receive the response as Digit Sequence.
+    ...    3. User can specify the limit input to valid numbers by entering the boundary values and selecting the check box."
+    [Tags]    Regression
+    Choose Response Type    Number
+    Select Number Response Type    Natural Number
+    Limit Number Range Should Be    1950    2030
+    Input Limit Number Range    100    500
+    Limit Number Range Should Be    100    500
+    Save Successfully
+
+Reg_Ques_22-2
+    [Documentation]    Main Tab - Response Type - Number - Callers can enter a numeric, touch-tone response
+    ...
+    ...    "1. User can select the ""Natural Number"" radio button to receive the response as Natural Number.
+    ...    2. User can select the ""Digit Sequence"" radio button to receive the response as Digit Sequence.
+    ...    3. User can specify the limit input to valid numbers by entering the boundary values and selecting the check box."
+    [Tags]    Regression
+    Choose Response Type    Number
+    Select Number Response Type    Digit Sequence
+    Limit Digit Sequence Range Should Be    1    30
+    Input Limit Digit Sequence Range    2    10
+    Limit Digit Sequence Range Should Be    2    10
+    Save Successfully
+
+Reg_Ques_23
+    [Documentation]    Main Tab - Response Type - Number - Add Page Commands
+    ...
+    ...    "1. User can select the ""Add Page Commands"" check box to save the commends.
+    ...    2. User can add 1, 5 and 10 page commands by clicking the corresponding buttons.
+    ...    3. User can delete the page comments by using the delete button."
+    [Tags]    Regression
+    Choose Response Type    Number
+    Select Number Response Type    Natural Number
+    Select Add Page Commands Checkbox
+    Input Ques Save Value    test
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+    Scroll Down Page    500
+    Click Add One Button
+    Add Page Commands Checkbox Should Exist    2
+    Scroll Down Page    700
+    Click Add Five Button
+    Add Page Commands Checkbox Should Exist    7
+    Scroll Down Page    750
+    Click Add Ten Button
+    Scroll Down Page    750
+    Add Page Commands Checkbox Should Exist    17
+    Select Add Page Commands Sub Checkbox    17
+    Scroll Down Page    950
+    Click Visible Delete Button    2
+    Add Page Commands Checkbox Should Not Exist    17
+    Unselect Ques Add Page Commands Checkbox
+
+Reg_Ques_24
+    [Documentation]    Main Tab - Response Type - Numbers - "Use Multiple Destinations / Use Single Destinations" links
+    ...
+    ...    "1. User can click on the ""Use Multiple Destinations / Use Single Destinations"" to specify the destination page based on the response.
+    ...    2. Based on the selection the go to drop down should be changed."
+    [Tags]    Regression
+    Select Add Page Commands Checkbox
+    Page Should Contain Use Single Destination Link
+    Add Page Commands Destination Should Exist
+    Click Use Single Destination Link
+    Add Page Commands Destination Should Not Exist
+    Page Should Contain Use Multiple Destinations Link
+    Input Ques Save Value    test
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_Ques_25
+    [Documentation]    Main Tab - Response Type - Keyword
+    ...
+    ...    "1. User selects the ""Keyword"" in the 'Response Type' drop down.
+    ...    2. User can add 1, 5 and 10 key words, DTMF input and Save value text boxes by clicking the corresponding buttons.
+    ...    3. User can delete the keywords by using the delete button."
+    [Tags]    Regression
+    Choose Response Type    Keyword
+    Input Ques Save Value    test
+    Input Ques Say Value    say test
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+    Scroll Down Page    500
+    Click Add One Button
+    Add Page Commands Checkbox Should Exist    2
+    Scroll Down Page    700
+    Click Add Five Button
+    Add Page Commands Checkbox Should Exist    7
+    Scroll Down Page    750
+    Click Add Ten Button
+    Add Page Commands Checkbox Should Exist    17
+    Select Add Page Commands Sub Checkbox    17
+    Scroll Down Page    850
+    Click Visible Delete Button    2
+    Add Page Commands Checkbox Should Not Exist    17
+
+Reg_Ques_26
+    [Documentation]    Main Tab - Response Type - Keyword - Allow Multiple Choice
+    ...
+    ...    1. User can select the "Allow Multiple Choice" check box to enable callers to answer with a multi-keyword response.
+    [Tags]    Regression
+    Choose Response Type    Keyword
+    Select Allow Multiple Choice Checkbox
+    Add Page Commands Press Text Should Be Readonly
+    Input Ques Save Value    test
+    Input Ques Say Value    say test
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_Ques_27
+    [Documentation]    Main Tab - Response Type - Keyword - "Use Multiple Destinations / Use Single Destinations" links
+    ...
+    ...    "1. User can click on the ""Use Multiple Destinations / Use Single Destinations"" to specify the destination page based on the response.
+    ...    2. Based on the selection the go to drop down should be changed."
+    [Tags]    Regression
+    Choose Response Type    Keyword
+    Page Should Contain Use Multiple Destinations Link
+    Add Page Commands Destination Should Not Exist
+    Click Use Multiple Destinations Link
+    Page Should Contain Use Single Destination Link
+    Add Page Commands Destination Should Exist
+    Input Ques Save Value    test
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_Ques_28
+    [Documentation]    Main Tab - Response Type - YES/NO
+    ...
+    ...    "1. User selects the ""Yes/No"" in the 'Response Type' drop down.
+    ...    2. Check User specify the voice page based on the callers's response by using the provided drop down downs for ""If response is Yes and If response is No"""
+    [Tags]    Regression
+    Choose Response Type    Yes / No
+    Yes Response Destination Should Exist
+    No Response Destination Should Exist
+    Text Should Be Visible    Callers can say "yes" or "no" (or press 1 for yes or 2 for no).
+
+Reg_Ques_29
+    [Documentation]    Main Tab - Response Type - YES/NO - Sample Responses links
+    ...
+    ...    "1. Click on the Sample Responses link.
+    ...    2. The Sample Responses information should be open in the new window."
+    [Tags]    Regression
+    Choose Response Type    Yes / No
+    Click Sample Responses Link
+    New Window Title Should Be    If callers say
+    Close Popup Window
+    Window Title Should Be    Angel.com - Question Page
+
+Reg_Ques_30
+    [Documentation]    Main Tab - Response Type - Credit Card Number
+    ...
+    ...    "1. User selects the ""Credit Card Number"" in the 'Response Type' drop down.
+    ...    2. User select the following credit card types should be displayed as check boxes ""Visa"", ""MasterCard"", ""American Express"", ""Discover"" and ""Diners Club"".
+    ...    3. User can specify the voice page based on the valid and invalid credit card response by using the provided drop down downs for ""If response is valid and If response is Invalid""."
+    [Tags]    Regression    PEP-144
+    Choose Response Type    Credit Card Number
+    Select Visa Checkbox
+    Select MasterCard Checkbox
+    Select American Express Checkbox
+    Select Discover Checkbox
+    Select Diners Club Checkbox
+    Save Successfully
+    Visa Checkbox Should Be Selected
+    Master Card Checkbox Should Be Selected
+    American Express Checkbox Should Be Selected
+    Discover Checkbox Should Be Selected
+    Dinner Club Checkbox Should Be Selected
+    Valid Response Destination Should Exist
+    Invalid Response Destination Should Exist
+
+*** Keywords ***

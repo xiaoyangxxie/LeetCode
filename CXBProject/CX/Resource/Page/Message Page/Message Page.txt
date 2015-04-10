@@ -1,0 +1,49 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          Menu Actions.txt
+Resource          ../../../resource.txt
+
+*** Variables ***
+${MESSAGE_PAGE_ICON}    name=messagePageIcon
+${MESSAGE PAGE TITLE}    Angel.com - Message Page
+@{PROMPTS LEVEL}    promptSiteLevel    promptPageLevel
+
+*** Keywords ***
+Create Message Page
+    Choose Voice Page    @{VPAGES}[5]
+    Message Page Should Be Open
+
+Message Page Should Be Open
+    Wait Util Page Fully Loaded
+    Header Tab Should Be Active    ${CXBUILDER_TAB_ACTIVE}    # Verify CX Builder Tab
+    ${expectLink}=    Get Expect Navi Link    @{NEWVPages}[12]    # Verify the header navigation links appear: Site Builder > Voice Sites > [SITE NAME] \# [SITE NUMBER] > New Logic Page
+    NaviLink Should Be    ${expectLink}
+    Page Name Should Be    @{NEWVPages}[12]    # Verify default Logic Page name
+    Page Number Should Be    ${PAGE NUMBER}    # Verify default Logic Page number
+    Page Comments Should Be    ${EMPTY}    # Verify default page comments is empty.
+    Page Group Should Be    HOME    # Verify default page group
+    Main Tab Should Be Active    # Verify MAIN tab is actived.
+    Save&SE&Exit Buttons Should Be Visible    # Verify the display of SAVE, SAVE & EXIT and EXIT buttons.
+    Message Page Icon Should Be Visible    # Verify icon to the left of the title appears.
+    Message Buttons Should Be Visible
+    Action Should Be    @{ACTIONS}[0]
+    Prompts Text Should Be    ${INIT PROMPTS TEXT}    1
+    ${pageURL}    Get Location
+    Set Test Variable    ${pageURL}
+
+Message Page Icon Should Be Visible
+    Page Should Contain Element    ${MESSAGE_PAGE_ICON}
+
+Message Buttons Should Be Visible
+    Page Should Contain Element    ${DELETE_BUTTON}
+    Page Should Contain Element    ${AUDIO_BUTTON}
+    Page Should Contain Element    ${TTS_BUTTON}
+    Page Should Contain Element    ${VAR_BUTTON}
+
+MP Advanced Option Tab Should Be Open
+    Barge In Should Be On
+    Element Should Be Disabled    name=checkbox
+
+Disable Site Commands
+    Select Checkbox    disableSiteCommandsCheckbox
+    Checkbox Should Be Selected    disableSiteCommandsCheckbox

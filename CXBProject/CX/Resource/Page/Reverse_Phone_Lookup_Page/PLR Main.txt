@@ -1,0 +1,22 @@
+*** Settings ***
+Resource          ../../../resource.txt
+Library           Selenium2Library
+
+*** Keywords ***
+Click Link Edit Variables Under 'Let me choose'
+    Click link    xpath=(//a[contains(text(),'Edit Variables')])[2]
+
+Click Link How to use Reverse Phone Lookup destinations
+    Click Link    link=How to use Reverse Phone Lookup destinations
+
+Choose Data Was Collected Go To Page
+    [Arguments]    ${page}
+    Select From List By Label    name=success0SelectBox    ${page}
+
+PLR Variable Should Be Contained
+    [Arguments]    ${value}
+    Element Should Contain    phoneVarRef_varID    ${value}
+
+Variable of let me choose should be contained
+    [Arguments]    ${value}
+    Dropdown Should Contain    firstNameVarRef_varID    ${value}

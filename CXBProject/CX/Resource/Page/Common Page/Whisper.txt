@@ -1,0 +1,84 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../../../resource.txt
+
+*** Variables ***
+${WHISPER_SCREEN_THE_CALL_CHECKBOX}    name=screenCallTabIsScreenCall
+${WHISPER_RECORD_CALLER'S_NAME_CHECKBOX}    name=screenCallTabRecordCallersName
+${WHISPER_VARIABLE_PROMPT_VAR}    id=receiverPrompts_2_varIDSelect
+${WHISPER_NOINPUT_COUNT_DROPDOWN}    id=receiverNoSpeechCount
+${WHISPER_NOINPUT_DESTINATION}    name=receiverNoSpeechStrat0SelectBox
+${WHISPER_NOMATCH_COUNT_DROPDOWN}    id=receiverNoMatchCount
+${WHISPER_NOMATCH_DESTINATION}    name=receivemonorNoMatchStrat0SelectBox
+${WHISPER_GIVE_THE_AGENT_CALL_CONTROL_CHECKBOX}    name=screenCallTabIsAutoAccept
+${CT_WHISPER_NOMATCH_DESTINATION}    name=receiverNoMatchStrat0SelectBox
+
+*** Keywords ***
+Click Whisper How It Works Link
+    Wait Until Keyword Succeeds    10sec    1sec    click link    xpath=(//a[contains(text(),'How it Works')])[2]
+
+Select Whisper Screen The Call Checkbox
+    Select Checkbox    ${WHISPER_SCREEN_THE_CALL_CHECKBOX}
+
+Unselect Whisper Screen The Call Checkbox
+    Unselect Checkbox    ${WHISPER_SCREEN_THE_CALL_CHECKBOX}
+
+Whisper Record The Caller's Name Checkbox Should Be Visible
+    Element Should Be Visible    ${WHISPER_RECORD_CALLER'S_NAME_CHECKBOX}
+
+Whisper Record The Caller's Name Checkbox Should Not Be Visible
+    Element Should Not Be Visible    ${WHISPER_RECORD_CALLER'S_NAME_CHECKBOX}
+
+Whisper Variable Prompt Var Dropdown Should Exist
+    Page Should Contain List    ${WHISPER_VARIABLE_PROMPT_VAR}
+
+Select Whisper Record Caller's Name Checkbox
+    Select Checkbox    ${WHISPER_RECORD_CALLER'S_NAME_CHECKBOX}
+
+Whisper Variable Prompt Var Dropdown Should Not Exist
+    Page Should Not Contain List    ${WHISPER_VARIABLE_PROMPT_VAR}
+
+Select Whisper Give The Agent Call Control Checkbox
+    Select Checkbox    ${WHISPER_GIVE_THE_AGENT_CALL_CONTROL_CHECKBOX}
+
+Whisper Add 1 Button Should Be Visible
+    Page Should Contain Button    ${ADD_ONE_BUTTON}
+
+Whisper Add 5 Button Should Be Visible
+    Page Should Contain Button    ${ADD_FIVE_BUTTON}
+
+Whisper Add 10 Button Should Be Visible
+    Page Should Contain Button    ${ADD_TEN_BUTTON}
+
+Whisper Agent Command Layer Should Be Visible
+    Text Should Be Visible    Commands to accept...
+    Text Should Be Visible    Commands to reject...
+    Whisper Add 1 Button Should Be Visible
+    Whisper Add 5 Button Should Be Visible
+    Whisper Add 10 Button Should Be Visible
+
+Choose Whisper NoInput Count
+    [Arguments]    ${value}
+    Select From List By Label    ${WHISPER_NOINPUT_COUNT_DROPDOWN}    ${value}
+
+Choose Whisper NoInput Destination
+    [Arguments]    ${value}
+    Select From List By Label    ${WHISPER_NOINPUT_DESTINATION}    ${value}
+
+Choose Whisper NoMatch Count
+    [Arguments]    ${value}
+    Select From List By Label    ${WHISPER_NOMATCH_COUNT_DROPDOWN}    ${value}
+
+Choose Whisper NoMatch Destination
+    [Arguments]    ${value}
+    Select From List By Label    ${WHISPER_NOMATCH_DESTINATION}    ${value}
+
+Whisper Tab Should Be Open
+    Element Should Be Visible    ${WHISPER_SCREEN_THE_CALL_CHECKBOX}
+
+Open Whisper Tab
+    Open Setting Tab    @{SETTINGS_BOX_TABS}[5]    # Open Whipser Tab
+
+CT Choose Whisper NoMatch Destination
+    [Arguments]    ${value}
+    Select From List By Label    ${CT_WHISPER_NOMATCH_DESTINATION}    ${value}

@@ -1,0 +1,189 @@
+*** Settings ***
+Resource          ../Common Elements.txt
+Resource          ../Common Page/Angel Header.txt
+Resource          ../Common Page/Left Navigation Panel.txt
+Resource          Prompts.txt
+Resource          Advanced Options.txt
+
+*** Variables ***
+${TRANSACTION_PAGE_ICON}    name=transactionPageIcon
+${TRANSACTION_URL_TEXT}    name=submitURL
+${TX_URL_VAR_SELECTOR}    id=submitVarURL
+${TRANSACTION_PAGE_TITLE}    Angel.com - Transaction Page
+${TX_URL_SUBMIT_RADIO}    submitType
+${VAR_BUTTON}     css=input.buttonVariable
+${TX_ALL_PARAMS_CHECKBOX}    name=paramCheckBox
+${TX_PARAM_DELETE_CHECKBOX}    css=input[name="delete_param"][value="@INDEX@"]
+${TX_PARAM_VAR_SELECTOR}    id=params_@INDEX@_varRef_varID
+${TX_PARAM_NAME_TEXT}    id=params_@INDEX@_key
+${TX_PARAM_VALUE_TEXT}    id=params_@INDEX@_value
+${CONSTANT_BUTTON}    css=input.buttonConstant
+${SEND_SURVEY_RESPONSE_BUTTON}    css=input.buttonSSR
+${TX_PARAM_TEST_VALUE_TEXT}    name=params_@INDEX@_testValue
+${TRANSACTION_TEST_PAGE_TITLE}    Angel.com - TransactionPage Test Results
+${RUN_TEST_LINK}    link=Run Test
+${INTERPRET_HTTP_RESPONSE_TYPE_SELECTOR}    id=responseType
+@{TX HTTP RESPONSE TYPES}    Text-to-Speech    Audio File (Internal)    URL to Audio File (External)    Link to Voice Page    Phone Number    AngelXML
+${TX_INTERPRET_HTTP_RESPONSE_GOTOPAGE_SELECTOR}    name=parameterTab0SelectBox
+${SEND_SURVEY_RESPONSE_TEST_URL}    http://cha-sb.angel-qe.com/Survey
+
+*** Keywords ***
+Create Transaction Page
+    Choose Voice Page    @{VPAGES}[11]
+    Transaction Page Should Be Open
+
+Transaction Page Should Be Open
+    Wait Util Page Fully Loaded
+    Header Tab Should Be Active    ${CXBUILDER_TAB_ACTIVE}    # Verify CX Builder Tab
+    ${expectLink}=    Get Expect Navi Link    @{NEW VPAGES}[6]    # Verify the header navigation links appear: Site Builder > Voice Sites > [SITE NAME] \# [SITE NUMBER] > New Logic Page
+    NaviLink Should Be    ${expectLink}
+    Title Should Be    ${TRANSACTION_PAGE_TITLE}
+    Page Name Should Be    @{NEW VPAGES}[6]    # Verify default Logic Page name
+    Page Number Should Be    ${PAGE NUMBER}    # Verify default Logic Page number
+    Page Comments Should Be    ${EMPTY}    # Verify default page comments is empty.
+    Page Group Should Be    HOME    # Verify default page group
+    Main Tab Should Be Active    # Verify MAIN tab is actived.
+    Save&SE&Exit Buttons Should Be Visible    # Verify the display of SAVE, SAVE & EXIT and EXIT buttons.
+    Transaction Page Icon Should Be Visible    # Verify icon to the left of the title appears.
+    Page Should Contain Element    ${TRANSACTION_URL_TEXT}
+    ${pageURL}    Get Location
+    Set Test Variable    ${pageURL}
+
+Transaction Page Icon Should Be Visible
+    Page Should Contain Element    ${TRANSACTION_PAGE_ICON}
+
+Input Transaction URL
+    [Arguments]    ${url}
+    Input Text    ${TRANSACTION_URL_TEXT}    ${url}
+
+TX URL Variable Selector Should Be Visible
+    Wait Until Keyword Succeeds    5sec    0.5sec    Element Should Be Visible    ${TX_URL_VAR_SELECTOR}
+
+TX URL Variable Selection Should Be
+    [Arguments]    ${url}
+    List Selection Should Be    ${TX_URL_VAR_SELECTOR}    ${url}
+
+TX Choose URL Variable
+    [Arguments]    ${var}
+    Click Element    ${TX_URL_VAR_SELECTOR}
+    Run Keyword And Ignore Error    Click Element    ${COMMENTS_TEXT}
+    Select From List By Label    ${TX_URL_VAR_SELECTOR}    ${var}
+
+TX URL Submit Type Should Be
+    [Arguments]    ${type}
+    Wait Until Keyword Succeeds    5sec    0.5sec    Radio Button Should Be Set To    ${TX_URL_SUBMIT_RADIO}    ${type}
+
+TX Select URL Submit Type
+    [Arguments]    ${type}
+    Select Radio Button    ${TX_URL_SUBMIT_RADIO}    ${type}
+
+TX Click Variable Button
+    [Arguments]    ${no}=1
+    Click Visible Element    ${VAR_BUTTON}    ${no}
+
+TX Param Block Should Be Open
+    Wait Until Keyword Succeeds    10sec    0.5sec    Element Should Be Visible    ${TX_ALL_PARAMS_CHECKBOX}
+
+TX Param Variables List Should Contain
+    [Arguments]    ${var}    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${TX_PARAM_VAR_SELECTOR}    ${no}
+    Click Element    ${locator}
+    Run Keyword And Ignore Error    Click Element    ${COMMENTS_TEXT}
+    Dropdown Should Contain    ${locator}    ${var}
+
+TX Choose Param Variable
+    [Arguments]    ${var}    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${TX_PARAM_VAR_SELECTOR}    ${no}
+    Click Element    ${locator}
+    Run Keyword And Ignore Error    Click Element    ${COMMENTS_TEXT}
+    Select From List By Label    ${locator}    ${var}
+
+TX Param Name Should Be
+    [Arguments]    ${name}    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${TX_PARAM_NAME_TEXT}    ${no}
+    Textfield Value Should Be    ${locator}    ${name}
+
+TX Input Param Name
+    [Arguments]    ${name}    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${TX_PARAM_NAME_TEXT}    ${no}
+    Input Text    ${locator}    ${name}
+
+TX Input Param Value
+    [Arguments]    ${val}    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${TX_PARAM_VALUE_TEXT}    ${no}
+    Input Text    ${locator}    ${val}
+
+TX Click Constant Button
+    [Arguments]    ${no}=1
+    Click Visible Element    ${CONSTANT_BUTTON}    ${no}
+
+TX Select Param Block
+    [Arguments]    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${TX_PARAM_DELETE_CHECKBOX}    ${no}
+    Select Checkbox    ${locator}
+
+TX Param Blocks Should Be Deleted
+    Page Should Not Contain Element    ${TX_ALL_PARAMS_CHECKBOX}
+
+Click SSR Button
+    [Arguments]    ${no}=1
+    Wait Until Element Is visable 10sec    ${SEND_SURVEY_RESPONSE_BUTTON}
+    Comment    Click Visible Element    ${SEND_SURVEY_RESPONSE_BUTTON}    ${no}
+    Wait Until Keyword Succeeds    10sec    1sec    Execute Javascript    $("input.buttonSSR").click()
+    Wait Until Element Is visable 10sec    params_0_key
+
+TX Param Value Should Be
+    [Arguments]    ${val}    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${TX_PARAM_VALUE_TEXT}    ${no}
+    Textfield Value Should Be    ${locator}    ${val}
+
+TX Param Variable Selection Should Be
+    [Arguments]    ${var}    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${TX_PARAM_VAR_SELECTOR}    ${no}
+    List Selection Should Be    ${locator}    ${var}
+
+TX Input Param Test Value
+    [Arguments]    ${val}    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${TX_PARAM_TEST_VALUE_TEXT}    ${no}
+    Input Text    ${locator}    ${val}
+
+TX Select All Param Checkboxes
+    Select Checkbox    ${TX_ALL_PARAMS_CHECKBOX}
+
+TX Param Checkbox Should Be Selected
+    [Arguments]    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${TX_PARAM_DELETE_CHECKBOX}    ${no}
+    Wait Until Keyword Succeeds    5sec    0.5sec    Checkbox Should Be Selected    ${locator}
+
+TX URL Should Be
+    [Arguments]    ${url}
+    Textfield Value Should Be    ${TRANSACTION_URL_TEXT}    ${url}
+
+TX Choose Interpret HTTP Response Type
+    [Arguments]    ${type}
+    Select From List By Label    ${INTERPRET_HTTP_RESPONSE_TYPE_SELECTOR}    ${type}
+
+TX Choose Interpret HTTP Response GoToPage
+    [Arguments]    ${page}
+    Click Element    ${TX_INTERPRET_HTTP_RESPONSE_GOTOPAGE_SELECTOR}
+    Run Keyword And Ignore Error    Click Element    ${COMMENTS_TEXT}
+    Select From List By Label    ${TX_INTERPRET_HTTP_RESPONSE_GOTOPAGE_SELECTOR}    ${page}
+
+Click HTTP Response Codes Link
+    Click Element    link=HTTP Response Codes
+
+HTTP Code Responses Page Should Be Open
+    Wait Until Keyword Succeeds    5sec    0.5sec    Title Should Be    HTTP Code Responses
+
+Click Back To Test Page Link
+    Click Element    link=< Back to Test Page
+
+TX Test Results Page Should Be Open
+    Wait Until Keyword Succeeds    5sec    0.5sec    Title Should Be    ${TRANSACTION_TEST_PAGE_TITLE}
+
+TX Interpret HTTP Response GoToPage Selector Should Not Be Visible
+    Wait Until Keyword Succeeds    5sec    0.5sec    Element Should Not Be Visible    ${TX_INTERPRET_HTTP_RESPONSE_GOTOPAGE_SELECTOR}
+
+Click Visible Variable Button
+    [Arguments]    ${no}=1
+    Click Visible Element    ${VAR_BUTTON}    ${no}

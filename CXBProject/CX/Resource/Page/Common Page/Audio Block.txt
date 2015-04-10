@@ -1,0 +1,361 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../Common Elements.txt
+Library           String
+Library           S2ExLibrary
+Resource          ../../../config.txt
+Resource          ../../Dictionary.txt
+
+*** Variables ***
+${LINK_AUDIO_LINK}    link=Link Audio
+${PLAY_LINK}      link=Play
+${CLEAR_LINK}     link=Clear
+${CHANGE_TO_TTS_IMG}    xpath=//*[@alt='Change to Text-to-Speech']
+${CHANGE_TO_AUDIO_IMG}    xpath=//*[@alt='Change to Audio']
+${AUDIO_BUTTON}    css=input.buttonAudio
+${TTS_BUTTON}     css=input.buttonTTS
+${VAR_BUTTON}     css=input.buttonVariable
+${USE_VAR_LINK}    link=Using Variables
+${CUR_FOLDER_TEXT}    name=curDir
+${FILE_SELECT_BUTTON}    name=file2
+${ADD_FOLDER_TEXT}    name=newDir
+${AUDIO_HANDLER_FRAME}    name=AudioHandler
+${FILE_MANAGER_FRAME}    name=filemanager
+${PROMPTS_TABLE}    id=promptsTable
+${UPLOAD_BUTTON}    css=input.buttonUpload
+${FOLDER_UP_BUTTON}    css=input.buttonFolderUp
+${LINK_TO_PAGE_BUTTON}    css=input[class="common-btn buttonLink"][value="Link to Page"]
+${PROMPTS_MSG_TEXT}    name=prompts_@INDEX@_message
+${PROMPTS_VAR_SELECTOR}    name=prompts_@INDEX@_varID
+${PROMPTS_PLAYAS_SELECTOR}    id=prompts_@INDEX@_playAs
+${AUDIO_FILE_TEXT}    name=prompts_@INDEX@_filetag
+${AUDIO_PROMPTS_CHECKBOX}    name=prompts_@INDEX@_selected
+${WAIT_PROMPT_TEXT}    filetag
+${OVERWRITE_YES}    pop-dialog-yes-btn
+${OVERRIDE_CANCEL}    pop-dialog-cancel-btn
+
+*** Keywords ***
+Input Prompts Text
+    [Arguments]    ${text}    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${PROMPTS_MSG_TEXT}    ${no}
+    Input Text    ${locator}    ${text}
+
+Prompts Text Should Be
+    [Arguments]    ${text}    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${PROMPTS_MSG_TEXT}    ${no}
+    ${actual}=    Get Text    ${locator}
+    Should Be Equal As Strings    ${actual}    ${text}
+
+Select Prompt Var
+    [Arguments]    ${var}    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${PROMPTS_VAR_SELECTOR}    ${no}
+    Select From List By Value    ${locator}    ${var}
+
+Select Prompt PlayAs
+    [Arguments]    ${var}    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${PROMPTS_PLAYAS_SELECTOR}    ${no}
+    Select From List By Label    ${locator}    ${var}
+
+Folder Link Should Exist
+    [Arguments]    ${name}
+    Wait Until Keyword Succeeds    5sec    0.5sec    Page Should Contain Element    link=${name}
+
+Change Current Folder
+    [Arguments]    ${name}
+    Click Link    link=${name}
+
+Select Folder Checkbox
+    [Arguments]    ${name}
+    Select Checkbox    css=input[name="dirs"][value="${name}"]
+
+Upload Sound File
+    [Arguments]    ${path}
+    Choose Audio File    ${path}
+    Click Button    ${UPLOAD_BUTTON}
+    Comment    new feature need confirm override sound files when it is duplicated
+    Click Overwrite Sound Files YES
+    Go To File Manager Frame
+    Wait Until Page Contains Element    link=${filename}
+
+Add Folder
+    [Arguments]    ${name}
+    Input Text    ${ADD_FOLDER_TEXT}    ${name}
+    Click Button    ${ADD_BUTTON}
+    Go To File Manager Frame
+    Wait Until Page Contains Element    link=${name}
+
+Link To Page
+    [Arguments]    ${filename}    ${no}=1
+    Select Audio File Checkbox    ${filename}
+    Go Out Of Frame
+    Go To Audio Frame
+    Click Button    ${LINK_TO_PAGE_BUTTON}
+    Go Out Of Frame
+
+Select Audio File Checkbox
+    [Arguments]    ${filename}
+    Go Out Of Frame
+    ${pageid}=    Get Element Attribute    name=subscriberID@value
+    ${value}=    Catenate    SEPARATOR=/    ${pageid}    ${filename}
+    Go To Audio Frame
+    Go To File Manager Frame
+    Wait Until Keyword Succeeds    10sec    1sec    Select Checkbox    css=input[value="${value}"]
+
+Audio File Text Should Be
+    [Arguments]    ${filename}    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${AUDIO_FILE_TEXT}    ${no}
+    Textfield Value Should Be    ${locator}    ${filename}
+
+Select Audio Prompts Checkbox
+    [Arguments]    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${AUDIO_PROMPTS_CHECKBOX}    ${no}
+    Select Checkbox    ${locator}
+
+Change To Audio
+    [Arguments]    ${no}=1
+    Click Element By No    ${no}    ${CHANGE_TO_AUDIO_IMG}
+
+Change To TTS
+    [Arguments]    ${no}=1
+    Click Visible Element    ${CHANGE_TO_TTS_IMG}    ${no}
+
+Go To Audio Frame
+    Select Frame    ${AUDIO_HANDLER_FRAME}
+
+Go Out Of Frame
+    Unselect Frame
+
+Folder Up
+    Click Button    ${FOLDER_UP_BUTTON}
+
+Go To File Manager Frame
+    Select Frame    ${FILE_MANAGER_FRAME}
+
+Go Back To Audio Block
+    [Arguments]    ${no}=1
+    Click Button    ${BACK_BUTTON}
+    Go Out Of Frame
+    Wait Until Keyword Succeeds    5sec    1sec    Element Should Be Visible    ${PROMPTS_TABLE}
+
+Delete Floder
+    [Arguments]    ${name}
+    Select Folder Checkbox    ${name}
+    Go Out Of Frame
+    Go To Audio Frame
+    Click Button    ${DELETE_BUTTON}
+    Go To File Manager Frame
+    Page Should Not Contain Element    link=${name}
+
+Current Folder Should Be
+    [Arguments]    ${folder}
+    Wait Until Keyword Succeeds    5sec    0.5sec    Textfield Value Should Be    ${CUR_FOLDER_TEXT}    ${folder}
+
+Prompts PlayAs Should Be
+    [Arguments]    ${method}    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${PROMPTS_PLAYAS_SELECTOR}    ${no}
+    List Selection Should Be    ${locator}    ${method}
+
+Prompts Var Should Be
+    [Arguments]    ${var}    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${PROMPTS_VAR_SELECTOR}    ${no}
+    List Selection Should Be    ${locator}    ${var}
+
+Click Link Audio Link
+    [Arguments]    ${no}=1
+    Click Visible Element    ${LINK_AUDIO_LINK}    ${no}
+
+Audio Handler Should Be Open
+    Wait Until Page Contains Element    ${AUDIO_HANDLER_FRAME}
+
+Link Audio File To Page
+    [Arguments]    ${filepath}    ${no}=1
+    Click Link Audio Link    ${no}
+    Audio Handler Should Be Open
+    Go To Audio Frame
+    Folder Up
+    log    ${filepath}
+    Upload Sound File    ${filepath}
+    Link To Page    ${filename}    ${no}
+
+Clear Audio File
+    [Arguments]    ${no}=1
+    Click Link    ${CLEAR_LINK}
+    Wait Until Keyword Succeeds    5sec    0.5sec    Audio File Text Should Be    None    ${no}
+
+Play Audio File
+    [Arguments]    ${filename}    ${no}=1
+    ${pageid}=    Get Element Attribute    name=subscriberID@value
+    Comment    ${title}    Run Keyword If    ${runsInChrome}    Execute javascript    document.title
+    Click Visible Element    ${PLAY_LINK}    ${no}
+    Run Keyword If    ${runsInFirefox}    Play Audio File In FF    ${filename}
+    Run Keyword If    ${runsInChrome}    Play Audio File In Chrome
+
+Choose Audio File
+    [Arguments]    ${path}
+    Choose File    ${FILE_SELECT_BUTTON}    ${path}
+    ${dir}    ${filename}=    Split Path    ${path}
+    Run Keyword If    ${runsInFirefox}    Textfield Value Should Be    ${FILE_SELECT_BUTTON}    ${filename}    ELSE IF    ${runsInChrome}
+    ...    Textfield Should Contain    name=audiofileName    ${filename}    ELSE    Textfield Value Should Be    ${FILE_SELECT_BUTTON}
+    ...    ${path}
+    Set Test Variable    ${filename}
+
+Delete Audio File
+    [Arguments]    ${filename}
+    Select Audio File Checkbox    ${filename}
+    Go Out Of Frame
+    Go To Audio Frame
+    Click Button    ${DELETE_BUTTON}
+    Go To File Manager Frame
+    Page Should Not Contain Element    link=${filename}
+
+Go To Folder
+    [Arguments]    ${foldername}
+    Click Link    link=${foldername}
+    Go Out Of Frame
+    Go To Audio Frame
+    Current Folder Should Be    /${foldername}
+
+Folder Should Be Empty
+    Go To File Manager Frame
+    Page Should Contain    ${EMPTY FOLDER FOLDER}
+
+Prompts Table Should Be Visible
+    Element Should Be Visible    ${PROMPTS_TABLE}
+
+Add Audio Prompt Block
+    [Arguments]    ${no}=1
+    Click Visible Element    ${AUDIO_BUTTON}    1
+    Audio Prompt Block Should Be Open    ${no}
+
+Audio Prompt Block Should Be Open
+    [Arguments]    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${AUDIO_PROMPTS_CHECKBOX}    ${no}
+    Wait Until Keyword Succeeds    5sec    0.5sec    Page Should Contain Element    ${locator}
+
+Add TTS Prompt Block
+    [Arguments]    ${no}=1
+    Click Visible Element    ${TTS_BUTTON}    1
+    TTS Prompt Block Should Be Open    ${no}
+
+TTS Prompt Block Should Be Open
+    [Arguments]    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${AUDIO_PROMPTS_CHECKBOX}    ${no}
+    Wait Until Keyword Succeeds    5sec    0.5sec    Page Should Contain Element    ${locator}
+    ${locator1}=    Generate Locator By Decreasing One    ${PROMPTS_MSG_TEXT}    ${no}
+    Page Should Contain Element    ${locator1}
+
+Add Variable Prompt Block
+    [Arguments]    ${no}=1
+    Click Visible Element    ${VAR_BUTTON}    1
+    Variable Prompt Block Should Be Open    ${no}
+    ${ranOption}=    Get Random Option From X    ${SITE VARIABLES}    1
+    Select Prompt Var    ${ranOption}    ${no}
+
+Variable Prompt Block Should Be Open
+    [Arguments]    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${AUDIO_PROMPTS_CHECKBOX}    ${no}
+    Wait Until Keyword Succeeds    5sec    0.5sec    Page Should Contain Element    ${locator}
+    ${locator1}=    Generate Locator By Decreasing One    ${PROMPTS_PLAYAS_SELECTOR}    ${no}
+    Page Should Contain Element    ${locator1}
+
+Using Variable Window Should Be Open
+    Wait Until Keyword Succeeds    5sec    0.5sec    Select Window    title=Working with Variables / IVR Wiki
+
+Play Audio File In FF
+    [Arguments]    ${filename}
+    File Should Be Downloaded    ${filename}
+    Delete Download File From Disk    ${filename}
+
+Play Audio File In Chrome
+    Comment    Wait Until Keyword Succeeds    5sec    0.5sec    Select Window    url=https://sb.angel-qe.com/sounds/${pageid}/${filename}
+    Comment    Page Should Contain Element    css=video[name="media"]
+    Comment    Close Window
+    Comment    Select Window    title=${title}
+    Comment    Run Keyword If    ${runsInChrome}    Select Window    title=Angel.com - @{test_name_substring}[1]    ELSE    Select Window
+
+Prompt Checkbox Should Be Delete
+    [Arguments]    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${AUDIO_PROMPTS_CHECKBOX}    ${no}
+    Page Should Not Contain Element    ${locator}
+
+Prompt Checkbox Should Be Selected
+    [Arguments]    ${no}=0
+    ${locator}=    Generate Locator By Decreasing One    ${AUDIO_PROMPTS_CHECKBOX}    ${no}
+    Checkbox Should Be Selected    ${locator}
+
+New Audio Prompts Should Be Visible
+    [Arguments]    ${index}=1
+    ${PROMPTS_CHECKBOX}    Generate Locator By Decreasing One    ${PROMPTS_CHECKBOX}    ${index}
+    ${PROMPTS_AUDIO_TEXT}    Generate Locator By Decreasing One    ${PROMPTS_AUDIO_TEXT}    ${index}
+    Page Should Contain Checkbox    ${PROMPTS_CHECKBOX}
+    Element Text Should Be    ${PROMPTS_AUDIO_TEXT}    ${EMPTY}
+
+New TTS Prompts Should Be Visible
+    [Arguments]    ${index}=1
+    ${PROMPTS_CHECKBOX}    Generate Locator By Decreasing One    ${PROMPTS_CHECKBOX}    ${index}
+    ${PROMPTS_TTS_TEXT}    Generate Locator By Decreasing One    ${PROMPTS_TTS_TEXT}    ${index}
+    Page Should Contain Checkbox    ${PROMPTS_CHECKBOX}
+    Element Text Should Be    ${PROMPTS_TTS_TEXT}    ${TTS TEXT MSG}
+    Save Page Named As Test Case
+
+Select Prompts Checkbox
+    [Arguments]    ${index}=1
+    ${PROMPTS_CHECKBOX}    Generate Locator By Decreasing One    ${PROMPTS_CHECKBOX}    ${index}
+    Wait Until Element Is Visible    ${PROMPTS_CHECKBOX}
+    Select Checkbox    ${PROMPTS_CHECKBOX}
+
+New Variable Prompts Should Be Visible
+    [Arguments]    ${index}=1
+    ${PROMPTS_CHECKBOX}    Generate Locator By Decreasing One    ${PROMPTS_CHECKBOX}    ${index}
+    Page Should Contain Checkbox    ${PROMPTS_CHECKBOX}
+    ${PROMPTS_VARIABLE}    Generate Locator By Decreasing One    ${PROMPTS_VARIABLE}    ${index}
+    ${PROMPTS_VARIABLE_PLAY}    Generate Locator By Decreasing One    ${PROMPTS_VARIABLE_PLAY}    ${index}
+    Run Keyword If    ${runsInFirefox}    List Selection Should Be    ${PROMPTS_VARIABLE}    Select a Variable
+    Run Keyword If    ${runsInFirefox}    List Selection Should Be    ${PROMPTS_VARIABLE_PLAY}    Smart Play
+    ${name_list}=    Get Selected List Label    ${PROMPTS_VARIABLE}
+    Run Keyword If    ${runsInChrome}    Should Contain    ${name_list}    Select a Variable
+    ${name_list}=    Get Selected List Label    ${PROMPTS_VARIABLE_PLAY}
+    Run Keyword If    ${runsInChrome}    Should Contain    ${name_list}    Smart Play
+
+Prompts Checkbox Should Be Visible
+    [Arguments]    ${index}=1
+    ${PROMPTS_CHECKBOX}    Generate Locator By Decreasing One    ${PROMPTS_CHECKBOX}    ${index}
+    Page Should Contain Checkbox    ${PROMPTS_CHECKBOX}
+
+Prompts Checkbox Should Not Be Visible
+    [Arguments]    ${index}=1
+    ${PROMPTS_CHECKBOX}    Generate Locator By Decreasing One    ${PROMPTS_CHECKBOX}    ${index}
+    Page Should Not Contain Checkbox    ${PROMPTS_CHECKBOX}
+
+Default TTS Prompts Should Be Visible
+    [Arguments]    ${index}=1
+    ${PROMPTS_CHECKBOX}    Generate Locator By Decreasing One    ${PROMPTS_CHECKBOX}    ${index}
+    ${PROMPTS_TTS_TEXT}    Generate Locator By Decreasing One    ${PROMPTS_TTS_TEXT}    ${index}
+    Page Should Contain Checkbox    ${PROMPTS_CHECKBOX}
+    Element Text Should Be    ${PROMPTS_TTS_TEXT}    ${EMPTY}
+    Save Page Named As Test Case
+
+Wait Prompt Text Should Be
+    [Arguments]    ${filename}
+    Textfield Value Should Be    ${WAIT_PROMPT_TEXT}    ${filename}
+
+Audio Prompt Block Should Not Exist
+    [Arguments]    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${AUDIO_PROMPTS_CHECKBOX}    ${no}
+    Wait Until Keyword Succeeds    5sec    0.5sec    Page Should Not Contain Element    ${locator}
+
+Select Prompts Checkbox For CT_03-6
+    [Arguments]    ${index}=1
+    ${PROMPTS_CHECKBOX}    Generate Locator By Decreasing One    ${PROMPTS_CHECKBOX}    ${index}
+    Wait Until Element Is Visible    ${PROMPTS_CHECKBOX}
+    Execute Javascript    $("input[${PROMPTS_CHECKBOX}]").click()
+    Click Down Button
+    Prompt Checkbox Should Be Selected    2
+
+Click Overwrite Sound Files YES
+    Wait Until Element Is visable 10sec    ${OVERWRITE_YES}
+    Wait Until Keyword Succeeds    10sec    1sec    Click Button    ${OVERWRITE_YES}
+
+Click Overwrite Sound Files Cancel
+    Wait Until Element Is visable 10sec    ${OVERRIDE_CANCEL}
+    Wait Until Keyword Succeeds    10sec    1sec    Click Button    ${OVERRIDE_CANCEL}

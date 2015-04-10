@@ -1,0 +1,255 @@
+*** Settings ***
+Resource          ../../../resource.txt
+Library           Selenium2Library
+
+*** Variables ***
+${SCH_PG_TIMEZONE_DROPDOWN}    name=timeZoneID
+${SCH_PG_DAY_DROPDOWN1}    xpath=//*[@id="Tab0"]/table/tbody/tr/td/table[2]/tbody/tr/td/table/tbody/tr[2]/td[2]/*[@id="day"]
+${SCH_PG_DAY_DROPDOWN2}    xpath=//*[@id="Tab0"]/table/tbody/tr/td/table[2]/tbody/tr/td/table/tbody/tr[4]/td[2]/*[@id="day"]
+${SCH_PG_DAY_DROPDOWN3}    xpath=//*[@id="Tab0"]/table/tbody/tr/td/table[2]/tbody/tr/td/table/tbody/tr[6]/td[2]/*[@id="day"]
+${SCH_PG_FROMTIME_TEXT}    name=startTime
+${SCH_PG_TOTIME_TEXT}    name=endTime
+${endtime_greater_starttime}    ending time is prior to the start time
+${hour_bet_0_and_23}    Hour should be between 0 and 23.
+${time_format_validation_error}    Time should be like 8:03:21am or 15:32:21.
+${time_empty_error_msg}    Time string can't be empty.
+${SCH_PG_GOTO_DROPDOWN}    name=timeBlockLayer0SelectBox
+${SITE_NUMBER_FROM_TOP}    xpath=//*[@id="mainFormTable"]/tbody/tr[1]/td[2]/a[3]
+${PAGE_NUM_SELECT_TEXT_SCHPG}    tb_pageCode_0
+#${OPEN_SITE_PAGE_IMG2}    xpath=//*[@id="anyOtherTime0"]/table/tbody/tr/td[1]/a/img/@alt
+${GOTO_PAGE_NAME_1}    Weekdays (Mon-Fri) 8:00 am to 8:00 pm
+${GOTO_PAGE_NAME_2}    Any other time
+${ANY_OTHER_TIME_VIEW_BUTTON}    xpath=//*[@id="anyOtherTime0SelectLayer"]//*[@value='View']
+${SCHEDULE_CHECKBOX}    xpath=(//input[@name='toBeDeleted'])[@INDEX@]
+${EDIT_PAGE_NAME}    Edited Page Name
+
+*** Keywords ***
+Create Schedule Page
+    Choose Voice Page    @{VPAGES}[9]
+    Schedule Page Should Be Open
+
+Schedule Page Should Be Open
+    Wait Util Page Fully Loaded
+    Title Should Be    Angel.com - Schedule Page
+    ${expectLink}=    Get Expect Navi Link    @{NEWVPages}[8]
+    NaviLink Should Be    ${expectLink}
+    Page Name Should Be    @{NEWVPages}[8]
+    Page Number Should Be    ${PAGE NUMBER}
+
+Choose Different Time Zones And Save Page
+    [Arguments]    @{values}
+    : FOR    ${value}    IN    @{values}
+    \    Select From List By Label    ${SCH_PG_TIMEZONE_DROPDOWN}    ${value}
+    \    Save Page Named As Test Case
+    \    Save Done Tip Should Be Open
+
+Choose Different Days And Save Page
+    [Arguments]    ${value1}    ${value2}    ${value3}
+    Selenium2Library.Select From List By Label    ${SCH_PG_DAY_DROPDOWN1}    ${value1}
+    Selenium2Library.Select From List By Label    ${SCH_PG_DAY_DROPDOWN2}    ${value2}
+    Selenium2Library.Select From List By Label    ${SCH_PG_DAY_DROPDOWN3}    ${value3}
+    Save Page
+    Save Done Tip Should Be Open
+
+Input Correct Time
+    [Arguments]    ${fromtime}    ${totime}
+    Wait Until Keyword Succeeds    20sec    2sec    Input Time    ${fromtime}    ${totime}
+    Comment    Save Page
+    Comment    Save Done Tip Should Be Open
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Input Time
+    [Arguments]    ${fromtime}    ${totime}
+    Input Text    ${SCH_PG_FROMTIME_TEXT}    ${fromtime}
+    Input Text    ${SCH_PG_TOTIME_TEXT}    ${totime}
+    Sleep    1
+    ${start}    Get Value    ${SCH_PG_FROMTIME_TEXT}
+    ${end}    Get Value    ${SCH_PG_TOTIME_TEXT}
+    Should Be Equal As Strings    ${start}    ${fromtime}
+    Should Be Equal As Strings    ${end}    ${totime}
+
+Input From Time Greater Than To Time
+    [Arguments]    ${fromtime}    ${totime}
+    Input Time    ${fromtime}    ${totime}
+    Save Page
+    Page Should Contain    ${endtime_greater_starttime}
+
+Incorrect Time Validation
+    [Documentation]    This keyword is to input different incorrect combinations of time like
+    ...    "1. input incorrect from time and correct to time
+    ...    2. input correct from time and incorrect to time
+    ...    3. input incorrect from and to time"
+    Input Time    25    23:00
+    Save Page
+    Page Should Contain    ${hour_bet_0_and_23}
+    Input Time    23:00    26
+    Save Page
+    Page Should Contain    ${hour_bet_0_and_23}
+    Input Time    25    30
+    Save Page
+    Page Should Contain    ${hour_bet_0_and_23}
+
+Incorrect Time Format Validation
+    [Documentation]    This keyword is to input different incorrect combinations of time format
+    ...    "1. using numbers with decimal places
+    ...    2. using alphabets in time field"
+    Input Time    6.7.8    20:00
+    Save Page
+    Page Should Contain    ${time_format_validation_error}
+    Input Time    13:00    hello
+    Save Page
+    Page Should Contain    ${time_format_validation_error}
+
+Blank Time Validation
+    [Documentation]    This keyword is to input blank values in from time, to time and from and to time fields
+    Input Time    ${EMPTY}    20:00
+    Save Page
+    Page Should Contain    ${time_empty_error_msg}
+    Input Time    06:00    ${EMPTY}
+    Save Page
+    Page Should Contain    ${time_empty_error_msg}
+    Input Time    ${EMPTY}    ${EMPTY}
+    Save Page
+    Page Should Contain    ${time_empty_error_msg}
+
+Incorrect and Blank Time Validation
+    [Documentation]    This keyword is to see if both error messages are displayed when given incorrect and blank time combinations
+    Input Time    ${EMPTY}    dd
+    Comment    Save Page
+    Wait Until Keyword Succeeds    10sec    1sec    Execute Javascript    $("input.imgSaveButton").click()
+    Wait Until Keyword Succeeds    10sec    1sec    Page Should Contain    ${time_format_validation_error}
+    page should contain    ${time_empty_error_msg}
+
+Choose Exisiting Goto Page In Same Site
+    [Arguments]    ${goto_page}
+    Select From List By Label    ${SCH_PG_GOTO_DROPDOWN}    ${goto_page}
+    Save Page
+    Save Done Tip Should Be Open
+    Click View Button
+    Switch To New Window    Angel.com - Message Page
+    Window Title Should Be    Angel.com - Message Page
+    Page Name Should Be    Greeting
+    Switch To Main Window
+
+Choose New Goto Page In Same Site
+    [Arguments]    ${goto_page}
+    Select From List By Label    ${SCH_PG_GOTO_DROPDOWN}    ${goto_page}
+    Save Page
+    Save Done Tip Should Be Open
+    Click View Button
+    Switch To New Window    Angel.com - Call Transfer Page
+    Window Title Should Be    Angel.com - Call Transfer Page
+    Page Name Should Be    ${GOTO_PAGE_NAME_1}
+    Switch To Main Window
+
+Choose Existing Goto Page In Another Voice Site
+    Select From List By Label    ${SCH_PG_GOTO_DROPDOWN}    A Page in Another Site
+    VPage Select With Site Number And Empty Page    ${PAGE_NUM_SELECT_TEXT_SCHPG}
+    Go To Choose Another Site Page
+    Switch To New Window    ${BROWSER ALL PAGES TITLE}
+    Run Keyword If    ${runsInFirefox}    Wait Until Keyword Succeeds    20 sec    0.25 sec    Choose Voice Page In Browse Voice Pages    990000125276
+    ...    2
+    Switch To Main Window
+    Run Keyword If    ${runsInFirefox}    Site Number In GoTo Should Be    990000125276
+    Run Keyword If    ${runsInFirefox}    Page Number In Schedule Time Goto Should Be    2
+
+Choose Any Other Time Existing Gotopg Same Site
+    [Arguments]    ${goto_page}
+    Select From List By Label    ${GOTOPAGE_SELECTOR}    ${goto_page}
+    Save Page
+    Save Done Tip Should Be Open
+    Click Any Other Time View Button
+    Switch To New Window    Angel.com - Message Page
+    Window Title Should Be    Angel.com - Message Page
+    Page Name Should Be    Greeting
+    Switch To Main Window
+
+Click Any Other Time View Button
+    Click Button    ${ANY_OTHER_TIME_VIEW_BUTTON}
+
+Choose Any Other Time New Gotopg Same Site
+    [Arguments]    ${SCH_PG_GOTO_DROPDOWN_ANY}    ${goto_page}
+    Select From List By Label    ${SCH_PG_GOTO_DROPDOWN_ANY}    ${goto_page}
+    Save Page
+    Save Done Tip Should Be Open
+    Click Any Other Time View Button
+    Switch To New Window    Angel.com - Call Transfer Page
+    Window Title Should Be    Angel.com - Call Transfer Page
+    Page Name Should Be    ${GOTO_PAGE_NAME_2}
+    Switch To Main Window
+
+Choose Any Other Time Existing Gotopg Other Voice Site
+    Select Schedule Checkbox    3
+    Click Delete Button
+    Select Schedule Checkbox    2
+    Click Delete Button
+    Select Schedule Checkbox    1
+    Click Delete Button
+    Select From List By Label    ${GOTOPAGE_SELECTOR}    A Page in Another Site
+    VPage Select With Site Number And Empty Page    ${PAGE_NUM_SELECT_TEXT}
+    Go To Choose Another Site Page
+    Switch To New Window    ${BROWSER ALL PAGES TITLE}
+    Run Keyword If    ${runsInFirefox}    Wait Until Keyword Succeeds    20 sec    0.25 sec    Choose Voice Page In Browse Voice Pages    990000125276
+    ...    2
+    Switch To Main Window
+    Run Keyword If    ${runsInFirefox}    Site Number In GoTo Should Be    990000125276
+    Run Keyword If    ${runsInFirefox}    Page Number In GoTo In Schpage Should Be    2
+
+Page Number In GoTo In Schpage Should Be
+    [Arguments]    ${value}
+    Textfield Value Should Be    ${PAGE_NUM_SELECT_TEXT}    ${value}
+
+VPage Select With Site Number And Empty Page
+    [Arguments]    ${PAGE_NUM_TEXT}
+    Wait Until Page Contains Element    ${SITE_NUM_SELECT_TEXT}
+    Page Should Contain Element    ${PAGE_NUM_SELECT_TEXT}
+    Textfield Value Should Be    ${PAGE_NUM_TEXT}    ${EMPTY}
+
+Select Schedule Checkbox
+    [Arguments]    ${index}=1
+    ${SCHEDULE_CHECKBOX}    Generate Locator    ${SCHEDULE_CHECKBOX}    ${index}
+    Select Checkbox    ${SCHEDULE_CHECKBOX}
+
+Page Should Not Contain Schedule
+    [Arguments]    ${index}=1
+    ${index}    Evaluate    int(${index})+1
+    ${SCHEDULE_CHECKBOX}    Generate Locator By Decreasing One    ${SCHEDULE_CHECKBOX}    ${index}
+    Page Should Not Contain Checkbox    ${SCHEDULE_CHECKBOX}
+
+Click Add Time Button
+    Click Button    css=input.buttonAddTime
+
+Click Reorder Time Button
+    Click Button    css=input.buttonReorderTime
+
+Different Days Should Be
+    [Arguments]    ${value1}    ${value2}    ${value3}
+    List Selection Should Be    ${SCH_PG_DAY_DROPDOWN1}    ${value1}
+    List Selection Should Be    ${SCH_PG_DAY_DROPDOWN2}    ${value2}
+    List Selection Should Be    ${SCH_PG_DAY_DROPDOWN3}    ${value3}
+
+Page Number In Schedule Time Goto Should Be
+    [Arguments]    ${value}
+    Textfield Value Should Be    ${PAGE_NUM_SELECT_TEXT_SCHPG}    ${value}
+
+Time Block Should Be Deleted
+    [Arguments]    ${i}
+    ${n1}    Get Time Block Lenth
+    Select Schedule Checkbox    ${i}
+    Execute Javascript    $("input.buttonDelete").click()
+    Comment    Click Delete Button
+    Sleep    2
+    ${n2}    Get Time Block Lenth
+    ${n1}    Evaluate    ${n1}-1
+    Should Be Equal As Integers    ${n1}    ${n2}
+
+Get Time Block Lenth
+    ${n1}    Execute Javascript    return $("input[name='toBeDeleted']").length
+    [Return]    ${n1}
+
+Select All Time Block
+    Execute Javascript    $("input[name=toBeDeleted]").click()
+
+Delete Time Block By Js
+    Execute Javascript    $("input.buttonDelete").click()

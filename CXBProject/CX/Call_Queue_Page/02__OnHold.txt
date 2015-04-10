@@ -1,0 +1,91 @@
+*** Settings ***
+Test Setup        Run Keywords    Create Call Queue Page    AND    Switch To On Hold Tab
+Resource          ../resource.txt
+
+*** Test Cases ***
+Reg_CQ_10
+    [Documentation]    On-Hold - Link - How it works?
+    ...    "1. Click on lhe link 'How it works?'
+    ...    2. System should open the link in new window."
+    [Tags]    Regression
+    Click CQ OnHold How It Works Link
+    New Window Title Should Be    Achieving a Great Caller Experience
+    Close Popup Window
+    Window Title Should Be    Angel.com - Call Queue Page
+
+Reg_CQ_11
+    [Documentation]    On-Hold - Audio button
+    ...    "1. Click Audio button.
+    ...    2. System should add new audio prompt."
+    [Tags]    Regression
+    Click Audio Button
+    New Audio Prompts Should Be Visible    4
+    Save Successfully
+
+Reg_CQ_12
+    [Documentation]    On-Hold - Text-to-Speech button
+    ...    "1. Click 'Text-to-Speech' button.
+    ...    2. System should add new Text -to-speech prompt."
+    [Tags]    Regression
+    Click Text-to-Speech Button
+    New TTS Prompts Should Be Visible    4
+    Save Successfully
+
+Reg_CQ_13
+    [Documentation]    On-Hold - Variable Button
+    ...    "1. Click 'Variable button.
+    ...    2. System should add the new variable line."
+    [Tags]    Regression
+    Click Variable Button
+    New Variable Prompts Should Be Visible    4
+    Save Page
+    Red Notice Should Display    The name of the variable cannot be blank.
+
+Reg_CQ_14
+    [Documentation]    On-Hold - Link - Using variables
+    ...    "1. Click Using Variables link.
+    ...    2. The Working with Variables link should be open in the new window."
+    [Tags]    Regression
+    Click Using Variables Link
+    New Window Title Should Be    Working with Variables / IVR Wiki
+    Close Popup Window
+
+Reg_CQ_15
+    [Documentation]    On-Hold - Delete button
+    ...    "1. Select any audio prompt or Text-to-speech prompt or variable prompt.
+    ...    2. Click the delete buton..
+    ...    3. System should delete the selected prompt."
+    [Tags]    Regression
+    Select Prompts Checkbox    3
+    Click CQ OnHold Delete Button
+    Prompts Checkbox Should Not Be Visible    3
+    Save Successfully
+
+Reg_CQ_16
+    [Documentation]    On-Hold - Hold Option
+    ...    1. Enter maximum Hold time in seconds for the callers and specify any page for callers to redirect after the hold time.
+    [Tags]    Regression
+    Input CQ OnHold Maximum Time    300
+    Choose CQ OnHold Maximum Time Destination    1 - Greeting
+    Save Successfully
+
+Reg_CQ_17
+    [Documentation]    Exit Command for callers - Link - What's this?
+    ...    "1. Click on lhe link 'What's This?'
+    ...    2. System should open the link in new window."
+    [Tags]    Regression
+    Scroll Down Page    800
+    Click What's This Link
+    New Window Title Should Be    Exit Command
+    Close Popup Window
+    Window Title Should Be    Angel.com - Call Queue Page
+
+Reg_CQ_18
+    [Documentation]    Exit Command for callers - Number Field
+    ...    1. Enter a number and specify any page in Exit command for callers \ to get out of the queue.
+    [Tags]    Regression
+    Input CQ OnHold Exit Command DTMF    2
+    Choose CQ OnHold Exit Command Destination    1 - Greeting
+    Save Successfully
+
+*** Keywords ***

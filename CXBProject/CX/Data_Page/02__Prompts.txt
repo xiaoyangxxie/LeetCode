@@ -1,0 +1,159 @@
+*** Settings ***
+Test Setup        Run Keywords    Create Data Page    AND    Create DP Data File If Not Exist    DPTest.xls    AND    Choose DP Data File
+...               DPTest.xls    AND    Open Prompts Tab
+Force Tags
+Resource          ../resource.txt
+
+*** Test Cases ***
+Reg_Data_24
+    [Documentation]    Initial Prompt - Delete
+    ...
+    ...    1. User can delete the 'Initial Prompt' by using the 'Delete' button up on check box selection. \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 2. If there is only one prompt, the system would not allow user to delete it.
+    [Tags]    Regression
+    Select Prompts Checkbox
+    Click Visible Delete Button
+    Text Should Be Visible    You cannot remove all the messages, please leave at least one message on this voice page.
+
+Reg_Data_25
+    [Documentation]    Initial Prompt - Audio
+    ...
+    ...    1. User can manage audio files in the 'Audio' tab.
+    [Tags]    Regression
+    Click Audio Button
+    New Audio Prompts Should Be Visible    2
+    Save Successfully
+
+Reg_Data_26
+    [Documentation]    Initial Prompt - Audio - Link Audio
+    ...
+    ...    1. User can link audio by clicking the button
+    [Tags]    Regression
+    Link Audio File To Page    ${AUDIO FILE}
+    Audio File Text Should Be    Sent.wav
+    Save Successfully
+
+Reg_Data_27
+    [Documentation]    Initial Prompt - Audio - Clear
+    ...
+    ...    1. User can Clear the audio file by clicking the button and then the play button cannot be clciked because of the blank audio file
+    [Tags]    Regression
+    Link Audio File To Page    ${AUDIO FILE}
+    Audio File Text Should Be    Sent.wav
+    Click Clear Link
+    Audio File Text Should Be    None
+    Save Successfully
+
+Reg_Data_28
+    [Documentation]    Initial Prompt - Audio - Play
+    ...
+    ...    1. User can Play the audio file by clicking the button \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 2. \ If the audio file is blank or have been cleared, the Play button cannot be clciked
+    [Tags]    Debug    chrome
+    Link Audio File To Page    ${AUDIO FILE}
+    Audio File Text Should Be    Sent.wav
+    Play Audio File    Sent.wav
+    Save Successfully
+
+Reg_Data_29
+    [Documentation]    Initial Prompt - Text-to-Speech
+    ...
+    ...    1. User can manage Text To Speech by clicking the 'Text-To-Speech' .
+    [Tags]    Regression
+    Click Text-to-Speech Button
+    New TTS Prompts Should Be Visible    2
+    Save Successfully
+
+Reg_Data_30
+    [Documentation]    Initial Prompt - Text-to-Speech - Toggle Arrow
+    ...
+    ...    1. User can toggle between Audio and Text-to-Speech by clicking the toggle arrow
+    [Tags]    Regression
+    Change To TTS
+    Default TTS Prompts Should Be Visible
+    Change To Audio
+    New Audio Prompts Should Be Visible
+    Save Successfully
+
+Reg_Data_31
+    [Documentation]    Initial Prompt - Variables
+    ...
+    ...    1. User can manage varibles by clicking the 'Variable'
+    [Tags]    Regression
+    Click Variable Button
+    New Variable Prompts Should Be Visible    2
+    Save Page
+    Red Notice Should Display    The name of the variable cannot be blank.
+
+Reg_Data_32
+    [Documentation]    Initial Prompt - Variables - Using Variables
+    ...
+    ...    1. User can manage varibles in Site Variables by clicking 'using the Variables' \
+    [Tags]    Regression
+    Click Using Variables Link
+    New Window Title Should Be    Working with Variables / IVR Wiki
+    Close Popup Window
+
+Reg_Data_33
+    [Documentation]    Initial Prompt - Up
+    ...
+    ...    1. User can make the selected prompts up \ by clicking the Up button (if the prompts are more than one, the button would display and do work)
+    [Tags]    Regression
+    Click Audio Button
+    Link Audio File To Page    ${AUDIO FILE}    2
+    Select Prompts Checkbox    2
+    Click Up Button
+    Prompt Checkbox Should Be Selected    1
+    Audio File Text Should Be    Sent.wav    1
+    Save Successfully
+
+Reg_Data_34
+    [Documentation]    Initial Prompt - Down
+    ...
+    ...    1. User can make the selected prompts down \ by clicking the Down button \ (if the prompts are more than one, the button would display and do work)
+    [Tags]    Regression
+    Click Audio Button
+    Link Audio File To Page    ${AUDIO FILE}    1
+    Select Prompts Checkbox    1
+    Click Down Button
+    Prompt Checkbox Should Be Selected    2
+    Audio File Text Should Be    Sent.wav    2
+    Save Successfully
+
+Reg_Data_35
+    [Documentation]    Wait Prompt - Link Audio
+    ...
+    ...    "1. User can add audio files by using the 'Link Audio' hyperlink.
+    ...    "
+    [Tags]    Regression
+    Link Audio File To Page    ${AUDIO FILE}    2
+    Wait Prompt Text Should Be    Sent.wav
+    Save Successfully
+
+Reg_Data_36
+    [Documentation]    Wait Prompt - Clear
+    ...
+    ...    "
+    ...    1. User can clear the linked audio files by using the 'Clear' link.
+    ...    "
+    [Tags]    Regression
+    Link Audio File To Page    ${AUDIO FILE}    2
+    Click Clear Link    2
+    Wait Prompt Text Should Be    None
+    Save Successfully
+
+Reg_Data_37
+    [Documentation]    Wait Prompt - Play
+    ...
+    ...    1. User can Play the audio file by clicking the button \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 2. \ If the audio file is blank or have been cleared, the Play button cannot be clciked
+    [Tags]    Debug    chrome
+    Link Audio File To Page    ${AUDIO FILE}    2
+    Play Audio File    Sent.wav    2
+    Save Successfully
+
+Reg_Data_38
+    [Documentation]    Wait Prompt - Link- Why?
+    ...
+    ...    1. A linked page will pop up by clicking the link 'Why?'
+    [Tags]    Regression
+    Click Why Link
+    New Window Title Should Be    Wait Prompt
+    Close Popup Window

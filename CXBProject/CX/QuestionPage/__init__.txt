@@ -1,0 +1,5 @@
+*** Settings ***
+Suite Setup       Voice Page Suite Setup
+Suite Teardown    Run Keywords    Voice Page Suite Teardown For Delete Audio Files    AND    Voice Page Suite Teardown
+Test Teardown     Voice Page Test Teardown
+Resource          ../resource.txt

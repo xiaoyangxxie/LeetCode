@@ -1,0 +1,14 @@
+*** Settings ***
+Resource          ../Resource/Page/Common Page/Login Page.txt
+Library           Selenium2Library
+Resource          ../Resource/Page/Common Page/Login Frame.txt
+Resource          ../Resource/Page/Common Page/Home Page.txt
+
+*** Keywords ***
+Login With Valid Credentials
+    Go To Login Page
+    Comment    Go To Login Frame
+    Input Email    ${LOGIN EMAIL}
+    Input Passwd    ${LOGIN PASSWORD}
+    Submit Credentials
+    Home Page Should Be Open

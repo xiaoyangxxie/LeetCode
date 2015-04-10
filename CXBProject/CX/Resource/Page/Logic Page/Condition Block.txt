@@ -1,0 +1,202 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../Common Elements.txt
+Resource          ../../../resource.txt
+
+*** Variables ***
+${COND_VAR_SELECTOR}    id=destinations_@INDEX@_conditions_0_leftVar_varID
+${COND_OP_SELECTOR}    id=destinations_@INDEX@_conditions_0_operator
+${COND_CONSTANT_TEXT}    name=destinations_@INDEX@_conditions_0_rightConstant
+${COND_DEST_PAGE_SELECTOR}    name=dest@INDEX@SelectBox
+@{OPERS}          equals    not equals    greater than    less than    greater than or equals    less than or equals    starts with
+...               ends with    contains
+${RIGHT_COND_VAR_SELECTOR}    id=destinations_@INDEX@_conditions_0_rightVar_varID
+${COND_USE_CONSTANT_IMG}    css=input.containedVariableLayer    # 00000000
+${COND_GOTOPAGE_SELECTOR}    name=dest@INDEX@SelectBox
+${COND_CHECKBOX}    name=destinations_@INDEX@_selected
+${COND_GOTOPAGE_SELECTOR2}    name=dest1SelectBox
+${INNER_COND_CHECKBOX}    name=destinations_@INDEX@_conditions_@INDEX2@_selected
+${COND_USE_VAR_IMG}    xpath=//div[@id='Initializer@INDEX@_0ConstantLayer']/img
+${INNER_COND_OP_SELECTOR}    id=destinations_@INDEX@_conditions_@INDEX2@_operator
+
+*** Keywords ***
+Condition Variable Should Be
+    [Arguments]    ${expectedVar}    ${index}=1
+    ${COND_VAR_SELECTOR}    Generate Locator By Decreasing One    ${COND_VAR_SELECTOR}    ${index}
+    List Selection Should Be    ${COND_VAR_SELECTOR}    ${expectedVar}
+
+Condition Operator Should Be
+    [Arguments]    ${expectedOp}    ${index}=1
+    ${COND_OP_SELECTOR}    Generate Locator By Decreasing One    ${COND_OP_SELECTOR}    ${index}
+    List Selection Should Be    ${COND_OP_SELECTOR}    ${expectedOp}
+
+Condition Block Should Be Open
+    [Arguments]    ${index}=1
+    ${COND_VAR_SELECTOR}    Generate Locator By Decreasing One    ${COND_VAR_SELECTOR}    ${index}
+    Wait Until Page Contains Element    ${COND_VAR_SELECTOR}
+    Condition Variable Should Be    @{SITE VARIABLES}[0]    ${index}
+    Condition Operator Should Be    @{OPERS}[0]    ${index}
+    Condition Constant Should Be    ${EMPTY}    ${index}
+    Condition Dest Page Should Be    Home Page    ${index}
+
+Condition Constant Should Be
+    [Arguments]    ${expectedText}    ${index}=1
+    ${COND_CONSTANT_TEXT}    Generate Locator By Decreasing One    ${COND_CONSTANT_TEXT}    ${index}
+    ${actualText}=    Get Element Attribute    ${COND_CONSTANT_TEXT}@value
+    Should Be Equal As Strings    ${actualText}    ${expectedText}
+
+Condition Dest Page Should Be
+    [Arguments]    ${expectedPage}    ${index}=1
+    ${COND_DEST_PAGE_SELECTOR}    Generate Locator By Decreasing One    ${COND_DEST_PAGE_SELECTOR}    ${index}
+    List Selection Should Be    ${COND_DEST_PAGE_SELECTOR}    ${expectedPage}
+
+Choose Condition Variable
+    [Arguments]    ${var}    ${index}=1
+    [Documentation]    arg1: condition line
+    ...    arg2: variable value
+    ${COND_VAR_SELECTOR}    Generate Locator By Decreasing One    ${COND_VAR_SELECTOR}    ${index}
+    Click Element    ${COND_VAR_SELECTOR}
+    Run Keyword And Ignore Error    Click Element    ${COMMENTS_TEXT}
+    Select From List By Value    ${COND_VAR_SELECTOR}    ${var}
+
+Choose Condition Operation
+    [Arguments]    ${selectVar}    ${index}=1
+    ${COND_OP_SELECTOR}    Generate Locator By Decreasing One    ${COND_OP_SELECTOR}    ${index}
+    Click Element    ${COND_OP_SELECTOR}
+    Run Keyword And Ignore Error    Click Element    ${COMMENTS_TEXT}
+    Select From List By Label    ${COND_OP_SELECTOR}    ${selectVar}
+
+Input Condition Constant
+    [Arguments]    ${constant}    ${index}=1
+    ${COND_CONSTANT_TEXT}    Generate Locator By Decreasing One    ${COND_CONSTANT_TEXT}    ${index}
+    Input Text    ${COND_CONSTANT_TEXT}    ${constant}
+
+Choose Condition Right Variable
+    [Arguments]    ${value}    ${index}=1
+    ${RIGHT_COND_VAR_SELECTOR}    Generate Locator By Decreasing One    ${RIGHT_COND_VAR_SELECTOR}    ${index}
+    Wait Until Keyword Succeeds    10sec    1sec    Element Should Be Visible    ${RIGHT_COND_VAR_SELECTOR}
+    Click Element    ${RIGHT_COND_VAR_SELECTOR}
+    Run Keyword And Ignore Error    Click Element    ${COMMENTS_TEXT}
+    Select From List By Value    ${RIGHT_COND_VAR_SELECTOR}    ${value}
+
+Choose Condition GoTo Page
+    [Arguments]    ${page}    ${index}=1
+    ${COND_GOTOPAGE_SELECTOR}    Generate Locator By Decreasing One    ${COND_GOTOPAGE_SELECTOR}    ${index}
+    Click Element    ${COND_GOTOPAGE_SELECTOR}
+    Run Keyword And Ignore Error    Click Element    ${COMMENTS_TEXT}
+    Select From List By Label    ${COND_GOTOPAGE_SELECTOR}    ${page}
+
+Choose Condition Variable Randomly
+    [Arguments]    ${index}=1
+    ${ranOption}=    Get Random Option From X    ${SITE VARIABLES}    1
+    Choose Condition Variable    ${ranOption}    ${index}
+
+Choose Condition Right Variable Randomly
+    [Arguments]    ${index}=1
+    ${ranOption}=    Get Random Option From X    ${SITE VARIABLES}    1
+    Choose Condition Right Variable    ${ranOption}    ${index}
+
+Change Condition Constant To Variable
+    [Arguments]    ${index}=1
+    ${COND_USE_VAR_IMG}    Generate Locator By Decreasing One    ${COND_USE_VAR_IMG}    ${index}
+    Click Element    ${COND_USE_VAR_IMG}
+
+Select Condition Checkbox
+    [Arguments]    ${index}=1
+    [Documentation]    arg: input the line number
+    ...    exp:1,2,3 etc
+    ${COND_CHECKBOX}    Generate Locator By Decreasing One    ${COND_CHECKBOX}    ${index}
+    Select Checkbox    ${COND_CHECKBOX}
+
+Page Should Not Contain Condition Checkbox
+    [Arguments]    ${index}=1
+    ${COND_CHECKBOX}    Generate Locator By Decreasing One    ${COND_CHECKBOX}    ${index}
+    Page Should Not Contain Element    ${COND_CHECKBOX}
+
+Choose Condition Operation Randomly
+    ${ranOption2}=    Get Random Option From X    ${OPERS}    0
+    Choose Condition Operation    ${ranOption2}
+
+Choose Condition GoTo Page Randomly
+    ${ranOption3}=    Get Random Option From X    ${NEW VPAGES}    0
+    Choose Condition GoTo Page    ${ranOption3}
+
+Page Should Contain Condition Checkbox
+    [Arguments]    ${index}=1
+    ${COND_CHECKBOX}    Generate Locator By Decreasing One    ${COND_CHECKBOX}    ${index}
+    Page Should Contain Element    ${COND_CHECKBOX}
+
+Inner Condition Operator Should Be
+    [Arguments]    ${expectedOp}    ${index}=1    ${index2}=1
+    ${INNER_COND_OP_SELECTOR}    Generate Locator By Decreasing One    ${INNER_COND_OP_SELECTOR}    ${index}
+    ${INNER_COND_OP_SELECTOR}    Generate Locator Index2 By Decreasing One    ${INNER_COND_OP_SELECTOR}    ${index2}
+    List Selection Should Be    ${INNER_COND_OP_SELECTOR}    ${expectedOp}
+
+Condition Checkbox Should Be Selected
+    [Arguments]    ${index}=1
+    ${COND_CHECKBOX}    Generate Locator By Decreasing One    ${COND_CHECKBOX}    ${index}
+    Checkbox Should Be Selected    ${COND_CHECKBOX}
+
+Condition Bool Operator Should Be
+    [Arguments]    ${value}    ${index}=1
+    ${BOOL_OP_SELECTOR}    Generate Locator By Decreasing One    ${BOOL_OP_SELECTOR}    ${index}
+    List Selection Should Be    ${BOOL_OP_SELECTOR}    ${value}
+
+Select Inner Condition Checkbox
+    [Arguments]    ${index}=1    ${index2}=1
+    ${INNER_COND_CHECKBOX}    Generate Locator By Decreasing One    ${INNER_COND_CHECKBOX}    ${index}
+    ${INNER_COND_CHECKBOX}    Generate Locator Index2 By Decreasing One    ${INNER_COND_CHECKBOX}    ${index2}
+    Select Checkbox    ${INNER_COND_CHECKBOX}
+
+Unselect Condition Checkbox
+    [Arguments]    ${index}=1
+    ${COND_CHECKBOX}    Generate Locator By Decreasing One    ${COND_CHECKBOX}    ${index}
+    Unselect Checkbox    ${COND_CHECKBOX}
+
+Inner Condition Checkbox Should Be Selected
+    [Arguments]    ${index}=1    ${index2}=1
+    ${INNER_COND_CHECKBOX}    Generate Locator By Decreasing One    ${INNER_COND_CHECKBOX}    ${index}
+    ${INNER_COND_CHECKBOX}    Generate Locator Index2 By Decreasing One    ${INNER_COND_CHECKBOX}    ${index2}
+    Checkbox Should Be Selected    ${INNER_COND_CHECKBOX}
+
+Page Should Contain Condition Top Otherwise
+    Wait Until Page Contains Element    ${OTHERWISE_TOP_IMG}
+
+Page Should Contain Condition Top OR
+    Wait Until Page Contains Element    ${OR_TOP_IMG}
+
+Page Should Contain Condition Bottom Otherwise
+    Page Should Contain Element    ${OTHERWISE_BOTTOM_IMG}
+
+Page Should Not Contain Condition Top OtherWise
+    Page Should Not Contain Element    ${OTHERWISE_TOP_IMG}
+
+Click Condition Bottom Element
+    Click Element    ${OTHERWISE_BOTTOM_IMG}
+
+Click Condition Condition Top OR
+    Click Element    ${OR_TOP_IMG}
+
+Click Condition Top Otherwise
+    Click Element    ${OTHERWISE_TOP_IMG}
+
+Page Should Contain Condition Top Continue
+    Wait Until Page Contains Element    ${CONTINUE_TOP_IMG}
+
+Click Condition Bottom Otherwise
+    Click Element    ${OTHERWISE_BOTTOM_IMG}
+
+Page Should Contain Condition Bottom Continue
+    Wait Until Page Contains Element    ${CONTINUE_BOTTOM_IMG}
+
+Click Condition Top Continue
+    Click Element    ${CONTINUE_TOP_IMG}
+
+Click Condition Bottom Continue
+    Wait Until Keyword Succeeds    12sec    1sec    Click Element    ${CONTINUE_BOTTOM_IMG}
+
+Unselect Inner Condition Checkbox
+    [Arguments]    ${index}=1    ${index2}=1
+    ${INNER_COND_CHECKBOX}    Generate Locator By Decreasing One    ${INNER_COND_CHECKBOX}    ${index}
+    ${INNER_COND_CHECKBOX}    Generate Locator Index2 By Decreasing One    ${INNER_COND_CHECKBOX}    ${index2}
+    Unselect Checkbox    ${INNER_COND_CHECKBOX}

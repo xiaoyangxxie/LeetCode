@@ -1,0 +1,94 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../Resource/Global Resource.txt
+Resource          ../Resource/Page/Common Page/CX Builder Page.txt
+Resource          ../Resource/Page/Common Page/New Voice Site Page.txt
+Resource          ../Resource/Page/Common Page/Site Overview.txt
+Resource          Login.txt
+Resource          ../Resource/Page/Common Page/Site Variables Page.txt
+Resource          ../resource.txt
+
+*** Keywords ***
+Create Voice Site
+    [Arguments]    ${siteName}
+    Close Notification
+    Open Header Tab    ${CXBUILDER_TAB}
+    CX Builder Page Should Be Open
+    Wait Until Keyword Succeeds    15sec    0.5sec    Click Link    ${CREATE_SITE_LINK}
+    Wait Until Page Contains Element    ${SITE_NAME_TEXT}    10sec
+    Input Site Name    ${siteName}
+    Click Element    ${CREATE_BUTTON}
+    Site Overview Should Be Open
+    Click Link    ${SITE_OVERVIEW_LINK}
+    ${SiteOverviewURL}    Get Location
+    Set Global Variable    ${SiteOverviewURL}
+
+Open Voice Site
+    [Arguments]    ${siteName}
+    Login With Valid Credentials
+    Open Header Tab    ${CXBUILDER_TAB}
+    CX Builder Page Should Be Open
+    Click Link    ${siteName}
+    Site Overview Should Be Open
+
+Delete Voice Site
+    [Arguments]    ${site name}
+    Open Header Tab    ${HOME_TAB_ACTIVE}
+    Click Link    link=Manage All Voice Sites
+    Wait Until Page Contains Element    css=input[value="Delete"]
+    ${domain code}=    Get Element Attribute    link=${site name}@href
+    ${domain code}=    Replace String Using Regexp    ${domain code}    .*domainCode=    ${EMPTY}
+    ${css var}=    Catenate    SEPARATOR=    input[value="    ${domain code}
+    ${css var}=    Catenate    SEPARATOR=    ${css var}    "]
+    Select Checkbox    css=${css var}
+
+Create Site Variable
+    [Arguments]    ${var}
+    Go To Site Variables
+    Site Variables Page Should Be Open
+    Create One Variable    ${var}
+
+Close Notification
+    ${status}    Run Keyword And Return Status    Page Should Contain Element    id=latestNotification
+    Run Keyword If    ${status}    Click Element    id=closeNotificationBtn
+
+Delete All Voice Site
+    Wait Until Element Is Visible    ${CXBUILDER_TAB_ACTIVE}
+    Comment    Click Element    ${CXBUILDER_TAB_ACTIVE}
+    Click Link    CX BUILDER
+    Click Link    link=Manage All Voice Sites
+    Wait Until Page Contains Element    css=input[value="Delete"]
+    ${site_number}    Execute Javascript    return $("input[name='deleteDomainTag']").length
+    log    ${site_number}
+    ${max}    Evaluate    int(${site_number})+5
+    : FOR    ${index}    IN RANGE    6    2000
+    \    Select Checkbox    //table[2]/tbody/tr[${index}]/td[1]/input
+    \    Exit For Loop If    '${index}'=='${max}'
+    Click Delete Button
+    Click Delete VoiceSite Yes
+    Wait Until Keyword Succeeds    120sec    5sec    Wait Until Page Contains Element    ${WELCOME_MESSAGE}
+    Page Should Contain    ${NO_VOICESITE_INYOUR_ACCOUNT}    10sec
+
+Select Voice Site
+    [Arguments]    ${site name}
+    Click CX Builder Active Tab
+    Click Manage All Voice Sites
+    Wait Until Page Contains Element    css=input[value="Delete"]
+    ${snumber}    Execute Javascript    return $("input[name='deleteDomainTag']").length
+    Set Suite Variable    ${snumber}
+    ${domain code}=    Get Element Attribute    link=${site name}@href
+    ${domain code}=    Replace String Using Regexp    ${domain code}    .*domainCode=    ${EMPTY}
+    ${css var}=    Catenate    SEPARATOR=    input[value="    ${domain code}
+    ${css var}=    Catenate    SEPARATOR=    ${css var}    "]
+    Select Checkbox    css=${css var}
+
+Click Manage All Voice Sites
+    Click Link    link=Manage All Voice Sites
+
+Assign Phone Number
+    [Arguments]    ${name}
+    Click Assign Number
+    Get Phone Number Checked
+    Click Phone Number VoiceSite    ${phonenumber1}
+    Select Voice Site For Phone Number    ${phonenumber1}    ${name}
+    Save&Exit Page

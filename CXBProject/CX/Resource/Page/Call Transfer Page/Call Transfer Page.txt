@@ -1,0 +1,150 @@
+*** Settings ***
+Resource          ../Common Elements.txt
+Resource          ../Common Page/Angel Header.txt
+Resource          ../Common Page/Whisper.txt
+Resource          Call Scenarios.txt
+Resource          Advanced Options.txt
+
+*** Variables ***
+${TRANSFER_TYPE_SELECTOR}    id=transferType
+@{TRANSFER TYPES}    BRIDGED_TRANSFER    BLIND_TRANSFER    SIP_REFER_TRANSFER
+${CALL_TRANSFER_PAGE_ICON}    name=callTransferIcon
+${CALL TRANSFER PAGE TITLE}    Angel.com - Call Transfer Page
+${SCREEN_CALL_CHECKBOX}    name=promptsTabIsScreenCall
+${SCREEN_CALL_DIV}    id=promptsTabRecordNameLayer
+${TRANSFER_PHONE_NUMBER_TEXT}    id=phoneNumberInputId
+${TRANSFER_EXTENSION_TEXT}    name=extension
+${TRANSFER_RING_NUMBER_SELECTOR}    id=timeout
+@{RING NUMBERS}    2 Rings    3 Rings    4 Rings    5 Rings    6 Rings    7 Rings    8 Rings
+...               9 Rings    10 Rings    Indefinitely
+${BUSY_OR_NO_ANSWER_GOTOPAGE_SELECTOR}    name=singleDestination0SelectBox
+${DETAILS_LINK}    link=Details...
+${USE_EXTENSION_LINK}    link=Using Extensions
+${WHY_PHONE_RING_INDEFINITELY_LINK}    link=Why would I let the phone ring indefinitely?
+${TRANSFER_POINTS_SELECTOR}    id=transferHost
+
+*** Keywords ***
+Create Call Transfer Page
+    Choose Voice Page    @{VPAGES}[2]
+    Call Transfer Page Should Be Open
+
+Call Transfer Page Should Be Open
+    Wait Util Page Fully Loaded
+    Wait Until Keyword Succeeds    30sec    0.5sec    Header Tab Should Be Active    ${CXBUILDER_TAB_ACTIVE}    # Verify CX Builder Tab
+    ${expectLink}=    Get Expect Navi Link    New Call Transfer Page    # Verify the header navigation links appear: Site Builder > Voice Sites > [SITE NAME] \# [SITE NUMBER] > New Transfer Page
+    NaviLink Should Be    ${expectLink}
+    Page Name Should Be    New Call Transfer Page    # Verify default Logic Page name
+    Page Number Should Be    ${PAGE NUMBER}    # Verify default Logic Page number
+    Page Comments Should Be    ${EMPTY}    # Verify default page comments is empty.
+    Page Group Should Be    HOME    # Verify default page group
+    Title Should Be    ${CALL TRANSFER PAGE TITLE}
+    Main Tab Should Be Active    # Verify MAIN tab is actived.
+    Save&SE&Exit Buttons Should Be Visible    # Verify the display of SAVE, SAVE & EXIT and EXIT buttons.
+    Call Transfer Page Icon Should Be Visible    # Verify icon to the left of the title appears.
+    ${pageURL}    Get Location
+    Set Test Variable    ${pageURL}
+
+Call Transfer Page Icon Should Be Visible
+    Wait Until Keyword Succeeds    20sec    0.5sec    Page Should Contain Element    ${CALL_TRANSFER_PAGE_ICON}
+
+Transfer Type Should Be
+    [Arguments]    ${type}
+    List Selection Should Be    ${TRANSFER_TYPE_SELECTOR}    ${type}
+
+Choose Transfer Type
+    [Arguments]    ${type}
+    Execute Javascript    $("#transferType").val("${type}").mousedown().change()
+
+Screen Call Block Should Be Open
+    Element Should Be Visible    ${SCREEN_CALL_DIV}
+
+Screen Call Block Should Be Invisible
+    Element Should Not Be Visible    ${SCREEN_CALL_DIV}
+
+Choose GoToPage Randomly In Sreen Call Block
+    ${page}=    Get Random Option From X    ${NEW VPAGES}    1
+    Select From List By Label    name=keywordLinks0SelectBox    ${page}
+
+Enable Screen The Call
+    Select Checkbox    ${SCREEN_CALL_CHECKBOX}
+
+Transfer Caller Block Should Be Open
+    Element Should Be Visible    ${TRANSFER_PHONE_NUMBER_TEXT}
+    Element Should Be Visible    ${TRANSFER_EXTENSION_TEXT}
+
+Choose Number Of Rings
+    [Arguments]    ${no}
+    Select From List By Label    ${TRANSFER_RING_NUMBER_SELECTOR}    ${no}
+
+Transfer Number Of Rings Should Be
+    [Arguments]    ${no}
+    List Selection Should Be    ${TRANSFER_RING_NUMBER_SELECTOR}    ${no}
+
+Play On Hold Muisic Checkbox Should Be Visible
+    Element Should Be Visible    ${PLAY_ON_HOLD_MUSIC_CHECKBOX}
+
+Use Variable Instead Of Phone Number
+    Click Image    css=img[alt="Use Variable"]
+    Element Should Be Visible    ${PHONE_NUMBER_VAR_SELECTOR}
+
+Choose Variable Randomly For Phone Number
+
+Busy Or No Answer GoToPage Should Be
+    [Arguments]    ${page}
+    List Selection Should Be    ${BUSY_OR_NO_ANSWER_GOTOPAGE_SELECTOR}    ${page}
+
+Click Using Extensiong Link
+    [Arguments]    ${no}
+    Click Visible Element    ${USE_EXTENSION_LINK}    1
+
+Using Extension Window Should Be Open
+    Wait Until Keyword Succeeds    8sec    0.5sec    Select Window    Using Extensions
+
+Click Why Phone Ring Indenfinitely Link
+    [Arguments]    ${no}=1
+    Click Visible Element    ${WHY_PHONE_RING_INDEFINITELY_LINK}    ${no}
+
+Why Phone Ring Indefinitely Window Should Be Open
+    Wait Until Keyword Succeeds    5sec    0.5sec    Select Window    Why would I let the phone ring indefinitely?
+
+CT Input Trigger Tones
+    [Arguments]    ${text}
+    Input Text    name=tone    ${text}
+
+CT Input Phone Number For Tones
+    [Arguments]    ${phone}
+    Input Text    name=acdPhone    ${phone}
+
+CT Tone Variable Select Should Be
+    [Arguments]    ${var}
+    List Selection Should Be    id=toneVariable_varID    ${var}
+
+CT Transfer Tone Phone Number Select Should Be
+    [Arguments]    ${phone}
+    List Selection Should Be    id=acdPhoneVariable_varID    ${phone}
+
+CT Tones Block Should Be Open
+    Wait Until Keyword Succeeds    5sec    0.5sec    Element Should Be Visible    id=toneConstantLayer
+
+CT Transfer Points Block Should Be Open
+    Wait Until Keyword Succeeds    10sec    0.5sec    Element Should Be Visible    id=transferHost
+
+Transfer Points Should Be
+    [Arguments]    ${point}
+    List Selection Should Be    ${TRANSFER_POINTS_SELECTOR}    ${point}
+
+Choose Transfer Point
+    [Arguments]    ${point}
+    Select From List By Label    ${point}
+
+CT Input Transfer Points Phone Number
+    [Arguments]    ${phone}
+    execute javascript    $("#phoneNumberInputId").val('${phone}')
+
+CT Input Transfer Phone Number
+    [Arguments]    ${phone}
+    Input Text    ${TRANSFER_PHONE_NUMBER_TEXT}    ${phone}
+
+CT Input Transfer Phone Extension
+    [Arguments]    ${extension}
+    Input Text    ${TRANSFER_EXTENSION_TEXT}    ${extension}

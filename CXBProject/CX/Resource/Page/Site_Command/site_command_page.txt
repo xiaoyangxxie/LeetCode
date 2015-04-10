@@ -1,0 +1,143 @@
+*** Settings ***
+Resource          ../../../resource.txt
+
+*** Variables ***
+${site_command}    css=#tnav3
+${asr_language}    asrLangVPage
+${demo_site}      xpath=//a[contains(text(),'RobotNGTTDemo')]
+${UK_English}     UK-English
+${sitecmd_go_to}    xpath=//*[@id='siteKeywords1SelectLayer']/table/tbody/tr/td/select
+${uk_goto_page}    0ac5379f-03-14984ae330c-e82b4581-fba,3
+${site_preperties}    css=#tnav1
+${asr_control}    \    #asrcontrol-icon
+${default_asrLanguage}    defaultAsrLanguage
+${english}        English
+${manager_call_sites}    link=Manage All Voice Sites
+${defaultTtsVoice}    defaultTtsVoice
+${tts_control}    \    #ttscontrol-icon
+${default_page}    defaultPageID
+${bridget_uk_english}    Bridget
+${add_site_command}    input.buttonAddCommand
+${site_command_say}    links_formattedKeywords
+${site_command_dtmf}    links_DTMF
+${asrLang_VPage}    asrLangVPage
+${tts_voice_variable}    ttsVoiceVariable
+${asr_language_variable}    asrLanguageVariable
+
+*** Keywords ***
+Click Site Command
+    Click Element    ${site_command}
+
+Click Exist Voice Site
+    [Arguments]    ${site}
+    Comment    Wait Until Click Success    xpath=//a[contains(text(),'${site}')]
+    Wait Until Keyword Succeeds    10sec    2sec    Click Link    link=${site}
+
+Select ASR Language
+    [Arguments]    ${language}
+    Wait Until Keyword Succeeds    20sec    1sec    Select From List By Value    ${default_asrLanguage}    ${language}
+
+Verify Selected Value
+    [Arguments]    ${select_id}    ${get_value}
+    ${selected}    Get Selected List Value    ${select_id}
+    Should Be Equal As Strings    ${get_value}    ${selected}
+
+Click Site Properties
+    Click Element    ${site_preperties}
+    Page Should Contain Element    ${default_page}
+
+Click ASR Control
+    Wait Until Element Is Visible    ${asr_control}
+    Wait Until Keyword Succeeds    10sec    2sec    Execute Javascript    $('${asr_control}').click()
+    Comment    Wait Until Keyword Succeeds    10sec    2sec    Execute Javascript    $('#asrcontrol-icon').click()
+    Wait Until Keyword Succeeds    10sec    2sec    Wait Until Element Is Visible    defaultAsrLanguage
+
+Click Manage All Voice Site
+    Wait Until Page Contains Element    ${manager_call_sites}
+    Wait Until Keyword Succeeds    10sec    1sec    Click Element    ${manager_call_sites}
+
+Select TTS Language
+    [Arguments]    ${language}
+    Wait Until Keyword Succeeds    20sec    1sec    Select From List By Value    ${defaultTtsVoice}    ${language}
+
+Click Element By Jquery
+    [Arguments]    ${element}
+    Wait Until Keyword Succeeds    10sec    2sec    Execute Javascript    window.jQuery("#${element}").click()
+
+Select Home Page
+    [Arguments]    ${page_id}
+    Click Site Properties
+    Click Element    ${default_page}
+    Wait Until Keyword Succeeds    20sec    1sec    Select From List By Value    ${default_page}    ${page_id}
+
+Select ASR Control
+    Wait Until Keyword Succeeds    10sec    2sec    Execute Javascript    $("#asrcontrol-icon").click()
+
+Select TTS Control
+    Wait Until Keyword Succeeds    10sec    2sec    Execute Javascript    $("#ttscontrol-icon").click()
+
+Click Add Site Command
+    ${len}    Get Site Cmd Length
+    Add Site Cmd
+    sleep    2
+    ${len1}    Get Site Cmd Length
+    ${lenexpect}    Evaluate    int(${len})
+    ${len1}    Evaluate    int(${len1})
+    Should Be Equal As Integers    ${lenexpect}    ${len1}
+
+Input Site Command Say
+    [Arguments]    ${i}    ${words}
+    Execute Javascript    $("input[name='${site_command_say}']").eq(${i}).val("${words}")
+
+Input Site Command Press
+    [Arguments]    ${i}    ${dtmf}
+    Execute Javascript    $("input[name='${site_command_dtmf}']").eq(${i}).val("${dtmf}")
+
+Select ASR Language In Site Command Page
+    [Arguments]    ${language}
+    Wait Until Keyword Succeeds    20sec    1sec    Select From List By Value    ${asrLang_VPage}    ${language}
+
+Click ASR Variable
+    Wait Until Keyword Succeeds    10sec    2sec    Execute Javascript    $("#asrLanguageVariable").click()
+
+click TTS variable
+    Wait Until Keyword Succeeds    10sec    2sec    Execute Javascript    $("#ttsVoiceVariable").click()
+
+select tts variable
+    [Arguments]    ${var}
+    Wait Until Keyword Succeeds    10sec    1sec    Select From List By Index    ${tts_voice_variable}    ${var}
+
+select asr variable
+    [Arguments]    ${var}
+    Wait Until Keyword Succeeds    10sec    1sec    Select From List By Index    ${asr_language_variable}    ${var}
+
+Select System Command ASR Language
+    [Arguments]    ${language}
+    Wait Until Keyword Succeeds    20sec    1sec    Select From List By Value    asrLangVPage    ${language}
+
+Get Site Cmd Length
+    Wait Until Element Is visable 10sec    name=pageSelector
+    ${len}    Execute Javascript    return window.jQuery("input[name='pageSelector']").length
+    Set Suite Variable    ${len}
+    [Return]    ${len}
+
+Add Site Cmd Number
+    [Arguments]    ${total}
+    : FOR    ${n}    IN RANGE    0    ${total}
+    \    One Site Cmd Is Added
+
+One Site Cmd Is Added
+    Wait Until Keyword Succeeds    15sec    2sec    Click Add Site Command
+
+Add Site Cmd
+    Wait Until Keyword Succeeds    10sec    1sec    Execute Javascript    $("input.buttonAddCommand").click()
+
+Define Site Command
+    [Arguments]    ${column}    ${say}    ${press}    ${page_name}
+    Input Site Command Say    ${column}    ${say}
+    Input Site Command Press    ${column}    ${press}
+    Common Elements.Select From List By Label    name=siteKeywords${column}SelectBox    ${page_name}
+
+Select PageSelector In Site Command
+    [Arguments]    ${var}
+    Select Checkbox    xpath=//*[@id='asrCommandsTable']//tr[${var}]/td[1]/input[2]

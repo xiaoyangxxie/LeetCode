@@ -1,0 +1,35 @@
+*** Settings ***
+Resource          ../resource.txt
+
+*** Keywords ***
+Command Page ASR language should be changed
+    Verify Selected Value    ${asr_language}    ${UK_English}
+    Verify Selected Value    ${sitecmd_go_to}    ${uk_goto_page}
+
+Go to Site And go to site properties page
+    [Arguments]    ${site}
+    Comment    Voice Page Suite Setup
+    Click Manage All Voice Site
+    Click Exist Voice Site    ${site}
+    Click Site Properties
+
+Chose TTS ASR language Home Page And Save Page
+    [Arguments]    ${tts_lang}    ${asr_lang}
+    Click Site Properties
+    Select TTS Control
+    Select TTS Language    ${tts_lang}
+    Select ASR Control
+    Select ASR Language    ${asr_lang}
+    Save Page
+
+Muti ASR Teardown
+    Click Site Properties
+    Chose TTS ASR language Home Page And Save Page    ${english}
+    Close All Browsers
+
+Input words and Dtmf in Sitecommand
+    [Arguments]    ${words}    ${dtmf}    ${Message_Vpage}
+    Click Add Site Command Button
+    Input Site Command Say    ${words}
+    Input Site Command Press    ${dtmf}
+    Select Goto Page    ${Message_Vpage}

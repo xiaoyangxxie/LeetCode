@@ -1,0 +1,70 @@
+*** Settings ***
+Resource          ../Common Elements.txt
+Library           Selenium2Library
+Resource          ../Common Page/Audio Block.txt
+Resource          Confirmation.txt
+Resource          Advanced Options.txt
+
+*** Variables ***
+${VOICE_MAIL_PAGE_ICON}    name=voicemailPageIcon
+${VM_MAILBOX_SELECTOR}    id=mailboxID
+${VM_RESPONSE_STORAGE_VAR_SELECTOR}    id=varRef_varID
+${VM_ACTION_SELECTOR}    id=finalActionType
+@{VM ACTION TYPES}    Go to Designated Page    Go Back    End the Call
+${VM_DEST_PAGE_SELECTOR}    name=prompts0SelectBox
+${VOICE_MAIL_PAGE_TITLE}    Angel.com - Voicemail Page
+
+*** Keywords ***
+Create Voice Mail Page
+    Choose Voice Page    @{VPAGES}[12]
+    Voice Mail Page Should Be Open
+
+Voice Mail Page Should Be Open
+    Wait Util Page Fully Loaded
+    Header Tab Should Be Active    ${CXBUILDER_TAB_ACTIVE}    # Verify CX Builder Tab
+    ${expectLink}=    Get Expect Navi Link    @{NEW VPAGES}[10]    # Verify the header navigation links appear: Site Builder > Voice Sites > [SITE NAME] \# [SITE NUMBER] > New Logic Page
+    NaviLink Should Be    ${expectLink}
+    Title Should Be    ${VOICE_MAIL_PAGE_TITLE}
+    Page Name Should Be    @{NEW VPAGES}[10]    # Verify default Logic Page name
+    Page Number Should Be    ${PAGE NUMBER}    # Verify default Logic Page number
+    Page Comments Should Be    ${EMPTY}    # Verify default page comments is empty.
+    Page Group Should Be    HOME    # Verify default page group
+    Main Tab Should Be Active    # Verify MAIN tab is actived.
+    Save&SE&Exit Buttons Should Be Visible    # Verify the display of SAVE, SAVE & EXIT and EXIT buttons.
+    Voice Mail Page Icon Should Be Visible    # Verify icon to the left of the title appears.
+    ${pageURL}    Get Location
+    Set Test Variable    ${pageURL}
+
+Voice Mail Page Icon Should Be Visible
+    Page Should Contain Element    ${VOICE_MAIL_PAGE_ICON}
+
+VM Mailbox Should Be
+    [Arguments]    ${mail}
+    List Selection Should Be    ${VM_MAILBOX_SELECTOR}    ${mail}
+
+VM Select Mailbox
+    [Arguments]    ${mail}
+    Select From List By Label    ${VM_MAILBOX_SELECTOR}    ${mail}
+
+VM Select Response Storage Variable
+    [Arguments]    ${var}
+    Select From List By Label    ${VM_RESPONSE_STORAGE_VAR_SELECTOR}    ${var}
+
+VM Response Storage Variable Should Be
+    [Arguments]    ${var}
+    List Selection Should Be    ${VM_RESPONSE_STORAGE_VAR_SELECTOR}    ${var}
+
+VM Select Action Type
+    [Arguments]    ${type}
+    Select From List By Label    ${VM_ACTION_SELECTOR}    ${type}
+
+VM Action Type Should Be
+    [Arguments]    ${type}
+    Wait Until Keyword Succeeds    5sec    0.5sec    List Selection Should Be    ${VM_ACTION_SELECTOR}    ${type}
+
+VM Select Destination Page
+    [Arguments]    ${page}
+    Select From List By Label    ${VM_DEST_PAGE_SELECTOR}    ${page}
+
+VM Destination GoToPage Selector Should Not Exsit
+    Wait Until Keyword Succeeds    5sec    0.5sec    Page Should Not Contain Element    ${VM_DEST_PAGE_SELECTOR}

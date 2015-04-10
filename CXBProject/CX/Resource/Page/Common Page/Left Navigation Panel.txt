@@ -1,0 +1,38 @@
+*** Settings ***
+Library           Selenium2Library
+
+*** Variables ***
+${SITE_OVERVIEW_LINK}    id=tnav0
+${SITE_PROS_LINK}    id=tnav1
+${SITE_VARS_LINK}    id=tnav2
+${SITE_CMDS_LINK}    id=tnav3
+${SYS_CMDS_LINK}    id=tnav4
+${ASR_SETTINGS_LINK}    id=tnav8
+${DIAGNOSTICS_LINK}    id=tnav9
+${PHONE_NUMBER_LINK}    xpath=//*[@id="leftNavPanel"]/div[2]/li/a
+
+*** Keywords ***
+Get Phone Number(s)
+    ${phoneNumber}=    Get Text    ${PHONE_NUMBER_LINK}
+    [Return]    ${phoneNumber}
+
+Go To Site Variables
+    Click Link    ${SITE_VARS_LINK}
+
+Go To Site Overview
+    Go To    ${SiteOverviewURL}
+
+Go To Site Commands
+    Click Link    ${SITE_CMDS_LINK}
+
+Click Add Site Command Button
+    Click Button    ${ADD_SITE_CMD_BUTTON}
+
+Go To Site Properties
+    Click Link    ${SITE_PROS_LINK}
+
+Add One Site Command
+    [Arguments]    ${say}    ${press}    ${page}
+    input Text    name=links_formattedKeywords    ${say}
+    input Text    name=links_DTMF    ${press}
+    select from list by label    name=siteKeywords0SelectBox    ${page}

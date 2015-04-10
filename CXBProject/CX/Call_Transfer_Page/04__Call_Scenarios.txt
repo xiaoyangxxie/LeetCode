@@ -1,0 +1,52 @@
+*** Settings ***
+Test Setup        Run Keywords    Create Call Transfer Page    AND    Open Call Scenarios Tab    AND    Call Scenarios Tab Should Be Open
+Force Tags
+Resource          ../Resource/Page/Call Transfer Page/Call Transfer Page.txt
+Resource          ../Testflow/Util.txt
+
+*** Test Cases ***
+Reg_CT_61
+    [Documentation]    Create Call Transfer Page, open *Call Scenarios* tab, User can select the destination voice page, if the receiver maintain the no input on the transfer call.
+    [Tags]    Regression
+    Call Scenarios Select No Answer Destination Page    @{NEW VPAGES}[1]
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_62
+    [Documentation]    Create Call Transfer Page, open *Call Scenarios* tab, User can select the destination voice page, if the transfer call's line is busy.
+    [Tags]    Regression
+    Click Use Multiple Destination Link    1
+    Line Is Busy Dest Selector Should Be Visible
+    Call Scenarios Select Line Busy Destination Page    @{NEW VPAGES}[1]
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_63
+    [Documentation]    Create Call Transfer Page, open *Call Scenarios* tab, User can select the destination voice page, if the transfer Time is Up.
+    [Tags]    Regression
+    Call Scenarios Select Transfer Time Up Destination Page    @{NEW VPAGES}[1]
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_64
+    [Documentation]    Create Call Transfer Page, open *Call Scenarios* tab, User can select the destination voice page, if the transfer call completes.
+    [Tags]    Regression
+    Call Scenarios Select Call Completes Destination Page    @{NEW VPAGES}[1]
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_65
+    [Documentation]    Create Call Transfer Page, open *Call Scenarios* tab, click *Link Audio* link, User can manage the audio prompts.
+    [Tags]    Regression
+    Click Link Audio Link    1
+    Audio Handler Should Be Open
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_66
+    [Documentation]    Create Call Transfer Page, open *Call Scenarios* tab, click *Change to TTS* image, User can use tts prompts instead of audio file.
+    [Tags]    Regression
+    Change To TTS    1
+    No Answer TTS Block Should Be Visible
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open

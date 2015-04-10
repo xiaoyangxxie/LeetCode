@@ -1,0 +1,73 @@
+*** Settings ***
+Resource          ../../../resource.txt
+
+*** Variables ***
+${COLUMN_HEADING}    name=structure_@INDEX@_columnName
+${DATA_FILE_NAME}    name=fileName
+${MANAGE_ALL_DATA_FILES}    link=Manage All Data Files
+${POP_DIALOG_OK}    id=pop-dialog-ok-btn
+${SHEER_TO_Delete}    name=sheetToDelete
+${CREATE_NEW_DATE_File}    link=Create New Data File
+${FILE_NAME}      amy.xls
+${IMPORT_DATE_FILES}    link=Import Data File
+
+*** Keywords ***
+Click Add Column Button
+    Click Button    name=Submit632
+
+Input Data File Name
+    [Arguments]    ${value}
+    Wait Until Keyword Succeeds    8sec    1sec    Input Text    ${DATA_FILE_NAME}    ${value}
+
+Input Data File Column Heading
+    [Arguments]    ${value}    ${index}=1
+    ${COLUMN_HEADING}    Generate Locator By Decreasing One    ${COLUMN_HEADING}    ${index}
+    Input Text    ${COLUMN_HEADING}    ${value}
+
+Click Data File Save Button
+    Click Button    name=Submit22
+
+Go To Manage All Data Files
+    Open Header Tab    ${CXBUILDER_TAB_ACTIVE}
+    CX Builder Page Should Be Open
+
+Click Manage All Data Files
+    Click Link    ${MANAGE_ALL_DATA_FILES}
+
+Delete All Data Files
+    Select All Checkboxes    ${SHEER_TO_Delete}
+    Click Delete Button
+    Run Keyword And Ignore Error    Click Element    ${POP_DIALOG_OK}
+    Page Should Not Contain Element    ${SHEER_TO_Delete}
+
+Suite TearDown To Delete Files
+    Open Header Tab    ${CXBUILDER_TAB_ACTIVE}
+    CX Builder Page Should Be Open
+    Go To Manage All Data Files
+    ${passed}=    Run Keyword And Return Status    Page Should Contain    ${SHEER_TO_Delete}
+    Run Keyword If    ${passed}    Run Keywords    Delete All Data Files
+
+Create New Data File
+    [Arguments]    ${column1}    ${column2}
+    click link    ${CREATE_NEW_DATE_File}
+    Input Data File Name    ${FILE_NAME}
+    Input Data File Column Heading    ${column1}
+    Click Add Column Button
+    Input Data File Column Heading    ${column2}    2
+    Click Data File Save Button
+
+DateFile Is Created
+    [Arguments]    ${name}
+    Wait Until Keyword Succeeds    10sec    2sec    Page Should Contain Element    link=${name}
+
+Import Date File
+    [Arguments]    ${path}
+    Click Import Date File
+    Wait Until Keyword Succeeds    10sec    1sec    Choose File    css=input[name='filename']    ${path}
+    ${dir}    ${filename}=    Split Path    ${path}
+
+Click Import Date File
+    Wait Until Keyword Succeeds    10sec    1sec    Click Link    ${IMPORT_DATE_FILES}
+
+Click Import File Save
+    Click Button    name=Submit44

@@ -1,0 +1,23 @@
+*** Settings ***
+Resource          ../../../resource.txt
+
+*** Variables ***
+${VOICE_SITES_LINK}    link=Voice Sites
+${AUDIO_FILES_LINK}    link=Audio
+${DATA_FILES_LINK}    link=Data Files
+${RECORDINGS&VOICEMAIL_LINK}    link=Recordings and Voicemail
+${MANAGE_SITES_LINK}    link=Manage All Voice Sites
+${CREATE_SITE_LINK}    link=Create New Voice Site
+${CX BUILDER PAGE TITLE}    Angel.com - CX Builder
+
+*** Keywords ***
+CX Builder Page Should Be Open
+    Wait Until Element Is Visible    ${CXBUILDER_TAB_ACTIVE}    30s
+    Title Should Be    ${CX BUILDER PAGE TITLE}
+
+Go To Audio Files Page
+    [Arguments]    ${token}
+    Go To    https://sb.angel-qe.com/AudioManager?ADC_TOKEN=${token}&command=showAudioManager
+
+Click Create New Data File Link
+    click link    link=Create New Data File

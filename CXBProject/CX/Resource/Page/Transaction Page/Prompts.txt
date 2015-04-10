@@ -1,0 +1,60 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../Common Elements.txt
+
+*** Variables ***
+${TX_PROMPTS_TABLE}    id=dvpPromptsTable
+${TX_PROMPT_CHECKBOX}    name=dvpPrompts_@INDEX@_selected
+${TX_AUDIO_FILE_TEXT}    name=dvpPrompts_@INDEX@_filetag
+${TX_TTS_MSG_TEXT}    name=dvpPrompts_@INDEX@_message
+${TX_VAR_PROMPT_SELECTOR}    id=dvpPrompts_@INDEX@_varIDSelect
+${WAIT_PROMPT_AUDIO_FILE_TEXT}    name=filetag
+
+*** Keywords ***
+TX Prompts Tab Should Be Open
+    Element Should Be Visible    ${TX_PROMPTS_TABLE}
+
+TX Prompt Audio File Should Be
+    [Arguments]    ${file}    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${TX_AUDIO_FILE_TEXT}    ${no}
+    Wait Until Keyword Succeeds    5sec    0.5sec    Textfield Value Should Be    ${locator}    ${file}
+
+TX Prompt TTS Block Should Be Visible
+    [Arguments]    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${TX_TTS_MSG_TEXT}    ${no}
+    Wait Until Keyword Succeeds    5sec    0.5sec    Element Should Be Visible    ${locator}
+
+TX Audio Prompt Block Should Be Open
+    [Arguments]    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${TX_PROMPT_CHECKBOX}    ${no}
+    Wait Until Keyword Succeeds    5sec    0.5sec    Page Should Contain Element    ${locator}
+    ${locator}=    Generate Locator By Decreasing One    ${TX_AUDIO_FILE_TEXT}    ${no}
+    Page Should Contain Element    ${locator}
+
+TX TTS Prompt Block Should Be Open
+    [Arguments]    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${TX_PROMPT_CHECKBOX}    ${no}
+    Wait Until Keyword Succeeds    5sec    0.5sec    Page Should Contain Element    ${locator}
+    ${locator}=    Generate Locator By Decreasing One    ${TX_TTS_MSG_TEXT}    ${no}
+    Page Should Contain Element    ${locator}
+
+TX Variable Prompt Block Should Be Open
+    [Arguments]    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${TX_PROMPT_CHECKBOX}    ${no}
+    Wait Until Keyword Succeeds    5sec    0.5sec    Page Should Contain Element    ${locator}
+    ${locator}=    Generate Locator By Decreasing One    ${TX_VAR_PROMPT_SELECTOR}    ${no}
+    Page Should Contain Element    ${locator}
+
+TX Select Prompt Block
+    [Arguments]    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${TX_PROMPT_CHECKBOX}    ${no}
+    Select Checkbox    ${locator}
+
+TX Prompt Block Should Be Deleted
+    [Arguments]    ${no}=1
+    ${locator}=    Generate Locator By Decreasing One    ${TX_PROMPT_CHECKBOX}    ${no}
+    Wait Until Keyword Succeeds    5sec    0.5sec    Page Should Not Contain Element    ${locator}
+
+TX Wait Prompt Audio File Should Be
+    [Arguments]    ${file}
+    Wait Until Keyword Succeeds    5sec    0.5sec    Textfield Value Should Be    ${WAIT_PROMPT_AUDIO_FILE_TEXT}    ${file}

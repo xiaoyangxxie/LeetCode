@@ -1,0 +1,43 @@
+*** Settings ***
+Force Tags
+Resource          ../Testflow/Logic Page.txt
+Resource          ../Testflow/Util.txt
+Resource          ../Resource/Page/Logic Page/Logic Page.txt
+Resource          ../Resource/Page/Common Page/Site Variables Page.txt
+
+*** Test Cases ***
+Advanced Option TC-16.1
+    [Documentation]    Create *Logic Page*, click *Advanced Option* tab, choose new error destination, click *Save* button. The system should allow to save without any errors.
+    [Tags]    Regression
+    Create Logic Page
+    Open Advanced Option Tab
+    Logic Advanced Options Should Be Open
+    Choose Error Destination Randomly
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+    Go To Site Overview
+    Logic Error Page Link Should Exist
+
+Advanced Option TC-16.2
+    [Documentation]    Create *Logic Page*, click *Advanced Option* tab, choose new *Log Type*, input new *Log Email*, click *Save* button. The system should allow to save without any errors.
+    [Tags]    Regression
+    Create Logic Page
+    Open Advanced Option Tab
+    Logic Advanced Options Should Be Open
+    Choose Error Destination Randomly
+    Choose Log Type    @{LOG TYPES}[2]
+    Input Log Email    zewang1@angel.com
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Advanced Option TC-16.3
+    [Documentation]    Create *Logic Page*, click *Advanced Option* tab, choose *Log Type* *Never*, input new *Log Email*, click *Save* button. The system should allow to save without any errors.
+    [Tags]    Regression
+    Create Logic Page
+    Open Advanced Option Tab
+    Logic Advanced Options Should Be Open
+    Choose Error Destination Randomly
+    Choose Log Type    @{LOG TYPES}[0]
+    Log Email Address Should Be    ${LOGIN EMAIL}
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open

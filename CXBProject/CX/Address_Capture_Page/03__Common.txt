@@ -1,0 +1,74 @@
+*** Settings ***
+Suite Setup       Click Link    ${SITE_OVERVIEW_LINK}
+Test Setup        Create Address Capture Page
+Resource          ../resource.txt
+
+*** Test Cases ***
+Reg_Addrs_16
+    [Documentation]    Miscellaneous: Edit Page Name and number. Edit page name & number and save.
+    [Tags]    Regression
+    Close All Browsers
+    Voice Page Suite Setup
+    Create Address Capture Page
+    Input Page Name    ${TEST_NAME}
+    Input Page Number    100
+    save page
+    Save Done Tip Should Be Open
+    Go To Site Overview
+    Page Name Should Exist    ${TEST_NAME}
+    Page Number Should Exist    100
+
+Reg_Addrs_17
+    [Documentation]    Miscellaneous: Change page type.1. Click the Page icon 2. Choose the page type and check the button: commit change and close
+    [Tags]    Regression
+    Page Type Icon Should Be    @{VPAGES_IMGS}[0]
+    Click Page Type Icon
+    Change Page Type To Should Exist
+    Select a Page Type List Should Exsit
+    Select a Page Type    @{VPAGES}[2]
+    Commit Changes In Page Type
+    Verify Page Type Changed    @{VPAGES_IMGS}[2]
+
+Reg_Addrs_18
+    [Documentation]    Miscellaneous: Comment.1. Enter characters or numbers 2. Save it and Check the view in Site overview(should have an icon showing page with a comment)
+    [Tags]    Regression
+    Input Page Comment    test
+    Save Successfully
+    Go To Site Overview
+    Comments Should Exist
+
+Reg_Addrs_19
+    [Documentation]    Miscellaneous: Parent Group.1. Click the Parent Group 2. Assign the page to any parent group
+    [Tags]    Regression
+    [Setup]    Run Keywords    Add Page Group    New Group    AND    Create Address Capture Page
+    Click Parent Group
+    Select the First Group
+    Save Parent Group
+    Verify Parent Group    New Group
+
+Reg_Addrs_20
+    [Documentation]    Miscellaneous: Save Button.1. Edit something and click the Save button.2. The details should be saved in the page
+    [Tags]    Regression
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_Addrs_21
+    [Tags]    Regression
+    Save&Exit Page Named As Test Case
+    Page Name Should Exist    ${TEST_NAME}
+    Verify HighLight    true
+
+Reg_Addrs_22
+    [Documentation]    Miscellaneous: Exit Button.1. Click the Exit button.2. The details should not be saved and navigate to the Site Overview page.
+    [Tags]    Regression
+    Exit Page
+    Verify Page Title    ${VOICE SITE PAGE TITLE}
+    Page Number Should Not Exist    ${PAGE NUMBER}
+
+Reg_Addrs_23
+    [Documentation]    Miscellaneous:Go to destination pages.1. Check the dropdown lists and check 2. Choose any type of pages:New pages
+    [Tags]    Regression
+    Choose Go To Destination Page    A Page in Another Site
+    Click A Page in another site
+    New Window Title Should Be    Angel.com - Browse Voice Pages
+    Close Popup Window

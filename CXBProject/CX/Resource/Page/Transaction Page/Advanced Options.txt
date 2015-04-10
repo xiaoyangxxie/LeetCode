@@ -1,0 +1,29 @@
+*** Settings ***
+Resource          ../Common Elements.txt
+Library           Selenium2Library
+Resource          ../Common Page/VPage Select.txt
+
+*** Variables ***
+${STORE_RESPONSE_METHOD_RADIO}    clearHash
+${TX_ERR_DEST_GOTOPAGE_SELECTOR}    name=advancedTab0SelectBox
+
+*** Keywords ***
+TX Advanced Option Tab Should Be Open
+    Wait Until Keyword Succeeds    5sec    0.5sec    Radio Button Should Be Set To    ${STORE_RESPONSE_METHOD_RADIO}    false
+
+TX Select Delete Response Storage
+    Select Radio Button    ${STORE_RESPONSE_METHOD_RADIO}    true
+
+TX Choose Error Detination GoToPage
+    [Arguments]    ${page}
+    Click Element    ${TX_ERR_DEST_GOTOPAGE_SELECTOR}
+    Run Keyword And Ignore Error    Click Element    ${COMMENTS_TEXT}
+    Select From List By Label    ${TX_ERR_DEST_GOTOPAGE_SELECTOR}    ${page}
+
+TX Chosen Site Number Should Be
+    [Arguments]    ${num}
+    Textfield Value Should Be    name=inputSiteCode_of_errorPage_domainCode    ${num}
+
+View Page Is Opened
+    Click Visible View Button    1
+    Switch To New Window    ${MESSAGE PAGE TITLE}

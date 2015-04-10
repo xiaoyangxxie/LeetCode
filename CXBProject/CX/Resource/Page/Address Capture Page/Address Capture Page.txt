@@ -1,0 +1,21 @@
+*** Settings ***
+Resource          ../../../resource.txt
+Library           Selenium2Library
+Resource          AC Main.txt
+Resource          AC Advanced.txt
+Resource          AC Common.txt
+
+*** Keywords ***
+Create Address Capture Page
+    Choose Voice Page    @{VPAGES}[0]
+    Address Capture Page Should Be Open
+
+Address Capture Page Should Be Open
+    Wait Util Page Fully Loaded
+    Title Should Be    Angel.com - Address Capture Page
+    ${pageURL}    Get Location
+    Set Test Variable    ${pageURL}
+    ${expectLink}=    Get Expect Navi Link    @{NEWVPages}[1]
+    NaviLink Should Be    ${expectLink}
+    Page Name Should Be    @{NEWVPages}[1]
+    Page Number Should Be    ${PAGE NUMBER}

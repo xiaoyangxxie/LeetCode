@@ -1,0 +1,71 @@
+*** Settings ***
+Test Setup        Run Keywords    Create Transaction Page    AND    Open Advanced Option Tab    AND    TX Advanced Option Tab Should Be Open
+Resource          ../Testflow/Util.txt
+
+*** Test Cases ***
+Reg_TX_46
+    [Documentation]    click the link *why* and the link page should be displayed.
+    [Tags]    Regression
+    Click Why Link    1
+    Switch To New Window    Caller Response Storage
+    Close Popup Window
+
+Reg_TX_47
+    [Documentation]    Select *Delete* as Caller Response Storage, save page, system should allow to save without any error.
+    [Tags]    Regression
+    TX Select Delete Response Storage
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_TX_48
+    [Documentation]    User can set the new voice page in Error Destination, check if there is \ any error.
+    [Tags]    Regression
+    TX Choose Error Detination GoToPage    @{NEW VPAGES}[0]
+    Save Successfully
+
+Reg_TX_49
+    [Documentation]    User can set the existing voice page, check if there is any error.
+    [Tags]    Regression
+    TX Choose Error Detination GoToPage    1 - Greeting
+    Wait Until Keyword Succeeds    20sec    2sec    View Page Is Opened
+    Comment    Click Visible View Button    1
+    Comment    Switch To New Window    ${MESSAGE PAGE TITLE}
+    Close Popup Window
+
+Reg_TX_50
+    [Documentation]    User can set the existing voice page in another site, check if there is any error.
+    [Tags]    Regression
+    TX Choose Error Detination GoToPage    A Page in Another Site
+    VPage Select Should Be Open
+    Go To Choose Another Site Page    1
+    Switch To New Window    ${BROWSER ALL PAGES TITLE}
+    Run Keyword If    ${runsInFirefox}    Choose Voice Site In Browse Voice Pages    ${SITE NUMBER}
+    Switch To Main Window
+    TX Chosen Site Number Should Be    ${SITE NUMBER}
+    Save Successfully
+
+Reg_TX_51
+    [Documentation]    User can select 'On Error Only' option in the mail logs \ to \ get email for only error on data page.
+    [Tags]    Regression
+    Choose Log Type    @{LOG TYPES}[1]
+    Log Email Address Should Be    ${LOGIN EMAIL}
+    Input Log Email    zewang1@angel.com
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_TX_52
+    [Documentation]    User can select 'Always' option in the mail logs \ to get email for all \ logs in the data page.
+    [Tags]    Regression
+    Choose Log Type    @{LOG TYPES}[2]
+    Log Email Address Should Be    ${LOGIN EMAIL}
+    Input Log Email    zewang1@angel.com
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_TX_53
+    [Documentation]    User can select 'Never' option in the mail logs \ to not \ get email for logs in the data page.
+    [Tags]    Regression
+    Choose Log Type    @{LOG TYPES}[0]
+    Log Email Address Should Be    ${LOGIN EMAIL}
+    Log Email Address Should Be Readonly
+    Save Successfully

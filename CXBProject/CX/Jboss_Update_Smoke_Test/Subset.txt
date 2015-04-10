@@ -1,0 +1,93 @@
+*** Settings ***
+Suite Setup       run keywords    Voice Page Suite Setup    Maximize Browser Window
+Suite Teardown    run keywords    Delete All Voice Site    Voice Page Suite Teardown For Delete Audio Files    User Log Out CXB    Voice Page Suite Teardown
+Test Teardown     Voice Page Test Teardown
+Resource          ../resource.txt
+
+*** Test Cases ***
+TC_1_CreateMessagePage
+    [Setup]    Create Message Page
+    Input Prompts Text    Some message to test.    1
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+TC_2_CreateCallTransferPage
+    [Setup]    Create Call Transfer Page
+    Transfer Type Should Be    @{TRANSFER TYPES}[0]
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+TC_3_CreateCallQueuePage
+    [Setup]    Create Call Queue Page
+    Input CQ Agent Detail Information    agent1    +8657185292027    11@angel.com    english    yes
+    Save Successfully
+
+TC_4_CreateLogicPage
+    Create Logic Page
+    Input Page Name    ${TEST_NAME}
+    Input Page Number    100
+    Save Page
+    Save Done Tip Should Be Open
+    Go To Site Overview
+    Page Name Should Exist    ${TEST_NAME}
+    Page Number Should Exist    100
+
+TC_5_CreateTransactionPage
+    [Setup]    Create Transaction Page
+    Input Transaction URL    http://www.angel.com
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+TC_6_CreateSchedulePage
+    [Setup]    Create Schedule Page
+    Choose Different Time Zones And Save Page    [GMT -12.0] Etc/GMT+12 - GMT-12:00    [GMT -5.0] EST - Eastern Standard Time    [GMT +5.5] Asia/Kolkata - India Standard Time    [GMT 0.0] Africa/Ouagadougou - Greenwich Mean Time    [GMT +14.0] Pacific/Kiritimati - Line Is. Time
+
+TC_7_AddSiteCmd
+    Click Site Command
+    Select ASR Language In Site Command Page    ${UKENGLISH}
+    Add Site Cmd Number    2
+    Define Site Command    0    ${EMPTY}    1    New Question Page
+    Define Site Command    1    ${EMPTY}    2    New Question Page
+    Save Page
+    Save Done Tip Should Be Open
+
+TC_8_CopyVoiceSite
+    Copy Voice Site    ${SUITE_NAME}    Copied Site
+
+TC_10_CreateQuestionPage
+    [Setup]    Create Question Page
+    Change To Audio    1
+    Click Link Audio Link    1
+    Audio Handler Should Be Open
+    Go To Audio Frame
+    Add Folder    NewFolder
+    Go Out Of Frame
+    Save Successfully
+
+TC_11_ActiveRecreateApiKey
+    [Setup]    Click Api Management
+    Click API Active
+    Api Key Is Not Empty
+    Click New Api
+
+TC_12_SetHomePage
+    Get Domain Code And Page Id by Name    TC_10_CreateQuestionPage
+    Select Home Page    ${PAGE_ID}
+
+TC_13_CreateDataFiles
+    Open Header Tab    ${CXBUILDER_TAB_ACTIVE}
+    CX Builder Page Should Be Open
+    Create New Data File    name    money
+    DateFile Is Created    ${FILE_NAME}
+
+TC_14_ImportDateFiles
+    Open Header Tab    ${CXBUILDER_TAB_ACTIVE}
+    CX Builder Page Should Be Open
+    Import Date File    ${FILE_FILE}
+    Click Import File Save
+    Click Copied Site Refresh
+    DateFile Is Created    test.xls
+
+TC_15_DeleteFiles
+    Suite TearDown To Delete Files
+    User Log Out CXB

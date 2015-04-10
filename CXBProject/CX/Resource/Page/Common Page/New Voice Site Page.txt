@@ -1,0 +1,23 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../../Global Resource.txt
+
+*** Variables ***
+${NEW VOICE SITE NAVI LINK TEXT}    CX Builder > Voice Sites > New Voice Site
+${NEW_VOICE_SITE_NAVI_DIV}    xpath=//*[@id="bodyContainer"]/table/tbody/tr[2]/td[2]
+${NEW VOICE SITE PAGE TITLE}    Angel.com - New Voice Site
+${DEFAULT SITE NAME}    New Site
+${SITE_NAME_TEXT}    name=domainTitle
+${CREATE_BUTTON}    css=input.imgcreatebutton
+
+*** Keywords ***
+Navigation Link Text Should Be
+    [Arguments]    ${expectedNavLinkText}
+    ${actualNavLinkText}=    Get Text    ${NEW_VOICE_SITE_NAVI_DIV}
+    Should Be Equal As Strings    ${expectedNavLinkText}    ${actualNavLinkText}
+
+Input Site Name
+    [Arguments]    ${siteNameTmp}
+    Set Variable    ${SITE NAME}    ${siteNameTmp}
+    Set Global Variable    ${SITE NAME}
+    Input Text    ${SITE_NAME_TEXT}    ${SITE NAME}

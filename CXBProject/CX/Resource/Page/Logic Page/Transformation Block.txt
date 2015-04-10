@@ -1,0 +1,87 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../Common Elements.txt
+Resource          Assignment Block.txt
+
+*** Variables ***
+${TRAN_USE_CONSTANT_IMG}    xpath=//li[@id='blocksInitializer@INDEX@_0VariableLayer']/img
+${TRAN_RIGHT_CONSTANT_TEXT}    name=blocks_@INDEX@_initializers_0_rightConstant
+${TRAN_USE_VAR_IMG}    xpath=//li[@id='blocksInitializer@INDEX@_0ConstantLayer']/img
+${TRAN_RIGHT_VAR_SELECTOR}    id=blocks_@INDEX@_initializers_0_rightVar_varID
+@{VAR OPS}        add    subtract    multiply    divide    append    remove    +space+
+...               length    first    last    reverse    substring    trim
+${TRAN_VAR_OP_SELECTOR}    id=blocks_@INDEX@_initializers_0_operator
+${TRAN_START_POS_TEXT}    name=blocks_@INDEX@_initializers_0_startPosition
+${TRAN_END_POS_TEXT}    name=blocks_@INDEX@_initializers_0_endPosition
+${TRAN_TRAN_USE_CONSTANT_IMG}    xpath=//div[@id='blocksInitializer@INDEX@_0VariableLayer2']/img
+${TRAN_RIGHT_USE_VAR_IMG}    xpath=//div[@id='blocksInitializer@INDEX@_0ConstantLayer2']/img
+
+*** Keywords ***
+Choose Transforamtion Variable Operator
+    [Arguments]    ${value}    ${index}=1
+    ${TRAN_VAR_OP_SELECTOR}    Generate Locator By Decreasing One    ${TRAN_VAR_OP_SELECTOR}    ${index}
+    Click Element    ${TRAN_VAR_OP_SELECTOR}
+    Run Keyword And Ignore Error    Click Element    ${COMMENTS_TEXT}
+    Select From List By Value    ${TRAN_VAR_OP_SELECTOR}    ${value}
+
+Transformation Block Should Be Open
+    [Arguments]    ${index}=1
+    ${TRAN_VAR_OP_SELECTOR}    Generate Locator By Decreasing One    ${TRAN_VAR_OP_SELECTOR}    ${index}
+    ${ASSIGNTO_VAR_SELECTOR}    Generate Locator By Decreasing One    ${ASSIGNTO_VAR_SELECTOR}    ${index}
+    ${ASSIGN_LEFT_VAR_SELECTOR}    Generate Locator By Decreasing One    ${ASSIGN_LEFT_VAR_SELECTOR}    ${index}
+    ${TRAN_RIGHT_CONSTANT_TEXT}    Generate Locator By Decreasing One    ${TRAN_RIGHT_CONSTANT_TEXT}    ${index}
+    Wait Until Page Contains Element    ${TRAN_VAR_OP_SELECTOR}
+    List Selection Should Be    ${ASSIGNTO_VAR_SELECTOR}    @{SITE VARIABLES}[0]
+    List Selection Should Be    ${ASSIGN_LEFT_VAR_SELECTOR}    @{SITE VARIABLES}[0]
+    List Selection Should Be    ${TRAN_VAR_OP_SELECTOR}    @{VAR OPS}[0]
+    Page Should Contain Element    ${TRAN_RIGHT_CONSTANT_TEXT}
+
+Input Transformation Right Constant
+    [Arguments]    ${con}    ${index}=1
+    ${TRAN_RIGHT_CONSTANT_TEXT}    Generate Locator By Decreasing One    ${TRAN_RIGHT_CONSTANT_TEXT}    ${index}
+    Input Text    ${TRAN_RIGHT_CONSTANT_TEXT}    ${con}
+
+Right Constant Input Should Not Be Visible
+    [Arguments]    ${index}=1
+    ${TRAN_RIGHT_CONSTANT_TEXT}    Generate Locator By Decreasing One    ${TRAN_RIGHT_CONSTANT_TEXT}    ${index}
+    Element Should Not Be Visible    ${TRAN_RIGHT_CONSTANT_TEXT}
+
+Input Transformation Substring Start Pos
+    [Arguments]    ${start}    ${index}=1
+    ${TRAN_START_POS_TEXT}    Generate Locator By Decreasing One    ${TRAN_START_POS_TEXT}    ${index}
+    Input Text    ${TRAN_START_POS_TEXT}    ${start}
+
+Input Transformation Substring End Pos
+    [Arguments]    ${end}    ${index}=1
+    ${TRAN_END_POS_TEXT}    Generate Locator By Decreasing One    ${TRAN_END_POS_TEXT}    ${index}
+    Input Text    ${TRAN_END_POS_TEXT}    ${end}
+
+Change Transformation Variable To Constant
+    [Arguments]    ${index}=1
+    ${TRAN_USE_CONSTANT_IMG}    Generate Locator By Decreasing One    ${TRAN_USE_CONSTANT_IMG}    ${index}
+    Click Element    ${TRAN_USE_CONSTANT_IMG}
+
+Choose Transformation Middle Variable Randomly
+    [Arguments]    ${index}=1
+    ${option}=    Get Random Option From X    ${SITE VARIABLES}    1
+    Choose Assignment Right Variable By Value    ${option}    ${index}
+
+Transformation SubString Start Should Be
+    [Arguments]    ${value}    ${index}=1
+    ${TRAN_START_POS_TEXT}    Generate Locator By Decreasing One    ${TRAN_START_POS_TEXT}    ${index}
+    Textfield Value Should Be    ${TRAN_START_POS_TEXT}    ${value}
+
+Change Transformation Right Variable To Constant
+    [Arguments]    ${index}=1
+    ${TRAN_RIGHT_USE_VAR_IMG}    Generate Locator By Decreasing One    ${TRAN_RIGHT_USE_VAR_IMG}    ${index}
+    Click Element    ${TRAN_RIGHT_USE_VAR_IMG}
+
+Change Transformation Constant To Variable
+    [Arguments]    ${index}=1
+    ${TRAN_USE_VAR_IMG}    Generate Locator By Decreasing One    ${TRAN_USE_VAR_IMG}    ${index}
+    Click Element    ${TRAN_USE_VAR_IMG}
+
+Change Transformation Right Constant To Variable
+    [Arguments]    ${index}=1
+    ${TRAN_RIGHT_USE_VAR_IMG}    Generate Locator By Decreasing One    ${TRAN_RIGHT_USE_VAR_IMG}    ${index}
+    Click Element    ${TRAN_RIGHT_USE_VAR_IMG}

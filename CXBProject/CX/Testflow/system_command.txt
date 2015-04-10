@@ -1,0 +1,36 @@
+*** Settings ***
+Resource          ../resource.txt
+
+*** Keywords ***
+Select UK System Command
+    Select Systemcmd for callers    ${UK_ENGLISHCALLER}    2
+    Select Systemcmd for callers    ${UK_ENGLISHCALLER}    3
+    Select Systemcmd for callers    ${UK_ENGLISHCALLER}    4
+    Select Systemcmd for callers    ${UK_ENGLISHCALLER}    5
+    Save Page
+    Save Done Tip Should Be Open
+    Save&Exit Page
+
+Select CA System Command
+    Select Systemcmd for callers    ${CANDIAN_FRENCHCALLER}    2
+    Select Systemcmd for callers    ${CANDIAN_FRENCHCALLER}    3
+    Select Systemcmd for callers    ${CANDIAN_FRENCHCALLER}    4
+    Select Systemcmd for callers    ${CANDIAN_FRENCHCALLER}    5
+    Remove CA System Keyword
+    Save Page
+    Save Done Tip Should Be Open
+    Save&Exit Page
+
+Remove CA System Keyword
+    Input System Command Keyword    ${CANDIAN_FRENCHCALLER}    2    ${EMPTY}
+    Input System Command Keyword    ${CANDIAN_FRENCHCALLER}    3    ${EMPTY}
+    Input System Command Keyword    ${CANDIAN_FRENCHCALLER}    4    ${EMPTY}
+
+Select English System Command
+    Select Systemcmd for callers    ${ENGLISHCALLER}    2
+    Select Systemcmd for callers    ${ENGLISHCALLER}    3
+    Select Systemcmd for callers    ${ENGLISHCALLER}    4
+    Select Systemcmd for callers    ${ENGLISHCALLER}    5
+    Save Page
+    Save Done Tip Should Be Open
+    Save&Exit Page

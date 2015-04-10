@@ -1,0 +1,61 @@
+*** Settings ***
+Resource          ../../../resource.txt
+
+*** Variables ***
+${RESPONSE_FILTERS_PRE_TEXT}    name=response_formattedPreKeywords
+${RESPONSE_FILTERS_POST_TEXT}    name=response_formattedPostKeywords
+
+*** keyword ***
+Log Email Address Should Be
+    [Arguments]    ${text}
+    Textfield Value Should Be    ${LOG_EMAIL_TEXT}    ${text}
+
+Log Email Text Should Be Disable
+    Run Keyword And Expect Error    *    Input Log Email    test@angel.com
+
+Log Email Address Should Not Be
+    [Arguments]    ${locator}    ${text}
+    Textfield Value Should Not Be    ${LOG_EMAIL_TEXT}    ${text}
+
+Data Error Page Link Should Exist
+    Page Should Contain Link    Data Error Page
+
+Error Destination Should Contain All Pages
+    Dropdown Should Contain List    ${ERR_DEST_SELECTOR}    ${NEW VPAGES}
+
+Error Destination Should Contain
+    [Arguments]    ${value}
+    Dropdown Should Contain    ${ERR_DEST_SELECTOR}    ${value}
+
+Choose Error Destination Page
+    [Arguments]    ${value}
+    Select From List By Label    ${ERR_DEST_SELECTOR}    ${value}
+
+Error Destination Page Should Be
+    [Arguments]    ${value}
+    List Selection Should Be    ${ERR_DEST_SELECTOR}    ${value}
+
+Click Exceptional Situations Link
+    Click Link    Exceptional Situations
+
+Log Email Address Should Be Readonly
+    Element Should Be Readonly    ${LOG_EMAIL_TEXT}
+
+Input Response Filters Pre Value
+    [Arguments]    ${value}
+    Input Text    ${RESPONSE_FILTERS_PRE_TEXT}    ${value}
+
+Input Response Filters Post Value
+    [Arguments]    ${value}
+    Input Text    ${RESPONSE_FILTERS_POST_TEXT}    ${value}
+
+Response Filters Pre Value Should Be
+    [Arguments]    ${value}
+    Textfield Value Should Be    ${RESPONSE_FILTERS_PRE_TEXT}    ${value}
+
+Response Filters Post Value Should Be
+    [Arguments]    ${value}
+    Textfield Value Should Be    ${RESPONSE_FILTERS_POST_TEXT}    ${value}
+
+Click Working with Keywords Link
+    Click Link    Working with Keywords

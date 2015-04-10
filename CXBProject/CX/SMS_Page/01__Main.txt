@@ -1,0 +1,115 @@
+*** Settings ***
+Test Setup        Create SMS Page
+Resource          ../resource.txt
+
+*** Test Cases ***
+Reg_SMS_01
+    [Documentation]    To field \ - variable,1. Check if the variable field is the default in "To" field and the default variable value is Caller ID"
+    ...    2. Check if "Caller ID" "New Variable" "Select a variable" and "existed variables" in the dropdown list. \ \ 3. Choose variable and save it without any error
+    [Tags]    Regression
+    [Setup]    Create One Variable    test
+    Go To Site Overview
+    Create SMS Page
+    SMS Variable Should Be Contained    test
+    Caller ID Should Be Selected
+    Select a variable Should Be Existed
+    New Variable Should Be Existed
+    Save Successfully
+
+Reg_SMS_02
+    [Documentation]    To field \ - static value.1. Click the switch icon and the static value field is displayed 2. Fill the digits in the field and it only allows 10 digits and save it
+    [Tags]    Regression
+    Click To_Switch Icon
+    Static value field is displayed
+    Input Less than 10 digits    1234
+    save page
+    Red notice of 10 digits should display    Your Phone Number must be exactly 10 digits.
+    Go To Site Overview
+    Verify Page Title    ${VOICE SITE PAGE TITLE}
+    Page Number Should Not Exist    ${PAGE NUMBER}
+
+Reg_SMS_03
+    [Documentation]    To field \ - Link ?，Click the link ? \ \ And a new page is displayed
+    [Tags]    Regression
+    Click Link ?
+    New Window Title Should Be    SMS Page / IVR Wiki
+    Close Popup Window
+    Window Title Should Be    Angel.com - SMS Page
+
+Reg_SMS_04
+    [Documentation]    Text Message field - static value field,1. Check if the static value field is the default in "Text message" field and the default value is "Type your text message content here or use a variable"2. Fill the allowed characters in the field and the numbers of the characters is limited to 160 charaters \ 3. Save it without any errror
+    [Tags]    Regression
+    Static Value of text message should be visible
+    Default value of Text Message should be Correct
+
+Reg_SMS_05
+    [Documentation]    Text Message field \ \ - variable,1. Click the switch icon and the static value field is displayed 2. Check if "Caller ID" "New Variable" "Select a variable" and "existed variables" in the dropdown list. \ 3. Choose variable and save it without any error
+    [Tags]    Regression
+    [Setup]    Create One Variable    test1
+    Go To Site Overview
+    Create SMS Page
+    Click Text_Switch Icon
+    Value Filed should display
+    SMS Text Variable Should Be Contained    test1
+    Select a variable of text Should Be Existed
+    New Variable of text Should Be Existed
+
+Reg_SMS_06
+    [Documentation]    Text Message field \ \ - Link "Character limit?",Click the link ? \ \ And a new page is displayed
+    [Tags]    Regression
+    Click Link Character Limit
+    New Window Title Should Be    SMS Page / IVR Wiki
+    Close Popup Window
+    Window Title Should Be    Angel.com - SMS Page
+
+Reg_SMS_07
+    [Documentation]    Run Test.1. Choose static value in both "To" and "Text message" fields 2. "Run test" is displayed \ \ \ 3. Fill valid number and some characters in the two fields and Click "Run test" \ and a new result page is displayed
+    [Tags]    Regression
+    Click To_Switch Icon
+    Static value field is displayed
+    Run Test Should Be Visible
+    Input 10 Digits    0123456789
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+    Click Run Test
+    Test Results Page Should Display
+    Close Popup Window
+    Window Title Should Be    Angel.com - SMS Page
+
+Reg_SMS_08
+    [Documentation]    Run Test - HTTP Response Codes/ Close Window.1. Click the link \ And a new page is displayed 2. \ Click "Close window" and it is closed
+    [Tags]    Regression
+    Click To_Switch Icon
+    Static value field is displayed
+    Run Test Should Be Visible
+    Input 10 Digits    0123456789
+    SAVE PAGE
+    Save Done Tip Should Be Open
+    Click Run Test
+    Test Results Page Should Display
+    Click Link Close Window
+    sleep    4
+    Test Results Window Should Be Closed
+    [Teardown]    Voice Page Test Teardown
+
+Reg_SMS_09
+    [Documentation]    Link - SMS Page Help.Click the link ? \ \ And a new page is displayed
+    [Tags]    Regression
+    Click Link SMS Page Help
+    Wait Until Keyword Succeeds    10sec    0.5sec    New Window Title Should Be    SMS Page / IVR Wiki
+    Close Popup Window
+    Window Title Should Be    Angel.com - SMS Page
+
+Reg_SMS_10
+    [Documentation]    If sms was sent - Go to field,1. Check if there are some errors in the dropdown list \ 2. Set pages as go to pages and save it without any error
+    [Tags]    Regression
+    Sent Dropdown List Should Contain All Pages
+    save page
+    Save Done Tip Should Be Open
+
+Reg_SMS_11
+    [Documentation]    If sms was not sent - Go to field.1. Check if there are some errors in the dropdown list 2. Set pages as go to pages and save it without any error
+    [Tags]    Regression
+    No Sent Dropdown List Should Contain All Pages
+    save page
+    Save Done Tip Should Be Open

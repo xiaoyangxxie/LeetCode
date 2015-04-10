@@ -1,0 +1,74 @@
+*** Settings ***
+Test Teardown     Voice Page Test Teardown
+Resource          ../resource.txt
+
+*** Test Cases ***
+VM_Main
+    [Tags]    imageCompare    Regression
+    [Setup]    Create Voice Mail Page
+    Compare The Page
+
+VM_NoInput
+    [Tags]    imageCompare    Regression
+    [Setup]    Run Keywords    Create Voice Mail Page    AND    Open No Input Tab    AND    No Input Tab Should Be Open
+    Compare The Page
+
+VM_NoMatch
+    [Tags]    imageCompare    Regression
+    [Setup]    Run Keywords    Create Voice Mail Page    AND    Open No Match Tab    AND    No Match Tab Should Be Open
+    Compare The Page
+
+VM_Confirmation
+    [Tags]    imageCompare    Regression
+    [Setup]    Run Keywords    Create Voice Mail Page    AND    Open Confirmation Tab    AND    Confirmation Tab Should Be Open
+    Compare The Page
+
+VM_AsrSettings
+    [Tags]    imageCompare    Regression
+    [Setup]    Run Keywords    Create Voice Mail Page    AND    Open ASR Settings Tab
+    Compare The Page
+
+VM_AdvancedOptions
+    [Tags]    imageCompare    Regression
+    [Setup]    Run Keywords    Create Voice Mail Page    AND    Open Advanced Option Tab    AND    VM Advanced Option Tab Should Be Open
+    Compare The Page
+
+SMS_Main
+    [Tags]    imageCompare    Regression
+    [Setup]    Create SMS Page
+    Compare The Page
+
+SMS_AdvancedOptions
+    [Tags]    imageCompare    Regression
+    [Setup]    Run Keywords    Create SMS Page    AND    Open Advanced Option Tab
+    Compare The Page
+
+QP_Main
+    [Tags]    Regression
+    [Setup]    Create Question Page
+    Compare The Page
+
+QP_NoInput
+    [Tags]    Regression
+    [Setup]    Run Keywords    Create Question Page    AND    Open No Input Tab    AND    No Input Tab Should Be Open
+    Compare The Page
+
+QP_NoMatch
+    [Tags]    Regression
+    [Setup]    Run Keywords    Create Question Page    AND    Open No Match Tab    AND    No Match Tab Should Be Open
+    Compare The Page
+
+QP_Confirmation
+    [Tags]    Regression
+    [Setup]    Run Keywords    Create Question Page    AND    Open Confirmation Tab
+    Compare The Page
+
+QP_AsrSettings
+    [Tags]    Regression
+    [Setup]    Run Keywords    Create Question Page    AND    ASR Settings Test Set Up
+    Compare The Page
+
+QP_AdvancedOptions
+    [Tags]    Regression
+    [Setup]    Run Keywords    Create Question Page    AND    Open Advanced Option Tab
+    Compare The Page

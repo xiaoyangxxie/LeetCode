@@ -1,0 +1,33 @@
+*** Settings ***
+Library           SSHLibrary
+Library           OperatingSystem
+Resource          ../config.txt
+
+*** Keywords ***
+SSH To Server
+    Open Connection    ${SSH_SERVER}
+    ${output}=    Login    ${SSH_SERVER_USER}    ${SSH_SERVER_PASSWD}
+
+Start NGTT
+    [Arguments]    ${suite}
+    SSH To Server
+    Execute Command    autoServer.pl -i ${suite} \ --group
+    Close Connection
+
+Send Report
+    [Arguments]    ${suite}
+    SSH To Server
+    Execute Command    reportSumResult.pl -u xie.yang@genesys.com -c \ "${suite}"
+
+NGTT Init
+    [Arguments]    ${suite}
+    SSH To Server
+    Execute Command    autoServer.pl -i ${suite} --init
+
+NGTT Init MutiAsr
+    NGTT Init    Muti_ASR_SiteCmd
+
+Send Report Argument
+    [Arguments]    ${emaillist}    ${suite}
+    SSH To Server
+    Execute Command    reportSumResult.pl -u ${emaillist} -c \ "${suite}"

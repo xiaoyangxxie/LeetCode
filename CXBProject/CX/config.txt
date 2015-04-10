@@ -1,0 +1,9 @@
+*** Variables ***
+${BASE URL}       https://cha-sb.angel-qe.com/login/login-page.jsp    # http://10.197.55.159:8080/login/login-page.jsp?LOGGING_INTO_CALL_QUEUE=null&domainCode=null&pageCode=null&message=&etl.failure.message=null&messageColor=null
+${BROWSER}        ff    #optional, ff/ie/chrome, default--ff
+${LOGIN EMAIL}    auto@genesys.com    # required
+${LOGIN PASSWORD}    1234QWER    # requiredGenesys1ctc
+${ENABLE PROFILE}    no    #required, yes/no, yes to use proxy
+${SCREENSHOT ON ERROR}    yes    # optional, yes/no, default--yes
+${EXECUTE SPEED}    0    # optional, define with seconds
+${RECORD OR TEST}    r    #r/record for record, others for test

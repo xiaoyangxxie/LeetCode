@@ -1,0 +1,71 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../../../resource.txt
+
+*** Variables ***
+${CONFIRMATION_THRESHOLD_TEXT}    id=vfconfirmationConfidenceDiv
+${CONFIRM_PROMPT_DIV}    confirmationLayer
+
+*** Keywords ***
+Confirm Recording Confirmation
+    Select Radio Button    ${RECORDING_CONFIRM_RADIO}    CONFIRMATION_ON
+
+Do Not Recording Confirm Radio Should Be Selected
+    Wait Until Keyword Succeeds    5sec    0.5sec    Radio Button Should Be Set To    ${RECORDING_CONFIRM_RADIO}    CONFIRMATION_OFF
+
+Recording Confirm Radio Should Be Selected
+    Radio Button Should Be Set To    ${RECORDING_CONFIRM_RADIO}    CONFIRMATION_ON
+
+Confirmation Tab Should Be Open
+    Do Not Recording Confirm Radio Should Be Selected
+
+VM Confirmation Prompts Block Should Not Be Visible
+    Element Should Not Be Visible    DottedLineSpacerTable
+    Element Should Not Be Visible    link= Link Audio
+    Element Should Not Be Visible    link= Play
+
+Confirmation Prompts Block Should Be Visible
+    Wait Until Keyword Succeeds    10s    1s    Element Should Be Visible    ${CONFIRM_PROMPT_DIV}
+
+Click How To Replace Link
+    [Arguments]    ${no}=1
+    Click Visible Element    link=How to Replace    ${no}
+
+Get Confirmation Prompt Audio File
+    [Arguments]    ${no}=1
+    ${filename}=    Get Visible Element Value    ${VM_CONFIRM_PROMPTS_AUDIO_FILE_TEXT}    ${no}
+    [Return]    ${filename}
+
+Confirmation Prompt Audio File Should Be
+    [Arguments]    ${filename}    ${no}=1
+    Visible Element Value Should Be    ${VM_CONFIRM_PROMPTS_AUDIO_FILE_TEXT}    ${filename}    ${no}
+
+Click Reset To Default Values Link
+    [Arguments]    ${no}=1
+    Click Visible Element    link=Reset to default values    ${no}
+
+Select Ques Recording Confirmation As Confirm
+    Select Radio Button    response_wantConfirm    TRUE
+
+Select Ques Recording Confirmation As Do Not Confirm
+    Select Radio Button    response_wantConfirm    FALSE
+
+Set Confirmation Threshold To
+    [Arguments]    ${value}
+    Execute Javascript    window.document.getElementById("vfconfirmationConfidenceDiv").value='${value}'
+    Save Page
+
+Confirmation Threshold Value Should Be
+    [Arguments]    ${value}
+    Wait Until Keyword Succeeds    30s    1s    Element Value Should Be    name=confirmationConfidence    ${value}
+
+VM Confirmation Prompts Block Should Be Visible
+    Wait Until Keyword Succeeds    10s    1s    Element Should Be Visible    ${VM_CONFIRM_PROMPT_DIV}
+
+Element Value Should Be
+    [Arguments]    ${locator}    ${expected}
+    ${value}    Get Value    ${locator}
+    Should Be Equal As Strings    ${value}    ${expected}
+
+Confirmation Prompts Block Should Not Be Visible
+    Element Should Not Be Visible    ${CONFIRM_PROMPT_DIV}

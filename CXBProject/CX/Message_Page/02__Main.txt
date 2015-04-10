@@ -1,0 +1,168 @@
+*** Settings ***
+Test Setup        Create Message Page
+Resource          ../resource.txt
+
+*** Test Cases ***
+Reg_Msg_01
+    [Documentation]    Create Message Page, enter text message and save, then the system should allow to save without any error.
+    [Tags]    Regression
+    Input Prompts Text    Some message to test.    1
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_Msg_02
+    [Documentation]    Create message page, click the *Arrow* link, then the user can link any audio files to play.
+    [Tags]    Regression
+    Change To Audio    1
+    Link Audio File To Page    ${AUDIO FILE}    1
+    Save Successfully
+
+Reg_Msg_03
+    [Documentation]    Create message page, click the *Arrow* link, link audio files to play, and click *Clear* link to clear the audio file.
+    [Tags]    Regression
+    Change To Audio    1
+    Link Audio File To Page    ${AUDIO FILE}    1
+    Clear Audio File    1
+    Save Successfully
+
+Reg_Msg_04
+    [Documentation]    Create message page, click the *Arrow* link, link audio files to play, and click *Play* link to play the wav file.
+    [Tags]    Debug    chrome
+    Change To Audio    1
+    Link Audio File To Page    ${AUDIO FILE}    1
+    Play Audio File    Sent.wav    1
+    Save Successfully
+
+Reg_Msg_05
+    [Documentation]    Create message page, click the *Arrow* link, click the *Link Audio* link, then the system should navigate to page where user can select the audio files.
+    [Tags]    Regression
+    Change To Audio    1
+    Click Link Audio Link    1
+    Audio Handler Should Be Open
+    Save Successfully
+
+Reg_Msg_06
+    [Documentation]    Create message page, click the *Arrow* link, click the *Link Audio* link, click the *Browser* button, and the system should allow to browse file system to choose audio file.
+    [Tags]    Regression
+    Change To Audio    1
+    Click Link Audio Link    1
+    Audio Handler Should Be Open
+    Go To Audio Frame
+    Choose Audio File    ${AUDIO FILE}
+    Go Out Of Frame
+    Save Successfully
+
+Reg_Msg_07
+    [Documentation]    Create message page, click the *Arrow* link, click the *Link Audio* link, input folder name and click *Add* button to add folder, system should allow to add folder without any error.
+    [Tags]    Regression
+    Change To Audio    1
+    Click Link Audio Link    1
+    Audio Handler Should Be Open
+    Go To Audio Frame
+    Add Folder    NewFolder
+    Go Out Of Frame
+    Save Successfully
+
+Reg_Msg_08
+    [Documentation]    Create message page, click the *Arrow* link, click the *Link Audio* link, upload audio file and the system should allow to upload without any error.
+    [Tags]    Regression
+    Change To Audio    1
+    Click Link Audio Link    1
+    Audio Handler Should Be Open
+    Go To Audio Frame
+    Upload Sound File    ${AUDIO FILE}
+    Go Out Of Frame
+    Save Successfully
+
+Reg_Msg_09
+    [Documentation]    Create message page, click the *Arrow* link, click the *Link Audio* link, upload audio file and then click *Delete* button to delete the audio file.
+    [Tags]    Regression
+    Change To Audio    1
+    Click Link Audio Link    1
+    Audio Handler Should Be Open
+    Go To Audio Frame
+    Upload Sound File    ${AUDIO FILE}
+    Delete Audio File    ${filename}
+    Go Out Of Frame
+    Save Successfully
+
+Reg_Msg_10
+    [Documentation]    Create message page, click the *Arrow* link, click the *Link Audio* link, add folder, and upload audio file in the folder, then click *Folder Up* button to go to the higher level folder.
+    [Tags]    Regression    PEP-424
+    Change To Audio    1
+    Click Link Audio Link    1
+    Audio Handler Should Be Open
+    Go To Audio Frame
+    Add Folder    NewFolder1
+    Go To Folder    NewFolder1
+    Upload Sound File    ${AUDIO FILE}
+    Go Out Of Frame
+    Go To Audio Frame
+    Folder Up
+    Current Folder Should Be    /
+    Go Out Of Frame
+    Save Successfully
+
+Reg_Msg_11
+    [Documentation]    Create message page, click the *Arrow* link, click the *Link Audio* link, and click *Back* button, system should navigate to the prompts table.
+    [Tags]    Regression
+    Change To Audio    1
+    Click Link Audio Link    1
+    Audio Handler Should Be Open
+    Go To Audio Frame
+    Go Back To Audio Block    1
+    Prompts Table Should Be Visible
+    Save Successfully
+
+Reg_Msg_12
+    [Documentation]    Create message page, click *Audio* button, new audio prompt block should be open.
+    [Tags]    Regression
+    Add Audio Prompt Block    2
+    Save Successfully
+
+Reg_Msg_13
+    [Documentation]    Create message page, click *Text-to-Speech* button, new tts prompt block should be open.
+    [Tags]    Regression
+    Add TTS Prompt Block    2
+    Save Successfully
+
+Reg_Msg_14
+    [Documentation]    Create message page, click *Variable* button, new variable line should be open.
+    [Tags]    Regression
+    Add Variable Prompt Block    2
+    Save Successfully
+
+Reg_Msg_15
+    [Documentation]    Create message page, click *Using Variables* link, new window working with using variables shouel be open.
+    [Tags]    Regression
+    Click Using Variables Link
+    Using Variable Window Should Be Open
+    Run Keyword If    ${RunsInFirefox}    Close Current Window
+    Switch To Main Window
+
+Reg_Msg_16
+    [Documentation]    Create message page, add audio prompt, tts prompt, and variable prompt, then select the checkboxes of these blocks, click *Delete* button, system should allow to delete without any error.
+    [Tags]    Regression
+    Add Audio Prompt Block    2
+    Add TTS Prompt Block    3
+    Add Variable Prompt Block    4
+    Select Audio Prompts Checkbox    2
+    Select Audio Prompts Checkbox    3
+    Select Audio Prompts Checkbox    4
+    Click Delete Button
+    Save Successfully
+
+Reg_Msg_18
+    [Documentation]    Create message page, select the action *Listen for Site & Page Commands*, asr commands block should be open.
+    [Tags]    Regression
+    Select Action Type    @{ACTIONS}[1]
+    ASR Commands Block Should Be Open
+    Save Page
+    Red Notice Should Display    Please specify a keyword or keypad entry for each link.
+
+Reg_Msg_20
+    [Documentation]    Create message page, select the action *Go to Designated Page*, designated page selector should be open.
+    [Tags]    Regression
+    Select Action Type    @{ACTIONS}[3]
+    GoToDesignated Page Should Be    Home Page
+    Save Successfully

@@ -1,0 +1,69 @@
+*** Settings ***
+Library           S2ExLibrary
+Library           Utils
+Library           String
+Library           Selenium2Library
+Resource          ../../../resource.txt
+
+*** Variables ***
+${LEXEE_BUTTON}    id=voiceBundlePushButton
+${DIAGNOSE_ICON}    css=input[alt="Run Site Diagnostics"]
+${VOICE SITE PAGE TITLE}    Angel.com - Site Overview
+${PAGE_TYPE_SELECTOR}    name=pageTypeSelection
+${NEW_GROUP_BUTTON}    css=input.buttonAddCx
+${ASSIGN_GROUP_BUTTON}    css=input.buttonAssignCx
+${PAGE_CHECKBOX}    id=page${PAGE NUMBER}
+${SWITCH_HOME_PAGE_LINK}    link=Switch Home Page
+${WHAT'S_THIS_LINK}    link=What's This
+${EXPAND_IMG}     css=input[alt="Expand Pages"]
+
+*** Keywords ***
+Site Overview Should Be Open
+    Wait Util Page Fully Loaded
+    Title Should Be    ${VOICE SITE PAGE TITLE}
+    Page Should Contain Element    ${CXBUILDER_TAB_ACTIVE}
+    Site Name Should Be    ${SITE NAME}
+    @{PAGE NUMBERS}=    Get Text List From Elements    tag=span    pageNum_\\d
+    ${PAGE NUMBER}=    Get Page Number From List    ${PAGE NUMBERS}
+    Set Global Variable    ${PAGE NUMBER}
+    ${SITE NUMBER}=    Get Site Number
+    Set Global Variable    ${SITE NUMBER}
+
+Get Home Page
+    ${homePageText}=    Get Text    id=homeIndexTitle
+    [Return]    ${homePageText}
+
+Home Page Text Should Be
+    [Arguments]    ${pageNumber}    ${pageName}
+    ${actualText}=    Get Home Page
+    ${expectedText}=    Catenate    ${pageNumber}    -    ${pageName}
+    Should Be Equal As Strings    ${actualText}    ${expectedText}
+
+Site Name Should Be
+    [Arguments]    ${expectedName}
+    ${site name}=    Get Element Attribute    domainTitle@value
+    ${site name}=    Replace String Using Regexp    ${site name}    \\+    ${SPACE}
+    Should Be Equal As Strings    ${expectedName}    ${site name}
+
+Page Number Should Exist
+    [Arguments]    ${pageNumber}
+    ${pageNumberLocator}    Catenate    SEPARATOR=    css=span[id="pageNum_    ${pageNumber}    "]
+    Page Should Contain Element    ${pageNumberLocator}
+
+Page Number Should Not Exist
+    [Arguments]    ${pageNumber}
+    ${pageNumberLocator}    Catenate    SEPARATOR=    css=span[id="pageNum_    ${pageNumber}    "]
+    Page Should Not Contain Element    ${pageNumberLocator}
+
+Page Name Should Exist
+    [Arguments]    ${pageName}
+    Page Should Contain Link    ${pageName}
+
+Choose Voice Page
+    [Arguments]    ${value}
+    Set Selenium Implicit Wait    0
+    Wait Until Keyword Succeeds    10sec    0.5sec    Select From List By Label    ${PAGE_TYPE_SELECTOR}    ${SPACE}${SPACE}${value}
+    Set Selenium Implicit Wait    ${IMPLICT WAIT}
+
+Comments Should Exist
+    Page Should Contain image    /images/icons/msg.gif

@@ -1,0 +1,48 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../Common Elements.txt
+
+*** Variables ***
+${NO_ANSWER_AUDIO_FILE_TEXT}    name=noAnswer_filetag
+${NO_ANSWER_DEST_PAGE_SELECTOR}    name=singleDestination0SelectBox
+${LINE_IS_BUSY_AUDIO_FILE_TEXT}    name=lineBusy_filetag
+${TRANSFER_TIME_IS_UP_AUDIO_FILE_TEXT}    name=transferTimeUp_filetag
+${CALL_COMPLETES_AUDIO_FILE_TEXT}    name=callComplete_filetag
+${TRANSFER_TIME_IS_UP_DEST_PAGE_SELECTOR}    name=TransferTimeUp0SelectBox
+${CALL_COMPLETES_DEST_PAGE_SELECTOR}    name=CallComplete0SelectBox
+${LINE_IS_BUSY_DEST_PAGE_SELECTOR}    name=LineBusy0SelectBox
+${USE_MULTIPLE_DEST_LINK}    link=Use Multiple Destinations
+${NO_ANSWER_MSG_TEXT}    name=noAnswer_message
+
+*** Keywords ***
+Open Call Scenarios Tab
+    Open Setting Tab    @{SETTINGS_BOX_TABS}[6]    # Open Call Scenarios Tab
+
+Call Scenarios Tab Should Be Open
+    Wait Until Keyword Succeeds    5sec    0.5sec    Element Should Be Visible    ${NO_ANSWER_AUDIO_FILE_TEXT}
+
+Call Scenarios Select No Answer Destination Page
+    [Arguments]    ${page}
+    Select From List By Label    ${NO_ANSWER_DEST_PAGE_SELECTOR}    ${page}
+
+Call Scenarios Select Line Busy Destination Page
+    [Arguments]    ${page}
+    Select From List By Label    ${LINE_IS_BUSY_DEST_PAGE_SELECTOR}    ${page}
+
+Call Scenarios Select Transfer Time Up Destination Page
+    [Arguments]    ${page}
+    Select From List By Label    ${TRANSFER_TIME_IS_UP_DEST_PAGE_SELECTOR}    ${page}
+
+Call Scenarios Select Call Completes Destination Page
+    [Arguments]    ${page}
+    Select From List By Label    ${CALL_COMPLETES_DEST_PAGE_SELECTOR}    ${page}
+
+Click Use Multiple Destination Link
+    [Arguments]    ${no}=1
+    Click Visible Element    ${USE_MULTIPLE_DEST_LINK}    ${no}
+
+Line Is Busy Dest Selector Should Be Visible
+    Wait Until Keyword Succeeds    5sec    0.5sec    Element Should Be Visible    ${LINE_IS_BUSY_DEST_PAGE_SELECTOR}
+
+No Answer TTS Block Should Be Visible
+    Wait Until Keyword Succeeds    5sec    0.5sec    Element Should Be Visible    ${NO_ANSWER_MSG_TEXT}

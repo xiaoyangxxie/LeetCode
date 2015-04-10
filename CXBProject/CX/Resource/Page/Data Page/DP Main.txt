@@ -1,0 +1,263 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../../../resource.txt
+
+*** Variables ***
+${DP_DATA_VARIABLE}    id=writers_@INDEX@_varRef_varID
+${DP_UPDATE_DATA_COLUMN}    name=writers_@INDEX@_internalColumnName
+${DP_DATA_CHECKBOX}    xpath=(//input[@name='writersToBeDeleted'])[@INDEX@]
+${DP_DESTINATION}    name=dataSuccess0SelectBox
+${DP_UPDATE_ROW}    name=useRow
+${DP_UPDATE_ROW_COLUMN}    finders_@INDEX@_internalColumnName
+${DP_UPDATE_ROW_VARIABLE}    id=finders_@INDEX@_varRef_varID
+${DP_UPDATE_ROW_TEST_VALUE_TEXT}    name=finders_@INDEX@_testValue
+${DP_UPDATE_ROW_CHECKBOX}    xpath=(//input[@name='findersToBeDeleted'])[@INDEX@]
+${DP_ADD_CONDITION}    name=Submit623
+${DP_UPDATE_ROW_IF_NO_ROW_FOUND_CHECKBOX}    name=checkbox24223223232
+${DP_NO_ROW_FOUND_DESTINATION}    noDataFound0SelectBox
+${DP_LOAD_DATA_COLUMN}    name=loadVariables_0_internalColumnName
+${DP_LOAD_DATA_CHECKBOX}    xpath=(//input[@name='loadersToBeDeleted'])[@INDEX@]
+${DP_LOAD_DATA_VARIABLE}    id=loadVariables_@INDEX@_varID
+
+*** Keywords ***
+DP Put Data In Radio Button Should Be Selected
+    Radio Button Should Be Set To    subType    PUT_DATA_IN
+
+Select DP Get Data Out Radio button
+    Select Radio Button    subType    GET_DATA_OUT
+
+Select DP Put Data In Radio button
+    Select Radio Button    subType    PUT_DATA_IN
+
+DP Put Data In Radio Button Should Not Be Selected
+    Radio Button Should Not Be Set To    subType    PUT_DATA_IN
+
+DP Get Data Out Radio Button Should Be Selected
+    Radio Button Should Be Set To    subType    GET_DATA_OUT
+
+DP Get Data Out Radio Button Should Not Be Selected
+    Radio Button Should Not Be Set To    subType    GET_DATA_OUT
+
+Create DP Data File
+    [Arguments]    ${fileName}    ${Column1}    ${Column2}    ${Column3}    ${Column4}
+    Click CX Builder Active Tab
+    Click Create New Data File Link
+    Input Data File Name    ${fileName}
+    Input Data File Column Heading    ${Column1}
+    Click Add Column Button
+    Click Add Column Button
+    Click Add Column Button
+    Input Data File Column Heading    ${Column2}    2
+    Input Data File Column Heading    ${Column3}    3
+    Input Data File Column Heading    ${Column4}    4
+    Click Data File Save Button
+    Go Back To Data Page
+
+Create DP Data File If Not Exist
+    [Arguments]    ${fileName}    ${Column1}=DPCol1    ${Column2}=DPCol2    ${Column3}=DPCol3    ${Column4}=DPCol4
+    [Documentation]    create Data File with 4 Column
+    ${status}    Run Keyword And Return Status    Dropdown Should Contain    id=sheetID    ${fileName}
+    Run Keyword If    ${status}==False    Create DP Data File    ${fileName}    ${Column1}    ${Column2}    ${Column3}
+    ...    ${Column4}
+    ${DPCol}    Create List    ${Column1}    ${Column2}    ${Column3}    ${Column4}
+    Set Test Variable    ${DPCol}
+
+Data File List Should Contain
+    [Arguments]    ${value}
+    Dropdown Should Contain    id=sheetID    ${value}
+
+Go Back To Data Page
+    Go To    ${pageURL}
+    Window Title Should Be    Angel.com - Data Page
+
+Choose DP Data File
+    [Arguments]    ${filename}
+    Comment    ${option_value}    Run Keyword If    ${runsInChrome}    Get Label Value By Text    sheetID    ${filename}
+    Comment    Run Keyword If    ${runsInChrome}    Execute Javascript    $("#sheetID").val("${option_value}").mousedown().change()
+    Comment    Run Keyword If    ${runsInFirefox}    Select From List By Label    id=sheetID    ${filename}
+    Select From List By Label    id=sheetID    ${filename}
+    Wait Until Keyword Succeeds    30sec    0.5sec    PROMPTS Tab Should Exist
+    ADVANCED OPTIONS Tab Should Exist
+    Page Should Contain    The system will insert data into a new row
+    Page Should Contain Delete Button
+
+Choose DP Data Variable
+    ${DP_DATA_VARIABLE}    Generate Locator By Decreasing One    ${DP_DATA_VARIABLE}    ${index}
+    Select From List By Label    ${DP_DATA_VARIABLE}    ${value}
+
+DP Data Variable Should Contain
+    [Arguments]    ${value}    ${index}=1
+    ${DP_DATA_VARIABLE}    Generate Locator By Decreasing One    ${DP_DATA_VARIABLE}    ${index}
+    Dropdown Should Contain    ${DP_DATA_VARIABLE}    ${value}
+
+DP Data Variable Should Contain List
+    [Arguments]    ${value}    ${index}=1
+    ${DP_DATA_VARIABLE}    Generate Locator By Decreasing One    ${DP_DATA_VARIABLE}    ${index}
+    Dropdown Should Contain List    ${DP_DATA_VARIABLE}    ${value}
+
+DP Data Column Should Be
+    [Arguments]    ${value}    ${index}=1
+    ${DP_UPDATE_DATA_COLUMN}    Generate Locator By Decreasing One    ${DP_UPDATE_DATA_COLUMN}    ${index}
+    List Selection Should Be    ${DP_UPDATE_DATA_COLUMN}    ${value}
+
+DP Data Column Should Contain List
+    [Arguments]    ${value}    ${index}=1
+    ${DP_UPDATE_DATA_COLUMN}    Generate Locator By Decreasing One    ${DP_UPDATE_DATA_COLUMN}    ${index}
+    Dropdown Should Contain List    ${DP_UPDATE_DATA_COLUMN}    ${value}
+
+Select DP Data Checkbox
+    [Arguments]    ${index}=1
+    ${DP_DATA_CHECKBOX}    Generate Locator    ${DP_DATA_CHECKBOX}    ${index}
+    Select Checkbox    ${DP_DATA_CHECKBOX}
+
+DP Data Checkbox Should Not Exist
+    [Arguments]    ${index}=1
+    ${DP_DATA_CHECKBOX}    Generate Locator    ${DP_DATA_CHECKBOX}    ${index}
+    Page Should Not Contain Checkbox    ${DP_DATA_CHECKBOX}
+
+DP Destination Should Contain List
+    [Arguments]    ${value}
+    Dropdown Should Contain List    ${DP_DESTINATION}    ${value}
+
+DP Destination Should Contain
+    [Arguments]    ${value}
+    Dropdown Should Contain    ${DP_DESTINATION}    ${value}
+
+DP Data Column Should Contain All Column Data
+    [Arguments]    ${index}=1
+    DP Data Column Should Contain List    ${DPCol}    ${index}
+
+DP Data Variable Should Contain All System Variables
+    [Arguments]    ${index}=1
+    DP Data Variable Should Contain List    ${SYSTEM VARIABLES}    ${index}
+
+DP Destination Should Contain All Pages
+    DP Destination Should Contain List    ${NEW VPAGES}
+
+Click Update An Existing Row Link
+    Click Link    link=Update an existing row instead
+
+DP The System Will Insert Data Into Frame Should Not Exist
+    Page Should Not Contain    The system will insert data into a new row
+    Page Should Not Contain Link    link=Update an existing row instead
+
+DP Update Row Column Should Exist
+    [Arguments]    ${index}=1
+    ${DP_UPDATE_ROW_COLUMN}    Generate Locator By Decreasing One    ${DP_UPDATE_ROW_COLUMN}    ${index}
+    Page Should Contain List    ${DP_UPDATE_ROW_COLUMN}
+
+DP Update Row Variable Should Exist
+    [Arguments]    ${index}=1
+    ${DP_UPDATE_ROW_VARIABLE}    Generate Locator By Decreasing One    ${DP_UPDATE_ROW_VARIABLE}    ${index}
+    Page Should Contain List    ${DP_UPDATE_ROW_VARIABLE}
+
+DP Update Row Test Value Should Be Empty
+    [Arguments]    ${index}=1
+    ${DP_UPDATE_ROW_TEST_VALUE_TEXT}    Generate Locator By Decreasing One    ${DP_UPDATE_ROW_TEST_VALUE_TEXT}    ${index}
+    ${value}    Get Value    ${DP_UPDATE_ROW_TEST_VALUE_TEXT}
+    Should Be Empty    ${value}
+
+DP Update Row Should Exist
+    Page Should Contain List    ${DP_UPDATE_ROW}
+
+Select DP Update Row Checkbox
+    [Arguments]    ${index}=1
+    ${DP_UPDATE_ROW_CHECKBOX}    Generate Locator    ${DP_UPDATE_ROW_CHECKBOX}    ${index}
+    Select Checkbox    ${DP_UPDATE_ROW_CHECKBOX}
+
+DP Update Row Checkbox Should Not Exist
+    [Arguments]    ${index}=1
+    ${DP_UPDATE_ROW_CHECKBOX}    Generate Locator    ${DP_UPDATE_ROW_CHECKBOX}    ${index}
+    Page Should Not Contain Checkbox    ${DP_UPDATE_ROW_CHECKBOX}
+
+Click DP Add Condition Button
+    Click Button    ${DP_ADD_CONDITION}
+
+DP Add Condition Button Should Not Be Visible
+    Page Should Not Contain    ${DP_ADD_CONDITION}
+
+Select DP Update Row If Now Row Found Checkbox
+    Select Checkbox    ${DP_UPDATE_ROW_IF_NO_ROW_FOUND_CHECKBOX}
+
+DP Update Row Column Should Contain List
+    [Arguments]    ${value}    ${index}=1
+    ${DP_UPDATE_ROW_COLUMN}    Generate Locator By Decreasing One    ${DP_UPDATE_ROW_COLUMN}    ${index}
+    Dropdown Should Contain List    ${DP_UPDATE_ROW_COLUMN}    ${value}
+
+DP Update Row Variable Should Contain List
+    [Arguments]    ${value}    ${index}=1
+    ${DP_UPDATE_ROW_VARIABLE}    Generate Locator By Decreasing One    ${DP_UPDATE_ROW_VARIABLE}    ${index}
+    Dropdown Should Contain List    ${DP_UPDATE_ROW_VARIABLE}    ${value}
+
+DP Update Row Column Should Contain All Column Data
+    DP Update Row Column Should Contain List    ${DPCol}
+
+DP Update Row Variable Should Contain All System Variables
+    DP Update Row Variable Should Contain List    ${SYSTEM VARIABLES}
+
+DP Update Row Variable Should Contain
+    [Arguments]    ${value}    ${index}=1
+    ${DP_UPDATE_ROW_VARIABLE}    Generate Locator By Decreasing One    ${DP_UPDATE_ROW_VARIABLE}    ${index}
+    Dropdown Should Contain    ${DP_UPDATE_ROW_VARIABLE}    ${value}
+
+DP The System Will Insert Data Into Frame Should Exist
+    Page Should Contain    The system will insert data into a new row
+    Page Should Contain Link    Update an existing row instead
+
+DP No Row Found Destination Should Contain
+    [Arguments]    ${value}
+    Dropdown Should Contain    ${DP_NO_ROW_FOUND_DESTINATION}    ${value}
+
+DP No Row Found Destination Should Contain List
+    [Arguments]    ${value}
+    Dropdown Should Contain List    ${DP_NO_ROW_FOUND_DESTINATION}    ${value}
+
+DP No Row Found Destination Should Contain All Pages
+    DP No Row Found Destination Should Contain List    ${NEW VPAGES}
+
+DP Update Row Should Contain
+    [Arguments]    ${value}
+    Dropdown Should Contain    ${DP_UPDATE_ROW}    ${value}
+
+New Data File Page Should Be Open
+    Window Title Should Be    Angel.com - Data File Properties
+    Page Should Contain    New Data File
+
+Edit Data File Page Should Be Open
+    Window Title Should Be    Angel.com - Data File Properties
+    Page Should Contain    Scheduled Delivery & Update Options
+    Page Should Contain    Last Modified
+    Page Should Contain    Rows of Data
+
+DP Load Data Column Should Contain All Column Data
+    [Arguments]    ${index}=1
+    DP Load Data Column Should Contain List    ${DPCol}    ${index}
+
+DP Load Data Column should Contain List
+    [Arguments]    ${value}    ${index}=1
+    ${DP_LOAD_DATA_COLUMN}    Generate Locator By Decreasing One    ${DP_LOAD_DATA_COLUMN}    ${index}
+    Dropdown Should Contain List    ${DP_LOAD_DATA_COLUMN}    ${value}
+
+Select DP Load Data Checkbox
+    [Arguments]    ${index}=1
+    ${DP_LOAD_DATA_CHECKBOX}    Generate Locator    ${DP_LOAD_DATA_CHECKBOX}    ${index}
+    Select Checkbox    ${DP_LOAD_DATA_CHECKBOX}
+
+DP Load Data Checkbox Should Not Exist
+    [Arguments]    ${index}=1
+    ${DP_LOAD_DATA_CHECKBOX}    Generate Locator    ${DP_LOAD_DATA_CHECKBOX}    ${index}
+    Page Should Not Contain Checkbox    ${DP_LOAD_DATA_CHECKBOX}
+
+DP Load Data Variable Should Contain All System Variables
+    [Arguments]    ${index}=1
+    DP Load Data Variable Should Contain List    ${SYSTEM VARIABLES}    ${index}
+
+DP Load Data Variable Should Contain List
+    [Arguments]    ${value}    ${index}=1
+    ${DP_LOAD_DATA_VARIABLE}    Generate Locator By Decreasing One    ${DP_LOAD_DATA_VARIABLE}    ${index}
+    Dropdown Should Contain List    ${DP_LOAD_DATA_VARIABLE}    ${value}
+
+DP Load Data Variable Should Contain
+    [Arguments]    ${value}    ${index}=1
+    ${DP_LOAD_DATA_VARIABLE}    Generate Locator By Decreasing One    ${DP_LOAD_DATA_VARIABLE}    ${index}
+    Dropdown Should Contain    ${DP_LOAD_DATA_VARIABLE}    ${value}

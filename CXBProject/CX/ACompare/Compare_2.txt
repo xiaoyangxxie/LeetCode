@@ -1,0 +1,103 @@
+*** Settings ***
+Test Teardown     Voice Page Test Teardown
+Resource          ../resource.txt
+
+*** Test Cases ***
+DP_Main
+    [Tags]    imageCompare    Regression
+    [Setup]    Run Keywords    Create Data Page    AND    Create DP Data File If Not Exist    DPTest.xls    AND
+    ...    Choose DP Data File    DPTest.xls
+    Compare The Page
+
+DP_Prompts
+    [Tags]    imageCompare    Regression
+    [Setup]    Run Keywords    Create Data Page    AND    Create DP Data File If Not Exist    DPTest.xls    AND
+    ...    Choose DP Data File    DPTest.xls    AND    Open Prompts Tab
+    Compare The Page
+
+DP_AdvancedOptions
+    [Tags]    imageCompare    Regression
+    [Setup]    Run Keywords    Create Data Page    AND    Create DP Data File If Not Exist    DPTest.xls    AND
+    ...    Choose DP Data File    DPTest.xls    AND    Open Advanced Option Tab
+    Compare The Page
+
+LP_Main
+    [Tags]    imageCompare    Regression
+    [Setup]    Create Logic Page
+    Compare The Page
+
+LP_AdvancedOptions
+    [Tags]    imageCompare    Regression
+    [Setup]    Run Keywords    Create Logic Page    AND    Open Advanced Option Tab
+    Compare The Page
+
+MP_Main
+    [Tags]    imageCompare    Regression
+    [Setup]    Create Message Page
+    Compare The Page
+
+MP_NoInput
+    [Tags]    imageCompare    Regression
+    [Setup]    Run Keywords    Create Message Page    AND    Open No Input Tab    AND    No Input Tab Should Be Open
+    Compare The Page
+
+MP_NoMatch
+    [Tags]    imageCompare    Regression
+    [Setup]    Run Keywords    Create Message Page    AND    Open No Match Tab    AND    No Match Tab Should Be Open
+    Compare The Page
+
+MP_AsrSettings
+    [Tags]    imageCompare    Regression
+    [Setup]    Run Keywords    Create Message Page    AND    Open ASR Settings Tab
+    Compare The Page
+
+MP_AdvancedOptions
+    [Tags]    imageCompare    Regression
+    [Setup]    Run Keywords    Create Message Page    AND    Open Advanced Option Tab    AND    MP Advanced Option Tab Should Be Open
+    Compare The Page
+
+NC_Main
+    [Tags]    imageCompare    Regression
+    [Setup]    Create Name Capture Page
+    Compare The Page
+
+NC_AdvancedOptions
+    [Tags]    imageCompare    Regression
+    [Setup]    Run Keywords    Create Name Capture Page    AND    Open Advanced Option Tab
+    Compare The Page
+
+RPL_Main
+    [Tags]    imageCompare    Regression
+    [Setup]    Create Phone Lookup Page
+    Compare The Page
+
+RPL_AdvancedOptions
+    [Tags]    imageCompare    Regression
+    [Setup]    Run Keywords    Create Phone Lookup Page    AND    Open Advanced Option Tab
+    Compare The Page
+
+SP_Timeblocks
+    [Tags]    imageCompare    Regression
+    [Setup]    Create Schedule Page
+    Compare The Page
+
+TP_Main
+    [Tags]    imageCompare    Regression
+    [Setup]    Create Transaction Page
+    Compare The Page
+
+TP_Prompts
+    [Tags]    imageCompare    Regression
+    [Setup]    Run Keywords    Create Transaction Page    AND    Open Prompts Tab    AND    TX Prompts Tab Should Be Open
+    Compare The Page
+
+TP_AsrSettings
+    [Tags]    imageCompare    Regression
+    [Setup]    Run Keywords    Create Transaction Page    AND    Open ASR Settings Tab
+    Sleep    5s
+    Compare The Page
+
+TP_AdvancedOptions
+    [Tags]    imageCompare    Regression
+    [Setup]    Run Keywords    Create Transaction Page    AND    Open Advanced Option Tab    AND    TX Advanced Option Tab Should Be Open
+    Compare The Page

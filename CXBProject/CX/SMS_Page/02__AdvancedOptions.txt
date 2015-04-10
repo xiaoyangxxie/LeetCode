@@ -1,0 +1,31 @@
+*** Settings ***
+Test Setup        Run Keywords    Create SMS Page    AND    Open Advanced Option Tab
+Resource          ../resource.txt
+
+*** Test Cases ***
+Reg_SMS_12
+    [Documentation]    Advanced options - ERROR destination.1. Check if there are some errors in the dropdown list \ 2. Set pages as go to pages and save it without any error
+    [Tags]    Regression
+    SMS_Error Destination Should Contain All Pages
+
+Reg_SMS_13
+    [Documentation]    Email Debugging - Email on Error Only1. User can select 'On Error Only' option in the mail logs \ to \ get email for only error on data page.
+    [Tags]    Regression
+    choose on error only
+    on error only should be choosed
+    Save Successfully
+
+Reg_SMS_14
+    [Documentation]    Email Debugging - Email Always.1. User can select 'Always' option in the mail logs \ to get email for all \ logs in the data page.
+    [Tags]    Regression
+    Choose always
+    always should be choosed
+    Save Successfully
+
+Reg_SMS_15
+    [Documentation]    Email Debugging - Email Never1. User can select 'Never' option in the mail logs \ to not \ get email for logs in the data page.
+    [Tags]    Regression
+    Choose Never
+    Never should be choosed
+    Mail Logs Should ReadOnly
+    Save Successfully

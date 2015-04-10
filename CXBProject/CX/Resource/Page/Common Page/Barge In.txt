@@ -1,0 +1,20 @@
+*** Settings ***
+Library           Selenium2Library
+
+*** Variables ***
+${BARGE_IN_RADIO}    bargeIn
+
+*** Keywords ***
+Barge In Should Be On
+    ${status}    Run Keyword And Return Status    Radio Button Should Be Set To    ${BARGE_IN_RADIO}    TRUE
+    Run Keyword If    ${status}==False    Radio Button Should Be Set To    ${BARGE_IN_RADIO}    true
+
+Barge In Should Be Off
+    ${status}    Run Keyword And Return Status    Radio Button Should Be Set To    ${BARGE_IN_RADIO}    FALSE
+    Run Keyword If    ${status}==False    Radio Button Should Be Set To    ${BARGE_IN_RADIO}    false
+
+Turn On Barge In
+    Select Radio Button    ${BARGE_IN_RADIO}    TRUE
+
+Turn Off Barge In
+    Select Radio Button    ${BARGE_IN_RADIO}    FALSE

@@ -1,0 +1,23 @@
+*** Settings ***
+
+*** Variables ***
+@{PHONE NUMBERS}
+${SITE NAME}      ${EMPTY}
+${SITE NUMBER}    ${EMPTY}
+${PAGE NUMBER}    ${EMPTY}
+${PAGE NAME}      ${EMPTY}
+${BASIC URL}      about:blank
+${LOGIN_IMG}      id=Login
+${FF PROFILE DIR PROXY}    ${CURDIR}${/}..${/}Resource${/}Profile${/}FirefoxProfile-Proxy
+${IMPLICT WAIT}    5
+${SELENIUM_TIMEOUT}    10
+${FF PROFILE DIR NO PROXY}    ${CURDIR}${/}..${/}Resource${/}Profile${/}FirefoxProfile-NoProxy
+${AUDIO FILE}     ${CURDIR}${/}TestFile${/}Sent.wav
+${SCREENSHOT PATH}    ${OUTPUTDIR}${/}screenshot
+${PROJECT NAME}    CX
+${BASE LINE FOLDER NAME}    Baseline
+${LINUX PROFILE PROXY}    ${CURDIR}${/}..${/}Resource${/}Profile${/}LinuxFirefoxProfile
+${LINUX PROFILE NO PROXY}    ${CURDIR}${/}..${/}Resource${/}Profile${/}LinuxFirefoxProfile
+${FILE_FILE}      ${CURDIR}${/}TestFile${/}text.xls
+
+*** Keywords ***

@@ -1,0 +1,5 @@
+*** Settings ***
+Suite Setup       Voice Page Suite Setup
+Suite Teardown    Voice Page Suite Teardown
+Test Teardown     Voice Page Test Teardown
+Resource          ../resource.txt

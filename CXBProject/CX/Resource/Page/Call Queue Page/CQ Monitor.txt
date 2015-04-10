@@ -1,0 +1,273 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../../../resource.txt
+
+*** Variables ***
+${CQ_MONITOR_AVAILABLE_VARIABLES}    name=callInformationSelect
+${CQ_MONITOR_SELECTED_VARIABLES}    name=deleteCallInformationDisplay
+${CQ_MONITOR_ENABLE_DISPOSITION_CODE_CHECKBOX}    xpath=(//input[@name='enableDispositionCodes'])[2]
+${CQ_MONITOR_ALLOW_ENTER_CUSTOM_DISPOSITION_CODE_CHECKBOX}    xpath=(//input[@name='enableCustomDispositionCodes'])[2]
+${CQ_MONITOR_CUSTOM_DISPOSITION_CODE_TEXT}    name=customDispositionCodes_@INDEX@_disposition
+${CQ_MONITOR_ENABLE_AWAY_MESSAGES_CHECKBOX}    xpath=(//input[@name='enableAwayMessage'])[2]
+${CQ_MONITOR_ALLOW_ENTER_CUSTOM_AWAY_MESSAGE_CHECKBOX}    xpath=(//input[@name='enableCustomAwayMessages'])[2]
+${CQ_MONITOR_CUSTOM_AWAY_MESSAGE_TEXT}    name=awayMessages_@INDEX@_awayMessage
+${CQ_MONITOR_AVAILABLE_VOICE_PAGES}    name=voicePageTransferSelect
+${CQ_MONITOR_SELECTED_VOICE_PAGES}    name=deleteVPTransferPoint
+${CQ_MONITOR_FAVORITE_VOICE_PAGES}    xpath=(//select[@name='deleteVPTransferPoint'])[2]
+${CQ_MONITOR_AVAILABLE_AGENTS}    xpath=(//select[@name='voicePageTransferSelect'])[2]
+${CQ_MONITOR_SELECTED_AGENTS}    name=deleteAllAgentsTransferPoint
+${CQ_MONITOR_FAVORITE_AGENTS}    xpath=(//select[@name='deleteAllAgentsTransferPoint'])[2]
+${CQ_MONITOR_PARAMETER_COLUMN}    name=loadVariables_@INDEX@_internalColumnName
+${CQ_MONITOR_DATAFILE_DROPDOWN}    //select[@id='sheetID']
+
+*** Keywords ***
+Click CQ Monitor How It Works Link
+    click link    xpath=(//a[contains(text(),'How it Works')])[3]
+
+CQ Monitor Selected Variables Should Be Empty
+    ${selectedVariable}    Get List Items    ${CQ_MONITOR_SELECTED_VARIABLES}
+    Should Be Empty    ${selectedVariable}
+
+Select CQ Monitor Avaiable Variables
+    [Arguments]    ${value}
+    Select From List By Label    ${CQ_MONITOR_AVAILABLE_VARIABLES}    ${value}
+
+CQ Monitor Selected Variables Should Contain
+    [Arguments]    ${value}
+    ${selectedVariable}    Get List Items    ${CQ_MONITOR_SELECTED_VARIABLES}
+    Should contain    ${selectedVariable}    ${value}
+
+Click CQ Monitor Disposition Code How It Works Link
+    click link    xpath=(//a[contains(text(),'How it Works')])[4]
+
+Input CQ Monitor Custom Disposition Code
+    [Arguments]    ${value}    ${index}=1
+    ${CQ_MONITOR_CUSTOM_DISPOSITION_CODE}    Generate Locator By Decreasing One    ${CQ_MONITOR_CUSTOM_DISPOSITION_CODE_TEXT}    ${index}
+    Input Text    ${CQ_MONITOR_CUSTOM_DISPOSITION_CODE}    ${value}
+
+Select CQ Monitor Enable Disposition Codes Checkbox
+    Select Checkbox    ${CQ_MONITOR_ENABLE_DISPOSITION_CODE_CHECKBOX}
+
+Select CQ Monitor Allow Agents To Enter Custom Disposition Code Checkbox
+    Select Checkbox    ${CQ_MONITOR_ALLOW_ENTER_CUSTOM_DISPOSITION_CODE_CHECKBOX}
+
+Click CQ Monitor Away Message How It Works Link
+    click link    xpath=(//a[contains(text(),'How it Works')])[5]
+
+Input CQ Monitor Custom Away Message
+    [Arguments]    ${value}    ${index}=1
+    ${CQ_MONITOR_CUSTOM_AWAY_MESSAGE_TEXT}    Generate Locator By Decreasing One    ${CQ_MONITOR_CUSTOM_AWAY_MESSAGE_TEXT}    ${index}
+    Input Text    ${CQ_MONITOR_CUSTOM_AWAY_MESSAGE_TEXT}    ${value}
+
+Select CQ Monitor Enable Away Message Checkbox
+    Select Checkbox    ${CQ_MONITOR_ENABLE_AWAY_MESSAGES_CHECKBOX}
+
+Select CQ Monitor Allow Agents To Enter Custom Away Message Checkbox
+    Select Checkbox    ${CQ_MONITOR_ALLOW_ENTER_CUSTOM_AWAY_MESSAGE_CHECKBOX}
+
+Click CQ Monitor Transfer Points How It Works Link
+    Click Link    xpath=(//a[contains(text(),'How it Works')])[6]
+
+Click CQ Monitor Switch Available Variables To Selected Variables Button
+    Click Button    name=Submit63
+
+Click CQ Monitor Switch Selected Variables To Available Variables Button
+    Click Button    name=Submit622
+
+Select CQ Monitor Selected Variables
+    [Arguments]    ${value}
+    Select From List By Label    ${CQ_MONITOR_SELECTED_VARIABLES}    ${value}
+
+CQ Monitor Selected Variables Should Not Contain
+    [Arguments]    ${value}
+    ${selectedVariable}    Get List Items    ${CQ_MONITOR_SELECTED_VARIABLES}
+    Should not contain    ${selectedVariable}    ${value}
+
+CQ Monitor Available Variables Should Contain
+    [Arguments]    ${value}
+    ${selectedVariable}    Get List Items    ${CQ_MONITOR_AVAILABLE_VARIABLES}
+    Should contain    ${selectedVariable}    ${value}
+
+CQ Monitor Available Variables Should Not Contain
+    [Arguments]    ${value}
+    ${selectedVariable}    Get List Items    ${CQ_MONITOR_AVAILABLE_VARIABLES}
+    Should Not contain    ${selectedVariable}    ${value}
+
+Select CQ Monitor Available Voice Pages
+    [Arguments]    ${value}
+    Select From List By Label    ${CQ_MONITOR_AVAILABLE_VOICE_PAGES}    ${value}
+
+Select CQ Monitor Selected Voice Pages
+    [Arguments]    ${value}
+    Select From List By Label    ${CQ_MONITOR_SELECTED_VOICE_PAGES}    ${value}
+
+Select CQ Monitor Favorites Voice Pages
+    [Arguments]    ${value}
+    Selenium2Library.Select From List By Label    ${CQ_MONITOR_FAVORITE_VOICE_PAGES}    ${value}
+
+Click CQ Monitor Switch Available Voice Pages To Selected Button
+    Click Button    name=Submit6
+
+CQ Monitor Available Voice Pages Should Contain
+    [Arguments]    ${value}
+    ${selectedVariable}    Get List Items    ${CQ_MONITOR_AVAILABLE_VOICE_PAGES}
+    Should contain    ${selectedVariable}    ${value}
+
+CQ Monitor Available Voice Pages Should Not Contain
+    [Arguments]    ${value}
+    ${selectedVariable}    Get List Items    ${CQ_MONITOR_AVAILABLE_VOICE_PAGES}
+    Should Not contain    ${selectedVariable}    ${value}
+
+CQ Monitor Selected Voice Pages Should Contain
+    [Arguments]    ${value}
+    ${selectedVariable}    Get List Items    ${CQ_MONITOR_SELECTED_VOICE_PAGES}
+    Should contain    ${selectedVariable}    ${value}
+
+CQ Monitor Selected Voice Pages Should Not Contain
+    [Arguments]    ${value}
+    ${selectedVariable}    Get List Items    ${CQ_MONITOR_SELECTED_VOICE_PAGES}
+    Should Not contain    ${selectedVariable}    ${value}
+
+CQ Monitor Favorite Voice Pages Should Contain
+    [Arguments]    ${value}
+    ${selectedVariable}    Get List Items    ${CQ_MONITOR_FAVORITE_VOICE_PAGES}
+    Should contain    ${selectedVariable}    ${value}
+
+CQ Monitor Favorite Voice Pages Should Not Contain
+    [Arguments]    ${value}
+    ${selectedVariable}    Get List Items    ${CQ_MONITOR_FAVORITE_VOICE_PAGES}
+    Should Not contain    ${selectedVariable}    ${value}
+
+Click CQ Monitor Switch Selected Voice Pages To Favorite Button
+    Click Button    name=Submit64
+
+Click CQ Monitor Switch Selected Voice Pages To Available Button
+    Click Button    name=Submit62
+
+Click CQ Monitor Switch Favorite Voice Pages To Selected Button
+    Click Button    name=Submit623
+
+Select CQ Monitor Available Agents
+    [Arguments]    ${value}
+    Selenium2Library.Select From List By Label    ${CQ_MONITOR_AVAILABLE_AGENTS}    ${SPACE}${value}
+
+Select CQ Monitor Selected Agents
+    [Arguments]    ${value}
+    Select From List By Label    ${CQ_MONITOR_SELECTED_AGENTS}    ${SPACE}${value}
+
+Select CQ Monitor Favorite Agents
+    [Arguments]    ${value}
+    Selenium2Library.Select From List By Label    ${CQ_MONITOR_FAVORITE_AGENTS}    ${SPACE}${value}
+
+Add CQ Monitor Test Agent For Transfer Points
+    Open Main Tab
+    Click Visible Add Button
+    Input CQ Agent Detail Information    transferTest    1111111111    transfer@angel.com    index=2
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+    Open Monitor Tab
+
+Click CQ Monitor Switch Available Agents To Selected Button
+    Click Button    name=Submit652
+
+Click CQ Monitor Switch Selected Agent To Favorite Button
+    Wait Until Keyword Succeeds    15sec    1sec    Click Button    name=Submit6422
+
+Click CQ Monitor Switch Favorite Agents To Selected Button
+    Click Button    name=Submit62322
+
+Click CQ Monitor Switch Selected Agent To Available Button
+    Wait Until Keyword Succeeds    15sec    1sec    Click Button    name=Submit6242
+
+CQ Monitor Available Agents Should Contain
+    [Arguments]    ${value}
+    ${selectedVariable}    Get List Items    ${CQ_MONITOR_AVAILABLE_AGENTS}
+    Should contain    ${selectedVariable}    ${value}
+
+CQ Monitor Selected Agents Should Contain
+    [Arguments]    ${value}
+    ${selectedVariable}    Get List Items    ${CQ_MONITOR_SELECTED_AGENTS}
+    Should contain    ${selectedVariable}    ${SPACE}${value}
+
+CQ Monitor Favorite Agents Should Contain
+    [Arguments]    ${value}
+    ${selectedVariable}    Get List Items    ${CQ_MONITOR_FAVORITE_AGENTS}
+    Should contain    ${selectedVariable}    ${SPACE}${value}
+
+CQ Monitor Available Agents Should Not Contain
+    [Arguments]    ${value}
+    ${selectedVariable}    Get List Items    ${CQ_MONITOR_AVAILABLE_AGENTS}
+    Should Not contain    ${selectedVariable}    ${SPACE}${value}
+
+CQ Monitor Selected Agents Should Not Contain
+    [Arguments]    ${value}
+    ${selectedVariable}    Get List Items    ${CQ_MONITOR_SELECTED_AGENTS}
+    Should Not contain    ${selectedVariable}    ${SPACE}${value}
+
+CQ Monitor Favorite Agents Should Not Contain
+    [Arguments]    ${value}
+    ${selectedVariable}    Get List Items    ${CQ_MONITOR_FAVORITE_AGENTS}
+    Should Not contain    ${selectedVariable}    ${SPACE}${value}
+
+Click CQ Monitor Transfer To Contact How It Works Link
+    click link    xpath=(//a[contains(text(),'How it Works')])[7]
+
+CQ Monitor Custom Disposition Code Should Be
+    [Arguments]    ${value}    ${index}=1
+    ${CQ_MONITOR_CUSTOM_DISPOSITION_CODE_TEXT}    Generate Locator By Decreasing One    ${CQ_MONITOR_CUSTOM_DISPOSITION_CODE_TEXT}    ${index}
+    Textfield Value Should Be    ${CQ_MONITOR_CUSTOM_DISPOSITION_CODE_TEXT}    ${value}
+
+CQ Monitor Custom Away Message Should Be
+    [Arguments]    ${value}    ${index}=1
+    ${CQ_MONITOR_CUSTOM_AWAY_MESSAGE_TEXT}    Generate Locator By Decreasing One    ${CQ_MONITOR_CUSTOM_AWAY_MESSAGE_TEXT}    ${index}
+    Textfield Value Should Be    ${CQ_MONITOR_CUSTOM_AWAY_MESSAGE_TEXT}    ${value}
+
+CQ Monitor Parameter Column Dropdown Should Not Be Visible
+    [Arguments]    ${index}=1
+    ${CQ_MONITOR_PARAMETER_COLUMN}    Generate Locator By Decreasing One    ${CQ_MONITOR_PARAMETER_COLUMN}    ${index}
+    Element Should Not Be Visible    ${CQ_MONITOR_PARAMETER_COLUMN}
+
+CQ Monitor Parameter Column Dropdown Should Be Visible
+    [Arguments]    ${index}=1
+    ${CQ_MONITOR_PARAMETER_COLUMN}    Generate Locator By Decreasing One    ${CQ_MONITOR_PARAMETER_COLUMN}    ${index}
+    Element Should Be Visible    ${CQ_MONITOR_PARAMETER_COLUMN}
+
+Choose CQ Monitor Data File
+    [Arguments]    ${value}
+    Wait Until Keyword Succeeds    15sec    0.5sec    Selenium2Library.Select From List By Label    ${CQ_MONITOR_DATAFILE_DROPDOWN}    ${value}
+
+Create CQ Monitor Data File If Not Exist
+    [Arguments]    ${value}
+    ${status}    Run Keyword And Return Status    CQ Monitor Data File Should Not Exist    ${value}
+    Run Keyword If    ${status}    Create CQ Monitor Data File    ${value}
+    Open Monitor Tab
+
+Create CQ Monitor Data File
+    [Arguments]    ${value}
+    Scroll Down Page    1500
+    Click New Link
+    Input Data File Name    ${value}
+    Input Data File Column Heading    name    1
+    Click Add Column Button
+    Input Data File Column Heading    destination    2
+    Click Add Column Button
+    Input Data File Column Heading    keyword    3
+    Click Add Column Button
+    Input Data File Column Heading    favorite    4
+    Click Data File Save Button
+
+Click CQ Monitor View Sample Data Link
+    [Arguments]    ${no}=1
+    [Documentation]    http://www.socialtext.net/data/workspaces/ivrwiki/attachments/call_transfer_points:20080212164044-0-4003/original/Contacts.xls
+    Wait Until Element Is visable 10sec    link=View Sample Data File
+    Click Visible Element    link=View Sample Data File    ${no}
+
+CQ Monitor Data File Should Exist
+    [Arguments]    ${value}
+    ${list}    Get List Items    ${CQ_MONITOR_DATAFILE_DROPDOWN}
+    Should Contain    ${list}    ${value}
+
+CQ Monitor Data File Should Not Exist
+    [Arguments]    ${value}
+    ${list}    Get List Items    ${CQ_MONITOR_DATAFILE_DROPDOWN}
+    Should Not Contain    ${list}    ${value}

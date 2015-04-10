@@ -1,0 +1,605 @@
+*** Settings ***
+Library           Selenium2Library
+Library           Collections
+Resource          ../Global Resource.txt
+Library           String
+Library           S2ExLibrary
+Resource          ../../resource.txt
+Library           OperatingSystem
+Library           Screenshot
+
+*** Variables ***
+${CXBUILDER_LINK}    link=CX Builder
+${VOICE_SITES_LINK}    link=Voice Sites
+${PAGE_NAME_TEXT}    name=title
+${PAGE_NUMBER_TEXT}    name=pageCode
+${COMMENTS_TEXT}    name=pageComments
+${PARENT_GROUP_NAME_LINK}    id=parentGroupName
+${SAVE_BUTTON}    css=input.imgSaveButton
+${SAVE&EXIT_BUTTON}    css=input.imgSaveExitButton
+${EXIT_BUTTON}    css=input.imgCancelButton
+${PROMPTS_TABLE}    id=promptsTable
+${DEFAULT_PROMPTS_CHECKBOX}    name=prompts_0_selected
+${DEFAULT_PROMPTS_TEXT}    name=prompts_0_message
+${CHANGE_TO_AUDIO_ICON}    css=img[alt="Change to Audio"]
+${DELETE_BUTTON}    css=input.buttonDelete
+${AUDIO_PROMPT_BUTTON}    css=input.buttonAudio
+${TTS_PROMPT_BUTTON}    css=input.buttonTTS
+${VariablePromptButton}    css=input.buttonVariable
+${UseVariableLink}    link=Using Variables
+${COPY_BUTTON}    xpath=//input[@value='Copy']
+${UP_BUTTON}      css=input.buttonUp
+${VIEW_BUTTON}    css=input.buttonNavGo
+${DOWN_BUTTON}    css=input[value="Down"]
+@{VPAGES}         Address Capture Page    Call Queue Page    Call Transfer Page    Data Page    Logic Page    Message Page    Name Capture Page ...
+...               Question Page    Reverse Phone Lookup Page    Schedule Page    SMS Page    Transaction Page    Voicemail Page
+${NOT CHOOSE VAR ERR MSG}    Please select a Variable
+${DEFAULT INITIAL PROMPT}    Type your message here. Say record to customize with your own voice.
+@{SETTINGS_BOX_TABS}    link=MAIN    link=NO INPUT    link=NO MATCH    link=ASR SETTINGS    link=ADVANCED OPTIONS    link=WHISPER    link=CALL SCENARIOS
+...               link=PROMPTS    link=CONFIRMATION
+@{NEW VPAGES}     New Call Queue Page    New Address Capture Page    New Name Capture Page    New Reverse Phone Lookup Page    New Data Page    New Logic Page    New Transaction Page
+...               New Question Page    New Schedule Page    New SMS Page    New Voicemail Page    New Call Transfer Page    New Message Page
+${HEADER_NAVI_LINK}    xpath=//*[@id="mainFormTable"]/tbody/tr[1]/td[2]
+@{SITE VARIABLES}    Select a Variable    CallerID    DialedNumber    CallDuration    CurrentTime    CallStartTime    SiteNumber
+...               PageHistory    CallGUID    CallRecordingURL    Agent    CallDirection    OutboundCallGUID
+@{SYSTEM VARIABLES}    CallerID    DialedNumber    CallDuration    CurrentTime-EST    CallStartTime-EST    SiteNumber    PageHistory \ [List]
+...               CallGUID    CallRecordingURL \ [List]    Agent    CallDirection    OutboundCallGUID
+${SAVE_DONE_TIP}    id=saveDoneTip
+${ADD_ONE_BUTTON}    css=input.button1
+${ADD_FIVE_BUTTON}    css=input.button5
+${ADD_TEN_BUTTON}    css=input.button10
+${ERR_MSG_SPAN}    css=span.errors
+${CHANGE_PAGE_TYPE_DIV}    id=changePageTypeLayer
+${CHANGE_PAGE_TYPE_SELECTOR}    id=changePageType
+${CHANGE_PAGE_TYPE_CLOSE_IMG}    css=img[alt="close"]
+${CHANGE_PAGE_TYPE_COMMIT}    css=input[alt="Commit Changes"]
+${CHANGE_PAGE_TYPE_LINK}    css=a[onclick="javascript:MM_showHideLayers('changePageTypeLayer','','show');"]
+${PARENT_GROUP_SELECT_TEXT}    id=parentFxName
+${ADD_GROUP_BUTTON}    css=span.common-btn.buttonAddCx
+${SAVE_GROUP_BUTTON}    id=save-add-cx
+${MERGE_BUTTON}    css=input[value="Merge"]
+${PROMPTS_CHECKBOX}    name=prompts_@INDEX@_selected
+${PROMPTS_AUDIO_TEXT}    name=prompts_@INDEX@_filetag
+${PROMPTS_TTS_TEXT}    name=prompts_@INDEX@_message
+${PROMPTS_VARIABLE}    id=prompts_@INDEX@_varIDSelect
+${PROMPTS_VARIABLE_PLAY}    id=prompts_@INDEX@_playAs
+@{VPAGES_IMGS}    addressCapturePageIcon    callQueuePageIcon    callTransferIcon    dataPageIcon    logicPageIcon    messagePageIcon    nameCapturePageIcon
+...               questionPageIcon    phoneCapturePageIcon    schedulePageIcon    smsPageIcon    transactionPageIcon    voicemailPageIcon
+${PAGE_COMMENTS}    name=pageComments
+${WHY_LINK}       link=Why?
+${ADD_BUTTON}     xpath=(//input[@value='Add'])
+${BACK_BUTTON}    css=input.buttonBack
+${WHAT'S_THIS_IMG}    name=whatsthis
+${OTHER_TIME_SITE_PAGE_IMG}    xpath=//*[@id="timeBlockLayer2"]//*[@alt='Browse Voice Pages']
+${expectedComments}    Text to check page comment
+${ADD_SITE_CMD_BUTTON}    css=input.buttonAddCommand
+${SITE_CMD_SAY_TEXT}    name=links_formattedKeywords
+${SITE_CMD_SAY_DTMF}    name=links_DTMF
+${SITE_CMD_GOTO_PAGE1}    name=siteKeywords0SelectBox
+${SYSTEM_COMMANDS_ID}    id=tnav4
+
+*** Keywords ***
+Page Comments Should Be
+    [Arguments]    ${expectedComments}
+    ${page comments}=    Get Text    ${COMMENTS_TEXT}
+    Should Be Equal    ${page comments}    ${expectedComments}
+
+Page Name Should Be
+    [Arguments]    ${expectedPageName}
+    ${actualPageName}=    Get Element Attribute    ${PAGE_NAME_TEXT}@value
+    Should Be Equal As Strings    ${actualPageName}    ${expectedPageName}
+
+Page Number Should Be
+    [Arguments]    ${expectedPageNumber}
+    ${actualPageNumber}=    Get Element Attribute    ${PAGE_NUMBER_TEXT}@value
+    ${actualPageNumber}    Convert To String    ${actualPageNumber}
+    Should Be Equal As Strings    ${actualPageNumber}    ${expectedPageNumber}
+
+NaviLink Should Be
+    [Arguments]    ${expectedLink}
+    ${actualLink}=    Get Text    ${HEADER_NAVI_LINK}
+    Should Be Equal As Strings    ${expectedLink}    ${actualLink}
+
+Page Group Should Be
+    [Arguments]    ${expectedGroup}
+    ${actualGroup}=    Get Text    ${PARENT_GROUP_NAME_LINK}
+    Should Be Equal As Strings    ${expectedGroup}    ${actualGroup}
+
+Get Expect Navi Link
+    [Arguments]    ${pageName}
+    ${tmp}=    Catenate    ${SITE NAME}    \#    ${SITE NUMBER}
+    ${val}=    Catenate    SEPARATOR=${SPACE}>${SPACE}    CX Builder    Voice Sites    ${tmp}    ${pageName}
+    [Return]    ${val}
+
+Main Tab Should Be Active
+    ${status}=    Get Element Attribute    xpath=//*[@id="mainSettingBoxTab"]/li[1]@class
+    Should Be Equal As Strings    ${status}    on
+
+Get Random Option From X
+    [Arguments]    ${vals}    ${index}
+    ${num}=    Get Length    ${vals}
+    ${ranNum}=    Evaluate    random.randint(${index}, ${num}-1)    random
+    ${ret}=    Get From List    ${vals}    ${ranNum}
+    [Return]    ${ret}
+
+Get Save Done Tip
+    ${ret}=    Get Text    ${SAVE_DONE_TIP}
+    [Return]    ${ret}
+
+Save Done Tip Should Be Open
+    Wait Until Page Contains Element    ${SAVE_DONE_TIP}
+    ${tips}=    Get Save Done Tip
+    Should Contain    ${tips}    This page has been saved.
+
+Get Random Index From List
+    [Arguments]    ${vals}    ${index}
+    ${num}=    Get Length    ${vals}
+    ${ranNum}=    Evaluate    random.randint(${index}, ${num}-1)    random
+    [Return]    ${ranNum}
+
+Get Error Message
+    ${var}=    Get Text    ${ERR_MSG_SPAN}
+    [Return]    ${var}
+
+Error Message Should Contain
+    [Arguments]    ${errMsg}
+    ${errorMsg}=    Get Error Message
+    Should Contain    ${errorMsg}    ${errMsg}
+
+Save&SE&Exit Buttons Should Be Visible
+    Element Should Be Visible    ${SAVE_BUTTON}
+    Element Should Be Visible    ${SAVE&EXIT_BUTTON}
+    Element Should Be Visible    ${EXIT_BUTTON}
+
+Input Page Name
+    [Arguments]    ${name}
+    Comment    Execute Javascript    $('input#pageTitle').val('${name}')
+    Wait Until Element Is Visible    ${PAGE_NAME_TEXT}
+    Input Text    ${PAGE_NAME_TEXT}    ${EMPTY}
+    Input Text    ${PAGE_NAME_TEXT}    ${name}
+
+Input Page Number
+    [Arguments]    ${number}
+    Input Text    ${PAGE_NUMBER_TEXT}    ${number}
+
+Selected Parent Group Name Should Be
+    [Arguments]    ${name}
+    Textfield Value Should Be    ${PARENT_GROUP_SELECT_TEXT}    ${name}
+
+Add Page Group
+    [Arguments]    ${group}
+    Click Element    ${ADD_GROUP_BUTTON}
+    Wait Until Keyword Succeeds    5sec    0.5sec    Selected Parent Group Name Should Be    HOME
+    Input New Group Name    ${group}
+    Save New Group
+    Wait Until Page Contains Element    link=${group}
+
+Input New Group Name
+    [Arguments]    ${name}
+    Input Text    id=fxcName    ${name}
+
+Save New Group
+    Execute Javascript    window.document.getElementById("save-add-cx").click()
+
+Save Page
+    Wait Until Keyword Succeeds    10sec    1sec    Click button    ${SAVE_BUTTON}
+
+Save&Exit Page
+    Click Button    ${SAVE&EXIT_BUTTON}
+
+Exit Page
+    Click Button    ${EXIT_BUTTON}
+
+Open Setting Tab
+    [Arguments]    ${tab}
+    Wait Until Keyword Succeeds    30sec    1sec    Click Link    ${tab}
+    Wait Util Page Fully Loaded
+
+Save&Exit Page Named As Test Case
+    Input Page Name    ${TEST_NAME}
+    Save&Exit Page
+
+Change Page Type To Should Exist
+    Element Should Be Visible    ${CHANGE_PAGE_TYPE_DIV}
+
+Close Page Type Icon
+    Click Element    ${CHANGE_PAGE_TYPE_CLOSE_IMG}
+
+Select a Page Type List Should Exsit
+    List Selection Should Be    ${CHANGE_PAGE_TYPE_SELECTOR}    Select a Page Type
+
+Change Page Type To Should Not Exist
+    Element Should Not Be Visible    ${CHANGE_PAGE_TYPE_DIV}
+
+Select a Page Type
+    [Arguments]    ${pageName}
+    Select From List By Label    ${CHANGE_PAGE_TYPE_SELECTOR}    ${pageName}
+
+Commit Changes In Page Type
+    Click Element    ${CHANGE_PAGE_TYPE_COMMIT}
+
+Verify Page Type Changed
+    [Arguments]    ${VALUE}
+    Wait Until Page Contains Element    ${VALUE}
+
+Click Parent Group
+    Click Link    ${PARENT_GROUP_NAME_LINK}
+    Wait Until Keyword Succeeds    5sec    1sec    Selected Parent Group Name Should Be    HOME
+
+Close Parent Group
+    Execute Javascript    window.document.getElementById("close-add").click()
+
+Save Parent Group
+    Execute Javascript    window.document.getElementById("save-add-cx").click()
+    Sleep    1sec
+
+Verify Parent Group
+    [Arguments]    ${group}
+    Wait Until Keyword Succeeds    5sec    1sec    Page Group Should Be    ${group}
+    Sleep    1sec
+
+Select the First Group
+    Execute Javascript    window.document.getElementsByClassName("node-text")[1].click()
+
+Save Page Named As Test Case
+    Input Page Name    ${TEST_NAME}
+    Page Should Contain    ${TEST_NAME}    5
+    Save Page
+
+Verify HighLight
+    [Arguments]    ${tmp}
+    [Documentation]    true for highlight, null for no highlight
+    ${attr}=    Get Element Attribute    id=isHighLight@value
+    Should Be Equal As Strings    ${attr}    ${tmp}
+
+Verify Page Title
+    [Arguments]    ${title}
+    Wait Until Keyword Succeeds    5sec    1sec    Title Should Be    ${title}
+
+Should Contain Error Message
+    [Arguments]    ${expectedMsg}
+    ${actualMsg}=    Get Error Message
+    Should Contain    ${actualMsg}    ${expectedMsg}
+
+Click Delete Button
+    Click Button    ${DELETE_BUTTON}
+
+Page Should Contain Delete Button
+    Page Should Contain Element    ${DELETE_BUTTON}
+
+Click Copy Button
+    Click Button    ${COPY_BUTTON}
+
+Generate Locator By Decreasing One
+    [Arguments]    ${locator}    ${index}=1
+    ${index}    Evaluate    int(${index})-1
+    ${index}    Convert To String    ${index}
+    ${locator}    Replace String    ${locator}    @INDEX@    ${index}
+    [Return]    ${locator}
+
+Click Merge Button
+    Wait Until Keyword Succeeds    10sec    0.5sec    Click Button    ${MERGE_BUTTON}
+
+Click Up Button
+    Click Button    ${UP_BUTTON}
+
+Click Down Button
+    Click Button    ${DOWN_BUTTON}
+
+Alert Text Should Be
+    [Arguments]    ${value}
+    Alert Should Be Present    ${value}
+
+Generate Locator Index2 By Decreasing One
+    [Arguments]    ${locator}    ${index2}=1
+    ${index2}    Evaluate    int(${index2})-1
+    ${index2}    Convert To String    ${index2}
+    ${locator}    Replace String    ${locator}    @INDEX2@    ${index2}
+    [Return]    ${locator}
+
+View Button Should Not Be Visible
+    Element Should Not Be Visible    ${VIEW_BUTTON}
+
+Click View Button
+    Click Element    ${VIEW_BUTTON}
+
+Switch To New Window
+    [Arguments]    ${value}
+    Wait Until Keyword Succeeds    13sec    0.5sec    Select Window    ${value}
+
+Window Title Should Be
+    [Arguments]    ${value}
+    Wait Until Keyword Succeeds    15sec    0.5sec    Title Should Be    ${value}
+
+Close Popup Window
+    Switch To Main Window
+
+Switch To Main Window
+    @{test_name_substring}    split string    ${SUITE_NAME}    .
+    ${title}    Get Page Title    @{test_name_substring}[1]
+    Run Keyword If    ${runsInChrome}    Select Window    title=Angel.com - ${title}    ELSE    Select Window
+
+New Window Title Should Be
+    [Arguments]    ${value}
+    Switch To New Window    ${value}
+    Title Should Be    ${value}
+
+Close Current Window
+    Close Window
+
+Click Add Button
+    Click Button    css=input.buttonAdd
+
+Generate Locator
+    [Arguments]    ${locator}    ${index}=1
+    ${index}    Convert To String    ${index}
+    ${locator}    Replace String    ${locator}    @INDEX@    ${index}
+    [Return]    ${locator}
+
+Generate Locator Index2
+    [Arguments]    ${locator}    ${index2}=1
+    ${index2}    Evaluate    int(${index2})-1
+    ${index2}    Convert To String    ${index2}
+    ${locator}    Replace String    ${locator}    @INDEX2@    ${index2}
+    [Return]    ${locator}
+
+Open Advanced Option Tab
+    Open Setting Tab    ADVANCED OPTIONS
+
+Click Audio Button
+    Click Button    css=input.buttonAudio
+
+Click Text-to-Speech Button
+    Click Button    css=input.buttonTTS
+
+Click Variable Button
+    Click Button    css=input.buttonVariable
+
+Click Using Variables Link
+    Click Link    Using Variables
+
+Text Should Be Visible
+    [Arguments]    ${value}
+    Page Should Contain    ${value}
+
+Comments Should Be Exist
+    Page Should Contain image    /images/icons/msg.gif
+
+Open Main Tab
+    Open Setting Tab    @{SETTINGS_BOX_TABS}[0]    # Open Main Tab
+
+Generate Nested Locator
+    [Arguments]    ${locator}    ${no}    ${nested}
+    ${index}=    Evaluate    int(${no})-1
+    ${index}=    Convert To String    ${index}
+    ${locator}=    Replace String    ${locator}    @INDEX@    ${index}
+    ${index1}=    Evaluate    int(${nested})-1
+    ${index1}=    Convert To String    ${index1}
+    ${locator}=    Replace String    ${locator}    @NESTED@    ${index1}
+    [Return]    ${locator}
+
+Click Visible Add Button
+    [Arguments]    ${index}=1
+    Click Visible Element    ${ADD_BUTTON}    ${index}
+
+Click View Link
+    Click Link    link=View
+
+Click Edit Link
+    click link    link=Edit
+
+Click Clear Contacts Link
+    Click Link    link=Clear Contacts
+
+Click New Link
+    click link    link=New
+
+Delete Download File From Disk
+    [Arguments]    ${value}
+    Run Keyword And Ignore Error    Remove File    ${downloadPath}${/}${value}
+
+File Should Be Downloaded
+    [Arguments]    ${value}
+    Wait Until Keyword Succeeds    10s    1s    File Should Exist    ${downloadPath}${/}/${value}
+
+Click How It Works Link
+    [Arguments]    ${no}=1
+    Click Visible Element    link=How it Works    ${no}
+
+Click Details Link
+    [Arguments]    ${no}
+    Click Visible Element    ${DETAILS_LINK}    ${no}
+
+Settings Tab Should Be Invisible
+    [Arguments]    ${tab}
+    Wait Until Keyword Succeeds    5sec    0.5sec    Page Should Not Contain Element    ${tab}
+
+Click Use Variable Img
+    [Arguments]    ${no}=1
+    Click Visible Element    css=img[alt="Use Variable"]    ${no}
+
+Click Use Constants Img
+    [Arguments]    ${no}=1
+    Click Visible Element    css=img[alt="Use Constants"]    ${no}
+
+Input Page Comment
+    [Arguments]    ${value}
+    Input Text    ${COMMENTS_TEXT}    ${value}
+
+Click What's This Img
+    [Arguments]    ${no}=1
+    Click Visible Element    ${WHAT'S_THIS_IMG}    ${no}
+
+Click Close Window Link
+    Click Element    link=Close Window
+
+Open Prompts Tab
+    Open Setting Tab    @{SETTINGS_BOX_TABS}[7]    # Open Prompts Tab
+
+Click Clear Link
+    [Arguments]    ${no}=1
+    Click Visible Element    link=Clear    ${no}
+
+Page Type Icon Should Be
+    [Arguments]    ${value}
+    Element Should Be Visible    css=a > img[name="${value}"]
+
+Radio Button Should Not Be Set To
+    [Arguments]    ${name}    ${value}
+    ${status}    Run Keyword And Return Status    Radio Button Should Be Set To    ${name}    ${value}
+    Should Be Equal As Strings    ${status}    False
+
+Dropdown Should Contain
+    [Arguments]    ${listLocator}    ${value}
+    ${list}    Get List Items    ${listLocator}
+    ${list}    Strip String In List    ${list}
+    Should Contain    ${list}    ${value}
+
+Click CX Builder Active Tab
+    Click Element    ${CXBUILDER_TAB_ACTIVE}
+
+ADVANCED OPTIONS Tab Should Exist
+    Page Should Contain Link    ADVANCED OPTIONS
+
+PROMPTS Tab Should Exist
+    Page Should Contain Link    PROMPTS
+
+Dropdown Should Contain List
+    [Arguments]    ${listLocator}    ${value}
+    @{list}    Get List Items    ${listLocator}
+    @{list}    Strip String In List    ${list}
+    List Should Contain Sub List    ${list}    ${value}
+
+Go To Choose Another Site Page Other Time
+    Click Element    ${OTHER_TIME_SITE_PAGE_IMG}
+
+Create Site Command
+    Input Text    ${SITE_CMD_SAY_TEXT}    schedule
+    Input Text    ${SITE_CMD_SAY_DTMF}    4
+    Select From List By Label    ${SITE_CMD_GOTO_PAGE1}    300 - ${TEST_NAME}
+
+Open Confirmation Tab
+    Open Setting Tab    @{SETTINGS_BOX_TABS}[8]    # Open Confirmation Tab
+
+Textfield Value Should Not Be
+    [Arguments]    ${locator}    ${value}
+    ${status}    Run Keyword And Return Status    Textfield Value Should Be    ${locator}    ${text}
+    Should Be Equal    ${status}    False
+
+Element Should Be Readonly
+    [Arguments]    ${locator}
+    ${attribute}    Get Element Attribute    ${locator}@readonly
+    Should Be Equal    ${attribute}    true
+
+Click Run Test Link
+    [Arguments]    ${no}=1
+    Click Visible Element    ${RUN_TEST_LINK}    ${no}
+
+Create Directory If Not Exist
+    [Arguments]    ${value}
+    ${status}    Run Keyword And Return Status    Directory Should Exist    ${value}
+    Run Keyword If    ${status}==False    Create Directory    ${value}
+
+Capture Screenshot Named As Test Case
+    [Arguments]    ${value}
+    Wait Util Page Fully Loaded
+    Create Directory If Not Exist    ${value}
+    Run Keyword And Ignore Error    Remove File    ${value}${/}${TEST_NAME}.png
+    Capture Page Screenshot    ${value}${/}${TEST_NAME}.png
+    File Should Exist    ${value}${/}${TEST_NAME}.png
+
+Run Compare Command
+    Run    compare ${BASELINE PATH}${/}${TEST_NAME}.png ${SCREENSHOT PATH}${/}${TEST_NAME}.png ${SCREENSHOT PATH}${/}${TEST_NAME}_Compare.png
+
+Compare With Baseline Screenshot
+    Capture Screenshot Named As Test Case    ${SCREENSHOT PATH}
+    Wait Until Keyword Succeeds    10s    2s    File Should Exist    ${SCREENSHOT PATH}${/}${TEST NAME}.png
+    Run Compare Command
+    ${status}    Run Keyword And Return Status    File Should Exist    ${SCREENSHOT PATH}${/}${TEST NAME}_Compare.png
+    Run Keyword If    ${status}==False    Run Compare Command
+    File Should Exist    ${SCREENSHOT PATH}${/}${TEST NAME}_Compare.png
+
+Compare The Page
+    Run Keyword If    "${RECORD OR TEST}".lower() in ['r','record']    Capture Screenshot Named As Test Case    ${BASELINE PATH}    ELSE    Compare With Baseline Screenshot
+
+Generate Baseline Path
+    ${status}    Run Keyword And Return Status    Should End With    ${EXECDIR}    ${PROJECT NAME}
+    ${projectPath}    Set Variable If    ${status}==False    ${EXECDIR}${/}${PROJECT NAME}    ${status}==True    ${EXECDIR}
+    ${path}    Split Curdir Path
+    ${BASELINE PATH}    Join Path    ${path}    ${BASE LINE FOLDER NAME}
+    Set Global Variable    ${BASELINE PATH}
+    [Return]    ${BASELINE PATH}
+
+Remove Baseline Directory
+    Run Keyword And Ignore Error    Remove Directory    ${BASELINE PATH}    yes
+
+Split Curdir Path
+    ${path}    ${dir}    split path    ${CURDIR}
+    ${path}    ${dir}    split path    ${path}
+    [Return]    ${path}
+
+Go To Site Overview Page If Not
+    ${title}    Get Title
+    Run Keyword If    '${VOICE SITE PAGE TITLE}'!='${title}'    Go To    ${SiteOverviewURL}
+
+Generate Download Path
+    ${downloadPath}    Set Variable If    '${:}'==';'    ~${/}Downloads    '${:}'==':'    ${/}root${/}Downloads
+    Set Global Variable    ${downloadPath}
+
+Wait Util Page Fully Loaded
+    Wait Until Keyword Succeeds    30s    1s    Page Should Be Fully Loaded
+
+Page Should Be Fully Loaded
+    ${status}    Execute Javascript    return document.readyState == 'complete'
+    Should Be True    ${status}
+
+Save Successfully
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Go To An Existed Voice Site
+    [Arguments]    ${siteName}
+    Open Header Tab    ${CXBUILDER_TAB}
+    CX Builder Page Should Be Open
+    Click Link    link=Manage All Voice Sites
+    Click Link    ${siteName}
+
+Go To An Existed Voice Page
+    [Arguments]    ${pageName}
+    Click Link    ${pageName}
+
+Voice Page Name Should Be
+    [Arguments]    ${pageName}
+    ${status}    Run Keyword And Return Status    Element Text Should Be    //span[@id='pageName_${idx}']/a    ${pageName}
+    [Return]    ${status}
+
+Click OK Button
+    Click Button    css=input.medium-btn.imgYesButton
+
+Select Voice Page
+    [Arguments]    ${pageName}
+    : FOR    ${idx}    IN RANGE    1    100
+    \    ${status}    Voice Page Name Should Be    ${pageName}
+    \    Run Keyword If    ${status}    Exit For Loop
+    Select Checkbox    id=page${idx}
+
+Delete Voice Page
+    [Arguments]    ${pageName}
+    Select Voice Page    ${pageName}
+    Click Delete Button
+    Click OK Button
+
+Select From List By Label
+    [Arguments]    ${locator}    ${text}
+    Run Keyword If    ${runsInChrome}    Select Label    ${locator}    ${text}
+    Run Keyword If    ${runsInFirefox}    Selenium2Library.Select From List By Label    ${locator}    ${text}
+
+Wait Until Test Name Input
+    ${status}    Run Keyword And Return Status    Page Should Contain    ${TEST_NAME}
+    Verify Text Input
+    Set Suite Variable    ${status}
+    [Return]    ${status}
+
+Verify Text Input
+    ${status}    Wait Until Test Name Input
+    Run Keyword If    ${status}==False    Input Page Name    ${TEST_NAME}

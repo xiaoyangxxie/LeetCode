@@ -1,0 +1,444 @@
+*** Settings ***
+Test Setup        Create Call Transfer Page
+Resource          ../Testflow/Util.txt
+Resource          ../Resource/Page/Common Page/Audio Block.txt
+Resource          ../Resource/Page/Common Page/Audio Files.txt
+
+*** Test Cases ***
+Reg_CT_01
+    [Documentation]    Create Call Transfer Page, default transfer type should be *Bridge PSTN*.
+    [Tags]    Regression
+    Transfer Type Should Be    @{TRANSFER TYPES}[0]
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_02
+    [Documentation]    Create Call Transfer Page, select *Screen the Call* checkbox, select go to page randomly from new vpages, save page, system should allow to save without any error.
+    [Tags]    Regression
+    Screen Call Block Should Be Invisible
+    Enable Screen The Call
+    Screen Call Block Should Be Open
+    Choose GoToPage Randomly In Sreen Call Block
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_03-1
+    [Documentation]    Create Call Transfer Page, click *Audio* button, new audio prompt block should be open.
+    [Tags]    Regression
+    Add Audio Prompt Block    2
+    Audio Prompt Block Should Be Open    2
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_03-2
+    [Documentation]    Create Call Transfer Page, click *Text-to-Speech* button, new TTS prompt block should be open.
+    [Tags]    Regression
+    Add TTS Prompt Block    2
+    TTS Prompt Block Should Be Open    2
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_03-3
+    [Documentation]    Create Call Transfer Page, click *Variable* button, new variable prompt block should be open.
+    [Tags]    Regression
+    Add Variable Prompt Block    2
+    Variable Prompt Block Should Be Open    2
+    Save Successfully
+
+Reg_CT_03-4
+    [Documentation]    Create Call Transfer Page, click *Audio* *Text-to-Speech* *Variable* button, click *Delete* button, these three blocks should be deleted.
+    [Tags]    Regression
+    Add Audio Prompt Block    2
+    Add TTS Prompt Block    3
+    Add Variable Prompt Block    4
+    Select Audio Prompts Checkbox    2
+    Select Audio Prompts Checkbox    3
+    Select Audio Prompts Checkbox    4
+    Click Delete Button
+    Prompt Checkbox Should Be Delete    2
+    Prompt Checkbox Should Be Delete    3
+    Prompt Checkbox Should Be Delete    4
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_03-5
+    [Documentation]    Create Call Transfer Page, click *Text-to-Speech* button, *Up* button should be visible, select tts checkbox, click *Up* button, tts block should get up.
+    [Tags]    Regression
+    Add TTS Prompt Block    2
+    Select Prompts Checkbox    2
+    Click Up Button
+    Prompt Checkbox Should Be Selected    1
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_03-6
+    [Documentation]    Create Call Transfer Page, click *Text-to-Speech* button, *Down* button should be visible, select audio checkbox, click *Down* button, audio block should get down.
+    [Tags]    Regression
+    Add TTS Prompt Block    2
+    Select Prompts Checkbox    1
+    Comment    Click Down Button
+    Comment    Prompt Checkbox Should Be Selected    2
+    Wait Until Keyword Succeeds    40sec    5sec    Select Prompts Checkbox For CT_03-6
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_03-7
+    [Documentation]    Create Call Transfer Page, click *Change to Audio* image, click *Link Audio* button, the system should allow user to select audio file to upload.
+    [Tags]    Regression
+    Change To Audio
+    Link Audio File To Page    ${AUDIO FILE}
+    Audio File Text Should Be    Sent.wav
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_03-8
+    [Documentation]    Create Call Transfer Page, click *Change to Audio* image, upload one audio file and click *Clear* link, audio file text should be None.
+    [Tags]    Regression
+    Change To Audio
+    Link Audio File To Page    ${AUDIO FILE}
+    Audio File Text Should Be    Sent.wav
+    Clear Audio File
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_04-1
+    [Documentation]    Create Call Transfer Page, Check the Phone number frame and extensions frame, Check the dropdown list of number of phone rings, Check the checkbox of Play on hold music.
+    [Tags]    Regression
+    Transfer Caller Block Should Be Open
+    Transfer Number Of Rings Should Be    @{RING NUMBERS}[2]
+    Play On Hold Muisic Checkbox Should Be Visible
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_04-2
+    [Documentation]    Create Call Transfer Page, Check the Phone number frame and extensions frame, Check the dropdown list of number of phone rings, Check the checkbox of Play on hold music.
+    [Tags]    Regression
+    Transfer Caller Block Should Be Open
+    Transfer Number Of Rings Should Be    @{RING NUMBERS}[2]
+    Play On Hold Muisic Checkbox Should Be Visible
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_05
+    [Documentation]    Create Call Transfer Page, Check the go to frame in *Busy or No Answer* block.
+    [Tags]    Regression
+    Busy Or No Answer GoToPage Should Be    Home Page
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_06-1
+    [Documentation]    Create Call Transfer Page, click the first *Details* link in Screen the Call block, *Whisper* tab should be open.
+    [Tags]    Regression
+    Click Details Link    1
+    Whisper Tab Should Be Open
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_06-2
+    [Documentation]    Create Call Transfer Page, click *Using Variables* link in audio block, the new window should be open with correct title.
+    [Tags]    Regression
+    Click Using Variables Link
+    Using Variable Window Should Be Open
+    Close Popup Window
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_06-3
+    [Documentation]    Create Call Transfer Page, click *Using Extensions* link in Transfer the Caller block, the new window should be open with correct title.
+    [Tags]    Regression
+    Click Using Extensiong Link    1
+    Using Extension Window Should Be Open
+    Close Popup Window
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_06-4
+    [Documentation]    Create Call Transfer Page, click *Details* link in Transfer the Caller block, Advanced Options tab should be open.
+    [Tags]    Regression
+    Click Details Link    2
+    Barge In Should Be Off
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_06-5
+    [Documentation]    Create Call Transfer Page, click *Why would I let phone ring indefinitely* link in Transfer the Caller block, new window should be open with correct title.
+    [Tags]    Regression
+    Click Why Phone Ring Indenfinitely Link    1
+    Why Phone Ring Indefinitely Window Should Be Open
+    Close Popup Window
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_06-6
+    [Documentation]    Create Call Transfer Page, click *Details* link in Busy or No Answer block, Call Scenarios tab should be open.
+    [Tags]    Regression
+    Click Details Link    3
+    Call Scenarios Tab Should Be Open
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_07
+    [Documentation]    Create Call Transfer Page, select *TBT* as transfer type, *Whisper* tab and *Call Scenarios* tab be not in the page.
+    [Tags]    Regression
+    Choose Transfer Type    @{TRANSFER TYPES}[1]
+    CT Tones Block Should Be Open
+    Settings Tab Should Be Invisible    @{SETTINGS_BOX_TABS}[6]    # Call Scenarios tab invisible
+    Settings Tab Should Be Invisible    @{SETTINGS_BOX_TABS}[5]    # Whisper tab invisible
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_08-1
+    [Documentation]    Create Call Transfer Page, select *TBT* as transfer type, click *Audio* button, new audio prompt block should be open.
+    [Tags]    Regression
+    Choose Transfer Type    @{TRANSFER TYPES}[1]
+    Add Audio Prompt Block    2
+    Audio Prompt Block Should Be Open    2
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_08-2
+    [Documentation]    Create Call Transfer Page, select *TBT* as transfer type, click *Text-to-Speech* button, new TTS prompt block should be open.
+    [Tags]    Regression
+    Choose Transfer Type    @{TRANSFER TYPES}[1]
+    Add TTS Prompt Block    2
+    TTS Prompt Block Should Be Open    2
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_08-3
+    [Documentation]    Create Call Transfer Page, select *TBT* as transfer type, click *Variable* button, new variable prompt block should be open.
+    [Tags]    Regression
+    Choose Transfer Type    @{TRANSFER TYPES}[1]
+    Add Variable Prompt Block    2
+    Variable Prompt Block Should Be Open    2
+    Save Successfully
+
+Reg_CT_08-4
+    [Documentation]    Create Call Transfer Page, select *TBT* as transfer type, click *Audio* *Text-to-Speech* *Variable* button, click *Delete* button, these three blocks should be deleted.
+    [Tags]    Regression
+    Choose Transfer Type    @{TRANSFER TYPES}[1]
+    Add Audio Prompt Block    2
+    Add TTS Prompt Block    3
+    Add Variable Prompt Block    4
+    Select Audio Prompts Checkbox    2
+    Select Audio Prompts Checkbox    3
+    Select Audio Prompts Checkbox    4
+    Click Delete Button
+    Prompt Checkbox Should Be Delete    2
+    Prompt Checkbox Should Be Delete    3
+    Prompt Checkbox Should Be Delete    4
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_08-5
+    [Documentation]    Create Call Transfer Page, select *TBT* as transfer type, click *Text-to-Speech* button, *Up* button should be visible, select tts checkbox, click *Up* button, tts block should get up.
+    [Tags]    Regression
+    Choose Transfer Type    @{TRANSFER TYPES}[1]
+    Add TTS Prompt Block    2
+    Select Prompts Checkbox    2
+    Click Up Button
+    Prompt Checkbox Should Be Selected    1
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_08-6
+    [Documentation]    Create Call Transfer Page, select *TBT* as transfer type, click *Text-to-Speech* button, *Down* button should be visible, select audio checkbox, click *Down* button, audio block should get down.
+    [Tags]    Regression
+    Choose Transfer Type    @{TRANSFER TYPES}[1]
+    Add TTS Prompt Block    2
+    Select Prompts Checkbox    1
+    Click Down Button
+    Prompt Checkbox Should Be Selected    2
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_08-7
+    [Documentation]    Create Call Transfer Page, select *TBT* as transfer type, click *Change to Audio* image, click *Link Audio* button, the system should allow user to select audio file to upload.
+    [Tags]    Regression
+    Choose Transfer Type    @{TRANSFER TYPES}[1]
+    Change To Audio
+    Link Audio File To Page    ${AUDIO FILE}
+    Audio File Text Should Be    Sent.wav
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_08-8
+    [Documentation]    Create Call Transfer Page, select *TBT* as transfer type, click *Change to Audio* image, upload one audio file and click *Clear* link, audio file text should be None.
+    [Tags]    Regression
+    Choose Transfer Type    @{TRANSFER TYPES}[1]
+    Change To Audio
+    Link Audio File To Page    ${AUDIO FILE}
+    Audio File Text Should Be    Sent.wav
+    Clear Audio File
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_09-1
+    [Documentation]    Create Call Transfer Page, select *TBT* as transfer type, Check the trigger tones frame and phone number frame and It can be saved with setting valid characters or numbers.
+    [Tags]    Regression
+    Choose Transfer Type    @{TRANSFER TYPES}[1]
+    CT Input Trigger Tones    tones
+    CT Input Phone Number For Tones    111111111111
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_09-2
+    [Documentation]    Create Call Transfer Page, select *TBT* as transfer type, click *Use Variable* image for trigger tones and phone number, check the dropdown lists.
+    [Tags]    Regression
+    Choose Transfer Type    @{TRANSFER TYPES}[1]
+    Click Use Variable Img    1
+    CT Tone Variable Select Should Be    Select a Variable
+    Click Use Variable Img    1
+    CT Transfer Tone Phone Number Select Should Be    Select a Variable
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_10
+    [Documentation]    Create Call Transfer Page, select *TBT* as transfer type, check lins including *Use Variables* link in audio block.
+    [Tags]    Regression
+    Choose Transfer Type    @{TRANSFER TYPES}[1]
+    Click Using Variables Link
+    Using Variable Window Should Be Open
+    Close Popup Window
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_11
+    [Documentation]    Create Call Transfer Page, select *SIP Refer* as transfer type, *Whisper* tab and *Call Scenarios* tab be not in the page.
+    [Tags]    Regression
+    Choose Transfer Type    @{TRANSFER TYPES}[2]
+    CT Transfer Points Block Should Be Open
+    Settings Tab Should Be Invisible    @{SETTINGS_BOX_TABS}[6]    # Call Scenarios tab invisible
+    Settings Tab Should Be Invisible    @{SETTINGS_BOX_TABS}[5]    # Whisper tab invisible
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_12-1
+    [Documentation]    Create Call Transfer Page, select *SIP Refer* as transfer type, click *Audio* button, new audio prompt block should be open.
+    [Tags]    Regression
+    Choose Transfer Type    @{TRANSFER TYPES}[2]
+    Add Audio Prompt Block    2
+    Audio Prompt Block Should Be Open    2
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_12-2
+    [Documentation]    Create Call Transfer Page, select *SIP Refer* as transfer type, click *Text-to-Speech* button, new TTS prompt block should be open.
+    [Tags]    Regression
+    Choose Transfer Type    @{TRANSFER TYPES}[2]
+    Add TTS Prompt Block    2
+    TTS Prompt Block Should Be Open    2
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_12-3
+    [Documentation]    Create Call Transfer Page, select *SIP Refer* as transfer type, click *Variable* button, new variable prompt block should be open.
+    [Tags]    Regression
+    Choose Transfer Type    @{TRANSFER TYPES}[2]
+    Add Variable Prompt Block    2
+    Variable Prompt Block Should Be Open    2
+    Save Successfully
+
+Reg_CT_12-4
+    [Documentation]    Create Call Transfer Page, select *SIP Refer* as transfer type, click *Audio* *Text-to-Speech* *Variable* button, click *Delete* button, these three blocks should be deleted.
+    [Tags]    Regression
+    Choose Transfer Type    @{TRANSFER TYPES}[2]
+    Add Audio Prompt Block    2
+    Add TTS Prompt Block    3
+    Add Variable Prompt Block    4
+    Select Audio Prompts Checkbox    2
+    Select Audio Prompts Checkbox    3
+    Select Audio Prompts Checkbox    4
+    Click Delete Button
+    Prompt Checkbox Should Be Delete    2
+    Prompt Checkbox Should Be Delete    3
+    Prompt Checkbox Should Be Delete    4
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_12-5
+    [Documentation]    Create Call Transfer Page, select *SIP Refer* as transfer type, click *Text-to-Speech* button, *Up* button should be visible, select tts checkbox, click *Up* button, tts block should get up.
+    [Tags]    Regression
+    Choose Transfer Type    @{TRANSFER TYPES}[2]
+    Add TTS Prompt Block    2
+    Select Prompts Checkbox    2
+    Click Up Button
+    Prompt Checkbox Should Be Selected    1
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_12-6
+    [Documentation]    Create Call Transfer Page, select *SIP Refer* as transfer type, click *Text-to-Speech* button, *Down* button should be visible, select audio checkbox, click *Down* button, audio block should get down.
+    [Tags]    Regression
+    Choose Transfer Type    @{TRANSFER TYPES}[2]
+    Add TTS Prompt Block    2
+    Select Prompts Checkbox    1
+    Click Down Button
+    Prompt Checkbox Should Be Selected    2
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_12-7
+    [Documentation]    Create Call Transfer Page, select *SIP Refer* as transfer type, click *Change to Audio* image, click *Link Audio* button, the system should allow user to select audio file to upload.
+    [Tags]    Regression
+    Choose Transfer Type    @{TRANSFER TYPES}[2]
+    Change To Audio
+    Link Audio File To Page    ${AUDIO FILE}
+    Audio File Text Should Be    Sent.wav
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_12-8
+    [Documentation]    Create Call Transfer Page, select *SIP Refer* as transfer type, click *Change to Audio* image, upload one audio file and click *Clear* link, audio file text should be None.
+    [Tags]    Regression
+    Choose Transfer Type    @{TRANSFER TYPES}[2]
+    Change To Audio
+    Link Audio File To Page    ${AUDIO FILE}
+    Audio File Text Should Be    Sent.wav
+    Clear Audio File
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_13-1
+    [Documentation]    Create Call Transfer Page, select *SIP Refer* as transfer type, Check the transfer points dropdown list(added IP/Admin in CSR) and phone number frame.
+    [Tags]    Regression
+    Choose Transfer Type    @{TRANSFER TYPES}[2]
+    Transfer Points Should Be    IP/Domain
+    CT Input Transfer Points Phone Number    1111111111
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_13-2
+    [Documentation]    Create Call Transfer Page, select *SIP Refer* as transfer type, click *Use Variable* image, system should allow user to choose variable as phone number for transfer points.
+    [Tags]    Regression
+    Choose Transfer Type    @{TRANSFER TYPES}[2]
+    Transfer Points Should Be    IP/Domain
+    Click Use Variable Img    1
+
+Reg_CT_15
+    [Documentation]    Create Call Transfer Page, User can enter Text message and save.
+    [Tags]    Regression
+    Input Prompts Text    ${TEST_NAME}    1
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_32
+    [Documentation]    Create Call Transfer Page, User can specify the phone number for the transfer call.
+    [Tags]    Regression
+    CT Input Transfer Phone Number    1111111111
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_33
+    [Documentation]    Create Call Transfer Page, User can specify the phone number's extension for the transfer call.
+    [Tags]    Regression
+    CT Input Transfer Phone Extension    86
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_CT_34
+    [Documentation]    Create Call Transfer Page, User can specify the number of rings to be ringed to for the transfer call.
+    [Tags]    Regression
+    Choose Number Of Rings    @{RING NUMBERS}[0]
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open

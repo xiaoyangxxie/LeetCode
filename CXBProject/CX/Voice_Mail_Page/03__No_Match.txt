@@ -1,0 +1,153 @@
+*** Settings ***
+Test Setup        Run Keywords    Create Voice Mail Page    AND    Open No Match Tab    AND    No Match Tab Should Be Open
+Resource          ../Testflow/Util.txt
+Resource          ../Resource/Page/Common Page/No Match.txt
+
+*** Test Cases ***
+Reg_VM_26
+    [Documentation]    Create voice mail page, open *No Match* tab, check the default view. Check if there should be two radio buttons with *Site Level* and *Page Level* in the NI/NM part, the default level is *Site Level* ; Check if the sentence 'Check NI/NM Setting in Site Properties' should display.
+    [Tags]    Regression
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Reg_VM_27
+    [Documentation]    Create voice mail page, open *No Match* tab, click *Page Level* radio button, check there are three NI(NM)s, the default select is the First NI/NM, each NI/NM should have the re-prompt control with default 'On' (the check box is selected); check if other two unselected sections should grey out and cannot be selected; check if New buttons:Up,Down,Delete, Variable, Text-to-Speach, Audio should display under the selected NI/NM
+    [Tags]    Regression
+    NM Select Page Level
+    No Match Block Should Be Open
+    Save Successfully
+
+Reg_VM_28
+    [Documentation]    Create voice mail page, open *No Match* tab, click *Page Level* radio button, click *Link to Audio* link, system should navigate to page where user can select audio files.
+    [Tags]    Regression
+    NM Select Page Level
+    Click Link Audio Link    1
+    Audio Handler Should Be Open
+    Save Successfully
+
+Reg_VM_29
+    [Documentation]    Create voice mail page, open *No Match* tab, click *Page Level* radio button, click *Link to Audio* link, add audio file, click *Clear* link, system should clear the selected wav file.
+    [Tags]    Regression
+    NM Select Page Level
+    Link Audio File To Page    ${AUDIO FILE}    1
+    NM Nested Audio File Shoule Be    Sent.wav    1    1
+    Clear Audio File    1
+    Save Successfully
+
+Reg_VM_30
+    [Documentation]    Create voice mail page, open *No Match* tab, click *Page Level* radio button, click *Link to Audio* link, add audio file, click *Play* link, system should play the selected wav file.
+    [Tags]    Debug    chrome
+    NM Select Page Level
+    Link Audio File To Page    ${AUDIO FILE}    1
+    NM Nested Audio File Shoule Be    Sent.wav    1    1
+    Play Audio File    Sent.wav    1
+    Save Successfully
+
+Reg_VM_31
+    [Documentation]    Create voice mail page, open *No Match* tab, click *Page Level* radio button, click *Variable* link, a new variable should be added under the selected prompt.
+    [Tags]    Regression
+    NM Select Page Level
+    Add Nested Variable
+    NM Nested Variable Block Should Be Open    2    1
+
+Reg_VM_32
+    [Documentation]    Create voice mail page, open *No Match* tab, click *Page Level* radio button, click *Text-to-Speech* link, a new Text should be added under the selected prompt group.
+    [Tags]    Regression
+    NM Select Page Level
+    Add Nested TTS
+    NM Nested TTS Block Should Be Open    1    2
+    Save Successfully
+
+Reg_VM_33
+    [Documentation]    Create voice mail page, open *No Match* tab, click *Page Level* radio button, click *Audio* link, a new Text should be added under the selected prompt group.
+    [Tags]    Regression
+    NM Select Page Level
+    Add Nested Audio
+    NM Nested Audio Block Should Be Open    1    2
+    Save Successfully
+
+Reg_VM_34-1
+    [Documentation]    Create voice mail page, open *No Match* tab, click *Page Level* radio button, click *Text-to-Speech* link, select the TTS block checkbox, click *Up* link, the TTS block should get up.
+    [Tags]    Regression
+    NM Select Page Level
+    Add Nested TTS
+    NM Nested TTS Block Should Be Open    1    2
+    NM Select Nested Prompts Checkbox    1    1
+    Click Down Link
+    NM Nested Audio Block Should Be Open    1    2
+    Save Successfully
+
+Reg_VM_34-2
+    [Documentation]    Create voice mail page, open *No Match* tab, click *Page Level* radio button, click *Text-to-Speech* link, select the audio block checkbox, click *Down* link, the audio block should get down.
+    [Tags]    Regression
+    NM Select Page Level
+    Add Nested TTS
+    NM Nested TTS Block Should Be Open    1    2
+    NM Select Nested Prompts Checkbox    1    2
+    Click Up Link
+    NM Nested Prompts Checkbox Should Be Selected    1    1
+    NM Nested TTS Message Should Be    ${TTS TEXT MSG}    1    1
+    Save Successfully
+
+Reg_VM_35
+    [Documentation]    Create voice mail page, open *No Match* tab, click *Page Level* radio button, click *Text-to-Speech* link, click *Audio* link, click *Variable* link, select these three block checkboxes, click *Delete* link, these three blocks should be deleted.
+    [Tags]    Regression
+    NM Select Page Level
+    Add Nested TTS
+    Wait Until MI Page Level Page Display
+    Scroll Down Page    400
+    Add Nested Audio
+    Wait Until MI Page Level Page Display
+    Scroll Down Page    400
+    Add Nested Variable
+    Wait Until MI Page Level Page Display
+    Scroll Down Page    400
+    NM Select Nested Prompts Checkbox    1    2
+    NM Select Nested Prompts Checkbox    1    3
+    NM Select Nested Prompts Checkbox    1    4
+    Click Delete Link
+    NM Nested Block Should Be Deleted    1    2
+    NM Nested Block Should Be Deleted    1    3
+    NM Nested Block Should Be Deleted    1    4
+    Save Successfully
+
+Reg_VM_36
+    [Documentation]    Create voice mail page, open *No Match* tab, click *Page Level* radio button, click *Add* button, check if the new added NI/NM prompts should display.
+    [Tags]    Regression
+    NM Select Page Level
+    NM Add No Match Prompt Block    4
+    Save Successfully
+
+Reg_VM_37
+    [Documentation]    Create voice mail page, open *No Match* tab, click *Page Level* radio button, click *Add* button, , select the new added prompt block, click *Delete* button, check if the new added NI/NM prompts should be deleted.
+    [Tags]    Regression
+    NM Select Page Level
+    NM Add No Match Prompt Block    4
+    NM Select No Match Prompt    4
+    Click Visible Delete Button    1
+    NM No Match Prompt Block Should Be Deleted    4
+    Save Successfully
+
+Reg_VM_38-1
+    [Documentation]    Create voice mail page, open *No Match* tab, click *Page Level* radio button, click *Why?* link in the first line, check if the new window is open.
+    [Tags]    Regression
+    NM Select Page Level
+    Click Why Link    1
+    New Window Title Should Be    Why would a caller not be understood?
+    Close Popup Window
+
+Reg_VM_38-2
+    [Documentation]    Create voice mail page, open *No Match* tab, click *Page Level* radio button, click *Why?* link after play message, \ check if the new window is open.
+    [Tags]    Regression
+    NM Select Page Level
+    Click Why Link    2
+    New Window Title Should Be    Play the message above followed by the original page message. Why?
+    Close Popup Window
+
+Reg_VM_39
+    [Documentation]    Create voice mail page, open *No Match* tab, click *Page Level* radio button, click *View* button, system should navigate to the home page.
+    [Tags]    Regression
+    NM Select Page Level
+    Click Visible View Button    1
+    New Window Title Should Be    ${MESSAGE PAGE TITLE}
+    Close Popup Window

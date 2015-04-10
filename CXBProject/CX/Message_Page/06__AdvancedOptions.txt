@@ -1,0 +1,34 @@
+*** Settings ***
+Test Setup        Run Keywords    Create Message Page    AND    Open Advanced Option Tab    AND    MP Advanced Option Tab Should Be Open
+Resource          ../resource.txt
+
+*** Test Cases ***
+Reg_Msg_46
+    [Documentation]    Open *Advanced Options* tab, click *Why?* link, new window should be open.
+    [Tags]    Regression
+    Click Why Link
+    New Window Title Should Be    Barge-in
+    Close Popup Window
+
+Reg_Msg_47
+    [Documentation]    Open *Advanced Options* tab, click *On* radio button.
+    [Tags]    Regression
+    Turn On Barge In
+    Barge In Should Be On
+    Save Successfully
+
+Reg_Msg_48
+    [Documentation]    Open *Advanced Options* tab, click *Off* radio button.
+    [Tags]    Regression
+    Turn Off Barge In
+    Barge In Should Be Off
+    Save Successfully
+
+Reg_Msg_49
+    [Documentation]    Open *Advanced Options* tab, verify *Disable Site Commands* checkbox should be disable, click *Main* tab, select other actions except *Listen for Site Commands*, open *Advanced Options* tab, user should select the *Disable Site Commands* checkbox.
+    [Tags]    Regression
+    Open Main Tab
+    Select Action Type    @{ACTIONS}[2]
+    Open Advanced Option Tab
+    Disable Site Commands
+    Save Successfully

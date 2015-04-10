@@ -1,0 +1,117 @@
+*** Settings ***
+Resource          ../Common Elements.txt
+
+*** Variables ***
+${EDIT_VAR_LINK}    link=Edit Variables
+${CT_REFERRER_STORE_VAR_SELECTOR}    id=referrer_varID
+${CT_CALL_OUTCOME_STORE_VAR_SELECTOR}    id=transferStatus_varID
+${CT_TALK_TIME_STORE_VAR_SELECTOR}    id=transferDuration_varID
+${CT_WARN_CALL_EXPIRED_TIME_TEXT}    name=warnCallerOfTransferDurationLength
+${CT_WARN_CALL_EXPIRED_TIME_CHECKBOX}    name=warnCallerOfTransferDurationCheckbox
+${CT_LIMIT_CALL_DURATION_VAR_SELECTOR}    id=limitTransferDurationLengthVariable_varID
+${CT_LIMIT_CALL_DURATION_DIV}    id=durationLayer
+${CT_LIMIT_CALL_DURATION_CHECKBOX}    name=limitTransferDurationCheckbox
+${CT_LIMIT_CALL_DURATION_TEXT}    name=limitTransferDurationLength
+${CT_ACCOUNT_CALLER_ID_SELECTOR}    id=customCallerIDFromAccountTempTag
+${CT_CALLER_ID_VAR_SELECTOR}    id=aniVariable_varID
+${CT_CALLER_ID_TEXT}    name=ani
+@{CALLER ID TYPES}    Static    Variable    Number in Account
+${CT_CALLER_ID_TYPE_SELECTOR}    id=callerIDType
+${CUSTOMIZE_CALLER_ID_DIV}    id=customizeCallerIDPanel
+${CUSTOMIZE_CALLER_ID_CHECKBOX}    name=configAniCheckbox
+${ALLOW_HOT_WORD_DIV}    id=allowHotWordOptionPanel
+${ALLOW_CALLER_TO_BE_REDERECTED_TO_VOICE_PAGE_CHECKBOX}    name=allowHotWordCheckbox
+${PHONE_NUMBER_VAR_SELECTOR}    id=phoneNumberVariable_varID
+${PLAY_ON_HOLD_MUSIC_CHECKBOX}    name=playOnHoldMusicCheckbox
+${CT_AD_PLAY_ON_HOLD_MUSIC_CHECKBOX}    name=playOnHoldMusicCheckbox
+
+*** Keywords ***
+CT Advanced Option Tab Should Be Open
+    Barge In Should Be Off
+
+Select Play On Hold Music Checkbox
+    [Arguments]    ${no}=1
+    Click Visible Element    ${PLAY_ON_HOLD_MUSIC_CHECKBOX}    ${no}
+
+Select Allow Caller To Be Redirected To Voice Page Checkbox
+    Select Checkbox    ${ALLOW_CALLER_TO_BE_REDERECTED_TO_VOICE_PAGE_CHECKBOX}
+
+Allow Caller To Be Redirected To Voice Page Block Should Be Open
+    Wait Until Keyword Succeeds    5sec    0.5sec    Element Should Be Visible    ${ALLOW_HOT_WORD_DIV}
+
+Select Customize Caller ID Checkbox
+    Select Checkbox    ${CUSTOMIZE_CALLER_ID_CHECKBOX}
+
+CT Select Caller ID Type
+    [Arguments]    ${type}
+    Select From List By Label    ${CT_CALLER_ID_TYPE_SELECTOR}    ${type}
+
+CT Input Caller ID
+    [Arguments]    ${id}
+    Comment    Input Text    ${CT_CALLER_ID_TEXT}    ${id}
+    Execute Javascript    $("input[name='ani']").val(${id})
+
+CT Select Caller ID Variable
+    [Arguments]    ${var}
+    Select From List By Label    ${CT_CALLER_ID_VAR_SELECTOR}    ${var}
+
+CT Input Limit Call Duration
+    [Arguments]    ${duration}
+    Input Text    ${CT_LIMIT_CALL_DURATION_TEXT}    ${duration}
+
+CT Select Limit Call Duration Checkbox
+    Select Checkbox    ${CT_LIMIT_CALL_DURATION_CHECKBOX}
+
+CT Limit Call Duration Block Should Be Visible
+    Wait Until Keyword Succeeds    5sec    0.5sec    Element Should Be Visible    ${CT_LIMIT_CALL_DURATION_DIV}
+
+CT Select Limit Call Duration Variable
+    [Arguments]    ${var}
+    Select From List By Label    ${CT_LIMIT_CALL_DURATION_VAR_SELECTOR}    ${var}
+
+CT Select Warn Call Expired Time Checkbox
+    Select Checkbox    ${CT_WARN_CALL_EXPIRED_TIME_CHECKBOX}
+
+CT Account Caller ID Selector Should Be Visible
+    Wait Until Keyword Succeeds    5sec    0.5sec    Element Should Be Visible    ${CT_ACCOUNT_CALLER_ID_SELECTOR}
+
+CT Input Warn Call Expired Time
+    [Arguments]    ${time}
+    Input Text    ${CT_WARN_CALL_EXPIRED_TIME_TEXT}    ${time}
+
+Click Edit Variables Link
+    [Arguments]    ${no}=1
+    Click Visible Element    ${EDIT_VAR_LINK}    ${no}
+
+CT Select Talk Time Store Variable
+    [Arguments]    ${var}
+    Select From List By Label    ${CT_TALK_TIME_STORE_VAR_SELECTOR}    ${var}
+
+CT Select Call Outcome Store Variable
+    [Arguments]    ${var}
+    Select From List By Label    ${CT_CALL_OUTCOME_STORE_VAR_SELECTOR}    ${var}
+
+CT Select Referrer Store Variable
+    [Arguments]    ${var}
+    Select From List By Label    ${CT_REFERRER_STORE_VAR_SELECTOR}    ${var}
+
+Customize Caller ID Block Should Be Open
+    Wait Until Keyword Succeeds    5sec    0.5sec    Element Should Be Visible    ${CUSTOMIZE_CALLER_ID_DIV}
+
+CT Talk Time Store Variable Should Be
+    [Arguments]    ${var}
+    List Selection Should Be    ${CT_TALK_TIME_STORE_VAR_SELECTOR}    ${var}
+
+CT Call Outcome Store Variable Should Be
+    [Arguments]    ${var}
+    List Selection Should Be    ${CT_CALL_OUTCOME_STORE_VAR_SELECTOR}    ${var}
+
+CT Referrer Store Variable Should Be
+    [Arguments]    ${var}
+    List Selection Should Be    ${CT_REFERRER_STORE_VAR_SELECTOR}    ${var}
+
+CT Caller ID Should Be Inputed
+    [Arguments]    ${number}
+    CT Input Caller ID    ${number}
+    ${ani}    Get Text    ${CT_CALLER_ID_TEXT}
+    Should Be Equal As Strings    ${ani}    ${number}

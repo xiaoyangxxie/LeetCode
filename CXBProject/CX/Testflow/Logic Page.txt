@@ -1,0 +1,100 @@
+*** Settings ***
+Library           Selenium2Library
+Resource          ../Resource/Page/Logic Page/Logic Page.txt
+Resource          ../Resource/Page/Common Page/Site Overview.txt
+
+*** Keywords ***
+Add Assignment&Random&Number With Different Inputs
+    [Arguments]    ${from}    ${to}
+    Create Logic Page
+    Add Assignment
+    Choose Assignment/Transformation Variable    New Variable
+    Choose Assignment Operator    @{ASSIGN TYPE KEYS}[2]
+    Assignment Random From Number Should Be    ${DEFAULT FROM NUMBER}
+    Assignment Random To Number Should Be    ${DEFAULT TO NUMBER}
+    Input Assignment Random From Number    ${from}
+    Input Assignment Random To Number    ${to}
+    Save Page Named As Test Case
+
+Add Assignment&Random&Numeric With Different Inputs
+    [Arguments]    ${len}
+    Create Logic Page
+    Add Assignment
+    Choose Assignment/Transformation Variable    New Variable
+    Choose Assignment Operator    @{ASSIGN TYPE KEYS}[2]
+    Choose Assignment Random Type    @{ASSIGN RAN TYPES}[1]
+    Assignment Random Numeric Length Should Be    ${ASSIGN DEFAULT NUM LENGTH}
+    Input Assignment Random Numeric Length    ${len}
+    Save Page Named As Test Case
+
+Add Assignment&Random&Alphabetic With Different Inputs
+    [Arguments]    ${len}
+    Create Logic Page
+    Add Assignment
+    Choose Assignment/Transformation Variable    New Variable
+    Choose Assignment Operator    @{ASSIGN TYPE KEYS}[2]
+    Choose Assignment Random Type    @{ASSIGN RAN TYPES}[2]
+    Assignment Random Alphabetic Length Should Be    ${ASSIGN DEFAULT NUM LENGTH}
+    Input Assignment Alphabetic Length    ${len}
+    Save Page Named As Test Case
+
+Add Assignment&Random&Alpha Number With Different Inputs
+    [Arguments]    ${len}
+    Create Logic Page
+    Add Assignment
+    Choose Assignment/Transformation Variable    New Variable
+    Choose Assignment Operator    @{ASSIGN TYPE KEYS}[2]
+    Choose Assignment Random Type    @{ASSIGN RAN TYPES}[3]
+    Assignment Random Alpha Numeric Length Should Be    ${ASSIGN DEFAULT NUM LENGTH}
+    Input Assignment Alpha Number Length    ${len}
+    Save Page
+
+Add Transformation With Different Left Constant Inputs
+    [Arguments]    ${con}
+    [Documentation]    Click *Transformation* Button, and select *New Variable*, Click *Use Constant* image, input some different kinds of constant then save. System should allow to save without any errors.
+    Create Logic Page
+    Add Transformation
+    Choose Assignment/Transformation Variable    New Variable
+    Change Transformation Variable To Constant
+    Input Assignment Left Constant    ${con}
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Add Transformation With Random Left Var&Different Operators&Right Constant Inputs
+    [Arguments]    ${op}    ${con}
+    [Documentation]    Click *Transformation* Button, and select *New Variable*, random *Site Variable*, select different *Operator*, input some different kinds of *Right Constant* then save. System should allow to save without any errors.
+    Create Logic Page
+    Add Transformation
+    Choose Assignment/Transformation Variable    New Variable
+    Choose Transformation Middle Variable Randomly
+    Choose Transforamtion Variable Operator    ${op}
+    Input Transformation Right Constant    ${con}
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Add Transformation With The Third Kind of Op
+    [Arguments]    ${op}
+    [Documentation]    Click *Transformation* Button, and select *New Variable*, random *Site Variable*, select the third kind of *Operator*, then save. System should allow to save without any errors.
+    Create Logic Page
+    Add Transformation
+    Choose Assignment/Transformation Variable    New Variable
+    Choose Transformation Middle Variable Randomly
+    Choose Transforamtion Variable Operator    ${op}
+    Right Constant Input Should Not Be Visible
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+
+Add Transformation&substring Op With Different Inputs
+    [Arguments]    ${start}    ${end}
+    [Documentation]    Click *Transformation* Button, and select *New Variable*, random *Site Variable*, select the *substring Operator*, input some groups of *Start* and *End* numbers, then save. System should allow to save without any errors.
+    Create Logic Page
+    Add Transformation
+    Choose Assignment/Transformation Variable    New Variable
+    Choose Transformation Middle Variable Randomly
+    Choose Transforamtion Variable Operator    @{VAR OPS}[11]
+    Right Constant Input Should Not Be Visible
+    Transformation SubString Start Should Be    1
+    Input Transformation Substring Start Pos    ${start}
+    Input Transformation Substring End Pos    ${end}
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open

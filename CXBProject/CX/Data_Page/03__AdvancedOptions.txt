@@ -1,0 +1,95 @@
+*** Settings ***
+Suite Setup       Run Keywords    Voice Page Suite Teardown    Voice Page Suite Setup
+Test Setup        Run Keywords    Create Data Page    AND    Create DP Data File If Not Exist    DPTest.xls    AND    Choose DP Data File
+...               DPTest.xls    AND    Open Advanced Option Tab
+Force Tags
+Resource          ../resource.txt
+
+*** Test Cases ***
+Reg_Data_39
+    [Documentation]    Advanced Options: Error Destination - New Voice Page
+    ...
+    ...    1. User can set the new voice page as destination page
+    [Tags]    Regression
+    Error Destination Should Contain All Pages
+    Choose Error Destination Randomly
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+    Go To Site Overview
+    Data Error Page Link Should Exist
+
+Reg_Data_40
+    [Documentation]    Advanced Options: Error Destination - Existing Voice Page
+    ...
+    ...    1. User can set the existing voice page as destination page
+    [Tags]    Regression
+    Error Destination Should Contain    1 - Greeting
+    Choose Error Destination Page    1 - Greeting
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+    Error Destination Page Should Be    1 - Greeting
+
+Reg_Data_41
+    [Documentation]    Advanced Options: Error Destination - Home page
+    ...
+    ...    1. User can set Home page as destination page
+    [Tags]    Regression
+    Error Destination Should Contain    Home Page
+    Choose Error Destination Page    Home Page
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+    Error Destination Page Should Be    Home Page
+
+Reg_Data_42
+    [Documentation]    Advanced Options: Error Destination - A page in Another Site
+    ...
+    ...    1. User can set A Page in Another Site as destination page
+    [Tags]    Regression
+    Error Destination Should Contain    A Page in Another Site
+    Choose Error Destination Page    A Page in Another Site
+    VPage Select Should Be Open
+    Save Successfully
+
+Reg_Data_43
+    [Documentation]    Advanced Options: Error Destination - Link - Exceptional Situations
+    ...
+    ...    1. The linked page would pop up by clicking the "Exceptional Situations" link.
+    [Tags]    Regression
+    Click Exceptional Situations Link
+    New Window Title Should Be    Exceptional Situations
+    Close Popup Window
+
+Reg_Data_44
+    [Documentation]    Email Debugging - Email on Error Only
+    ...
+    ...    1. User can select 'On Error Only' option in the mail logs \ to \ get email for only error on data page. \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 2. User can set the Email Address
+    [Tags]    Regression
+    Choose Log Type    On Error Only
+    Log Email Address Should Be    ${LOGIN EMAIL}
+    Input Log Email    test@angel.com
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+    Log Email Address Should Be    test@angel.com
+
+Reg_Data_45
+    [Documentation]    Email Debugging - Email Always
+    ...
+    ...    1. User can select 'Always' option in the mail logs \ to get email for all \ logs in the data page. \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 2. User can set the Email Address
+    [Tags]    Regression
+    Choose Log Type    Always
+    Log Email Address Should Be    ${LOGIN EMAIL}
+    Input Log Email    test@angel.com
+    Save Page Named As Test Case
+    Save Done Tip Should Be Open
+    Log Email Address Should Be    test@angel.com
+
+Reg_Data_46
+    [Documentation]    Email Debugging - Email Never
+    ...
+    ...    1. User can select 'Never' option in the mail logs \ to not \ get email for logs in the data page
+    [Tags]    Regression
+    Choose Log Type    Never
+    Log Email Address Should Be Readonly
+    Save Successfully
+
+*** Keywords ***
